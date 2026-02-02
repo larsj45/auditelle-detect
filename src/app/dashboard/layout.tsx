@@ -53,8 +53,8 @@ export default function DashboardLayout({
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0">
         <div className="p-6">
           <Link href="/" className="flex items-center gap-2">
-            <Shield className="w-8 h-8 text-accent" />
-            <span className="text-xl font-bold text-navy">Auditelle</span>
+            <img src="/images/logo-color.svg" alt="Auditelle" className="h-8" />
+            
           </Link>
         </div>
 
@@ -93,8 +93,8 @@ export default function DashboardLayout({
       {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <Shield className="w-7 h-7 text-accent" />
-          <span className="text-lg font-bold text-navy">Auditelle</span>
+          <img src="/images/logo-color.svg" alt="Auditelle" className="h-7" />
+          
         </Link>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Menu">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

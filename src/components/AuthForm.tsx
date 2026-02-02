@@ -67,11 +67,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
     <div className="min-h-screen bg-[var(--bg-light)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-[var(--accent)] flex items-center justify-center">
-              <span className="text-white font-bold">A</span>
-            </div>
-            <span className="text-2xl font-bold text-[var(--navy)]">Auditelle</span>
+          <Link href="/" className="inline-flex items-center mb-6">
+            <img src="/images/logo-color.svg" alt="Auditelle" className="h-10" />
           </Link>
           <h1 className="text-2xl font-bold text-[var(--navy)]">{titles[mode]}</h1>
           <p className="text-gray-500 mt-2">{subtitles[mode]}</p>
