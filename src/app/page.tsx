@@ -200,7 +200,7 @@ export default function Home() {
                 'Facturation personnalisée',
               ]}
               cta="Nous contacter"
-              href="mailto:contact@auditelle.eu"
+              href="mailto:contact@auditelle.fr"
             />
           </div>
         </div>
