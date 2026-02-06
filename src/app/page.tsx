@@ -150,58 +150,77 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Tarifs simples et transparents
+              Tarification transparente et compétitive
             </h2>
-            <p className="text-gray-500 mt-4 text-lg">
-              Commencez gratuitement. Passez au Pro quand vous êtes prêt.
+            <p className="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">
+              Technologie Pangram Labs. Service français. Commencez gratuitement, évoluez selon vos besoins.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-start">
             <PricingCard
-              name="Gratuit"
+              name="Essai Gratuit"
               price="0€"
-              description="Pour découvrir la détection IA"
+              description="Découvrez la précision"
               features={[
-                '5 analyses par jour',
-                'Score de probabilité IA',
+                '50 analyses par mois',
+                'Score IA 99.9% précis',
                 'Identification du modèle',
                 'Historique 7 jours',
               ]}
-              cta="Commencer gratuitement"
+              cta="Commencer"
               href="/signup"
             />
             <PricingCard
-              name="Pro"
-              price="29€"
+              name="Professionnel"
+              price="25€"
               period="mois"
-              description="Pour les professionnels et enseignants"
+              description="Pour enseignants et consultants"
               features={[
-                '100 analyses par jour',
-                'Analyse section par section',
-                'Détection de plagiat',
-                'Export PDF des rapports',
-                'Historique illimité',
-                'Support prioritaire',
+                '1,000 analyses par mois',
+                'API access (500 calls)',
+                'Export PDF/CSV',
+                'Support email',
+                'Historique 30 jours',
               ]}
-              cta="Démarrer l'essai Pro"
+              cta="Choisir Pro"
               href="/signup?plan=pro"
               popular
             />
             <PricingCard
-              name="Entreprise"
-              price="Sur devis"
-              description="Pour les institutions et grandes organisations"
+              name="Université"
+              price="149€"
+              period="mois"
+              description="Pour établissements d'enseignement"
+              features={[
+                '10,000 analyses par mois',
+                'API illimitée',
+                'Intégration LMS',
+                'Dashboard administrateur',
+                'Support prioritaire',
+              ]}
+              cta="Contacter"
+              href="mailto:contact@auditelle.fr"
+            />
+            <PricingCard
+              name="Enterprise"
+              price="499€"
+              period="mois"
+              description="Pour organisations nationales"
               features={[
                 'Analyses illimitées',
-                'Accès API',
-                'Intégration LMS',
-                'Gestion multi-utilisateurs',
-                'SLA & support dédié',
-                'Facturation personnalisée',
+                'White-label API',
+                'Account manager dédié',
+                'SLA 99.9%',
+                'Custom features',
               ]}
               cta="Nous contacter"
               href="mailto:contact@auditelle.fr"
             />
+          </div>
+          <div className="text-center mt-12">
+            <p className="text-gray-500 text-sm">
+              Technologie Pangram • 99,9% de précision • Conforme RGPD • Support français • SIREN 945117000
+            </p>
           </div>
         </div>
       </section>
