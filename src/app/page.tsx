@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PricingCard from '@/components/PricingCard'
+import HeroDemo from '@/components/HeroDemo'
 import { Shield, Brain, FileSearch, BarChart3, Zap, Globe } from 'lucide-react'
 import Link from 'next/link'
 
@@ -35,6 +36,8 @@ export default function Home() {
           <p className="text-gray-400 text-sm mt-4">
             5 analyses gratuites par jour · Aucune carte bancaire requise
           </p>
+          
+          <HeroDemo />
         </div>
       </section>
 
