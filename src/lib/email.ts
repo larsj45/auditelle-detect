@@ -279,3 +279,177 @@ Passez à Pro pour 1,000 analyses/mois : https://www.auditelle.fr/dashboard?upgr
 Auditelle SASU - www.auditelle.fr`
   }
 }
+
+export function trialExpiringEmail(name: string, daysLeft: number) {
+  const firstName = name.split(' ')[0] || 'there'
+  
+  const urgency = daysLeft <= 1 ? 'last-day' : daysLeft <= 3 ? 'urgent' : 'reminder'
+  const emoji = daysLeft <= 1 ? '⏰' : daysLeft <= 3 ? '⚠️' : '📅'
+  const color = daysLeft <= 1 ? '#ef4444' : daysLeft <= 3 ? '#f59e0b' : '#0d9488'
+  
+  const subjectMap: Record<string, string> = {
+    'last-day': `${firstName}, votre essai gratuit se termine aujourd'hui ! ⏰`,
+    'urgent': `${firstName}, plus que ${daysLeft} jours d'essai ⚠️`,
+    'reminder': `${firstName}, votre essai se termine dans ${daysLeft} jours 📅`
+  }
+  
+  const dayText = daysLeft <= 1 ? "AUJOURD'HUI" : `${daysLeft} JOURS`
+  
+  return {
+    subject: subjectMap[urgency],
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #fef9ef; margin: 0; padding: 40px 20px;">
+  <div style="max-width: 560px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); padding: 32px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-size: 24px;">✦ AUDITELLE</h1>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 40px 32px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <span style="font-size: 48px;">${emoji}</span>
+      </div>
+      
+      <h2 style="color: #1a1a2e; margin: 0 0 16px 0; font-size: 22px; text-align: center;">
+        ${daysLeft <= 1 ? 'Dernière chance !' : `Plus que ${daysLeft} jours`}
+      </h2>
+      
+      <p style="color: #4b5563; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
+        ${firstName}, votre essai gratuit Auditelle ${daysLeft <= 1 ? "se termine aujourd'hui" : `se termine dans ${daysLeft} jours`}. 
+        Ne perdez pas l'accès au détecteur IA le plus précis du marché.
+      </p>
+      
+      <!-- Countdown box -->
+      <div style="background: ${daysLeft <= 1 ? '#fef2f2' : daysLeft <= 3 ? '#fffbeb' : '#ecfdf5'}; border: 2px solid ${color}; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
+        <p style="color: ${color}; margin: 0; font-size: 32px; font-weight: bold;">
+          ${dayText}
+        </p>
+        <p style="color: #6b7280; margin: 8px 0 0 0; font-size: 14px;">
+          avant la fin de votre essai
+        </p>
+      </div>
+      
+      <div style="background: #f9fafb; border-radius: 12px; padding: 20px; margin: 24px 0;">
+        <h3 style="color: #1a1a2e; margin: 0 0 12px 0; font-size: 16px;">🎯 Ce que vous gardez avec Pro :</h3>
+        <ul style="color: #4b5563; margin: 0; padding-left: 20px; line-height: 1.8;">
+          <li><strong>1,000 analyses/mois</strong></li>
+          <li>Historique complet</li>
+          <li>Accès API</li>
+          <li>Export PDF/CSV</li>
+          <li>Support prioritaire</li>
+        </ul>
+      </div>
+      
+      <a href="https://www.auditelle.fr/dashboard?upgrade=true" style="display: block; text-align: center; background: #e85d04; color: white; text-decoration: none; padding: 16px 28px; border-radius: 8px; font-weight: 600; margin: 24px 0; font-size: 16px;">
+        Passer à Pro — 25€/mois →
+      </a>
+      
+      <p style="color: #9ca3af; font-size: 13px; margin: 24px 0 0 0; text-align: center;">
+        Des questions ? Répondez simplement à cet email.
+      </p>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: #f9fafb; padding: 24px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+        Auditelle SASU · SIREN 945117000 · Paris, France<br>
+        <a href="https://www.auditelle.fr" style="color: #0d9488;">www.auditelle.fr</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+    `,
+    text: `${firstName}, votre essai Auditelle ${daysLeft <= 1 ? "se termine aujourd'hui !" : `se termine dans ${daysLeft} jours`}
+
+Ne perdez pas l'accès au détecteur IA le plus précis du marché.
+
+Passez à Pro pour 25€/mois : https://www.auditelle.fr/dashboard?upgrade=true
+
+Ce que vous gardez :
+- 1,000 analyses/mois
+- Historique complet
+- Accès API
+- Export PDF/CSV
+- Support prioritaire
+
+Auditelle SASU - www.auditelle.fr`
+  }
+}
+
+export function trialEndedEmail(name: string) {
+  const firstName = name.split(' ')[0] || 'there'
+  
+  return {
+    subject: `${firstName}, votre essai est terminé — mais il n'est pas trop tard ! 🔓`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #fef9ef; margin: 0; padding: 40px 20px;">
+  <div style="max-width: 560px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); padding: 32px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-size: 24px;">✦ AUDITELLE</h1>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 40px 32px;">
+      <h2 style="color: #1a1a2e; margin: 0 0 16px 0; font-size: 22px;">
+        Vous nous manquez, ${firstName} ! 👋
+      </h2>
+      
+      <p style="color: #4b5563; line-height: 1.6; margin: 0 0 24px 0;">
+        Votre essai gratuit Auditelle est terminé. Mais ne vous inquiétez pas — votre compte et votre historique sont toujours là, et vous attendent.
+      </p>
+      
+      <div style="background: #fef3c7; border-radius: 12px; padding: 20px; margin: 24px 0;">
+        <h3 style="color: #92400e; margin: 0 0 12px 0; font-size: 16px;">🎁 Offre spéciale :</h3>
+        <p style="color: #78350f; margin: 0; line-height: 1.6;">
+          Passez à Pro dans les prochaines <strong>48 heures</strong> et bénéficiez de <strong>50% de réduction</strong> sur votre premier mois.
+        </p>
+      </div>
+      
+      <a href="https://www.auditelle.fr/dashboard?upgrade=true&promo=COMEBACK50" style="display: block; text-align: center; background: #e85d04; color: white; text-decoration: none; padding: 16px 28px; border-radius: 8px; font-weight: 600; margin: 24px 0; font-size: 16px;">
+        Profiter de -50% →
+      </a>
+      
+      <p style="color: #9ca3af; font-size: 14px; margin: 32px 0 0 0; text-align: center;">
+        Ou répondez à cet email si vous avez des questions.
+      </p>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: #f9fafb; padding: 24px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+        Auditelle SASU · SIREN 945117000 · Paris, France<br>
+        <a href="https://www.auditelle.fr" style="color: #0d9488;">www.auditelle.fr</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+    `,
+    text: `Vous nous manquez, ${firstName} !
+
+Votre essai gratuit Auditelle est terminé. Mais votre compte et votre historique sont toujours là.
+
+Offre spéciale : Passez à Pro dans les 48 heures et bénéficiez de 50% de réduction !
+
+Profitez-en : https://www.auditelle.fr/dashboard?upgrade=true&promo=COMEBACK50
+
+Auditelle SASU - www.auditelle.fr`
+  }
+}
