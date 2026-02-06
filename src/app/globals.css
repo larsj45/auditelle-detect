@@ -3,15 +3,18 @@
 :root {
   --navy: #1a1a2e;
   --navy-light: #16213e;
-  --accent: #4361ee;
-  --accent-hover: #3a56d4;
-  --accent-light: #eef0ff;
+  --accent: #e85d04;
+  --accent-hover: #dc2f02;
+  --accent-light: #fff4e6;
   --text-primary: #1a1a2e;
   --text-secondary: #6b7280;
-  --bg-light: #f8f9fa;
+  --bg-light: #fefcf3;
+  --bg-warm: #fef9ef;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+  --teal: #0d9488;
+  --teal-dark: #115e59;
 }
 
 body {
@@ -20,7 +23,11 @@ body {
 }
 
 .gradient-hero {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, #0f3460 100%);
+  background: linear-gradient(180deg, #fef3c7 0%, #fef9ef 50%, #ffffff 100%);
+}
+
+.gradient-hero-alt {
+  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
 }
 
 .score-ring {

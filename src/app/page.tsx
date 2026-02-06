@@ -11,33 +11,61 @@ export default function Home() {
       <Navbar />
 
       {/* Hero */}
-      <section className="gradient-hero pt-32 pb-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-block bg-white/10 text-white/90 text-sm font-medium px-4 py-2 rounded-full mb-8 backdrop-blur-sm">
-            🏆 Vérifiée par l&apos;Université du Maryland comme la plus précise
+      <section className="gradient-hero pt-32 pb-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Text */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 bg-[var(--teal)]/10 text-[var(--teal-dark)] text-sm font-medium px-4 py-2 rounded-full mb-6">
+                <span className="w-2 h-2 bg-[var(--teal)] rounded-full animate-pulse"></span>
+                99,9% de précision vérifiée
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--navy)] leading-tight">
+                Le détecteur IA qui{' '}
+                <span className="text-[var(--accent)]">fonctionne vraiment</span>
+              </h1>
+              <p className="text-xl text-gray-600 mt-6 leading-relaxed">
+                Détectez ChatGPT, Claude, Gemini et plus avec une précision inégalée.
+                Vérifié par l&apos;Université du Maryland. Taux de faux positifs quasi nul.
+              </p>
+              
+              {/* Trust badges */}
+              <div className="flex flex-wrap gap-6 mt-8 justify-center lg:justify-start">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <svg className="w-5 h-5 text-[var(--teal)]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Détection IA avancée
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <svg className="w-5 h-5 text-[var(--teal)]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Vérifié par des tiers
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <svg className="w-5 h-5 text-[var(--teal)]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Essai gratuit
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
+                <Link href="/signup" className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
+                  Essayer gratuitement →
+                </Link>
+                <Link href="/#features" className="btn-secondary text-lg px-8 py-4 rounded-xl">
+                  Comment ça marche
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Column - Demo */}
+            <div className="lg:pl-8">
+              <HeroDemo />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight">
-            La détection IA la plus{' '}
-            <span className="text-[#7c8cf8]">précise</span>{' '}
-            du marché
-          </h1>
-          <p className="text-xl text-gray-300 mt-6 max-w-2xl mx-auto leading-relaxed">
-            Détectez le contenu généré par ChatGPT, Claude, Gemini et plus.
-            Résultats vérifiés par des tiers. Taux de faux positifs quasi nul.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
-            <Link href="/signup" className="btn-primary text-lg px-8 py-4">
-              Essayer gratuitement →
-            </Link>
-            <Link href="/#features" className="btn-secondary text-lg px-8 py-4 !bg-transparent !text-white !border-white/30 hover:!bg-white/10">
-              Découvrir
-            </Link>
-          </div>
-          <p className="text-gray-400 text-sm mt-4">
-            5 analyses gratuites par jour · Aucune carte bancaire requise
-          </p>
-          
-          <HeroDemo />
         </div>
       </section>
 
