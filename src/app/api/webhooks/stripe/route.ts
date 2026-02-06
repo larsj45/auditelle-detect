@@ -3,6 +3,16 @@ import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 
+// Map price IDs to plan names
+const getPlanFromPriceId = (priceId: string): string => {
+  const priceMap: Record<string, string> = {
+    [process.env.STRIPE_PRO_PRICE_ID || '']: 'pro',
+    [process.env.STRIPE_UNIVERSITY_PRICE_ID || '']: 'university',
+    [process.env.STRIPE_ENTERPRISE_PRICE_ID || '']: 'enterprise',
+  }
+  return priceMap[priceId] || 'pro'
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const sig = request.headers.get('stripe-signature')!
@@ -24,11 +34,12 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.metadata?.supabase_user_id
+      const plan = session.metadata?.plan || 'pro'
       if (userId) {
         await supabase
           .from('profiles')
           .update({
-            plan: 'pro',
+            plan,
             stripe_customer_id: session.customer as string,
             stripe_subscription_id: session.subscription as string,
           })
@@ -47,9 +58,11 @@ export async function POST(request: NextRequest) {
 
       if (profiles && profiles[0]) {
         const isActive = ['active', 'trialing'].includes(subscription.status)
+        const priceId = subscription.items.data[0]?.price?.id || ''
+        const plan = isActive ? getPlanFromPriceId(priceId) : 'free'
         await supabase
           .from('profiles')
-          .update({ plan: isActive ? 'pro' : 'free' })
+          .update({ plan })
           .eq('id', profiles[0].id)
       }
       break

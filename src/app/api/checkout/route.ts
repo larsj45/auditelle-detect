@@ -46,9 +46,17 @@ export async function POST(request: NextRequest) {
         .eq('id', user.id)
     }
 
-    const priceId = process.env.STRIPE_PRO_PRICE_ID
+    const { plan } = await request.json().catch(() => ({ plan: 'pro' }))
+    
+    const priceIds: Record<string, string | undefined> = {
+      pro: process.env.STRIPE_PRO_PRICE_ID,
+      university: process.env.STRIPE_UNIVERSITY_PRICE_ID,
+      enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID,
+    }
+    
+    const priceId = priceIds[plan]
     if (!priceId) {
-      return NextResponse.json({ error: 'Configuration de paiement manquante' }, { status: 500 })
+      return NextResponse.json({ error: 'Plan invalide ou non configuré' }, { status: 400 })
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -58,7 +66,8 @@ export async function POST(request: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?canceled=true`,
-      metadata: { supabase_user_id: user.id },
+      metadata: { supabase_user_id: user.id, plan },
+      allow_promotion_codes: true,
     })
 
     return NextResponse.json({ url: session.url })
