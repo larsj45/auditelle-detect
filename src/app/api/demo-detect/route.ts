@@ -47,17 +47,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Minimum 50 caractères requis' }, { status: 400 })
     }
     
-    // Call Pangram API
+    // Call Pangram API v3
     const pangramKey = process.env.PANGRAM_API_KEY
     if (!pangramKey) {
       return NextResponse.json({ error: 'Service temporairement indisponible' }, { status: 503 })
     }
     
-    const pangramRes = await fetch('https://api.pangram.com/v1/detect', {
+    const pangramRes = await fetch('https://text.api.pangramlabs.com/v3', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${pangramKey}`
+        'x-api-key': pangramKey
       },
       body: JSON.stringify({ text: text.slice(0, 2000) })
     })
@@ -72,11 +72,13 @@ export async function POST(request: NextRequest) {
     // Increment rate limit on success
     incrementRateLimit(ip)
     
-    // Return simplified result for demo
+    // Return simplified result for demo (v3 API format)
+    const aiScore = Math.round((pangramData.fraction_ai || 0) * 100)
     return NextResponse.json({
-      score: Math.round((pangramData.ai_probability || pangramData.score || 0) * 100),
-      model: pangramData.detected_model || pangramData.model || null,
-      isAI: (pangramData.ai_probability || pangramData.score || 0) > 0.5,
+      score: aiScore,
+      model: pangramData.prediction_short === 'AI' ? 'IA Générative' : null,
+      verdict: pangramData.headline || (aiScore >= 50 ? 'Contenu IA détecté' : 'Contenu humain'),
+      isAI: aiScore >= 50,
       remaining: DAILY_LIMIT - limitInfo.count - 1
     })
     

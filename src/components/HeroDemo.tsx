@@ -6,6 +6,7 @@ import { Loader2, Sparkles, AlertCircle } from 'lucide-react'
 interface DemoResult {
   score: number
   model: string | null
+  verdict: string
   isAI: boolean
 }
 
@@ -106,14 +107,14 @@ export default function HeroDemo() {
               <div className={`text-3xl font-bold ${getScoreColor(result.score)}`}>
                 {result.score}% IA
               </div>
-              <div className="text-white/60 text-sm mt-1">
-                {getScoreLabel(result.score)}
+              <div className="text-white/80 text-sm mt-1 font-medium">
+                {result.verdict}
               </div>
             </div>
-            {result.model && (
+            {result.isAI && (
               <div className="text-right">
-                <div className="text-white/40 text-xs uppercase tracking-wide">Modèle détecté</div>
-                <div className="text-white font-medium">{result.model}</div>
+                <div className="text-white/40 text-xs uppercase tracking-wide">Verdict</div>
+                <div className="text-red-400 font-medium">Contenu IA</div>
               </div>
             )}
           </div>
