@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
+import { sendEmail, subscriptionConfirmedEmail } from '@/lib/email'
 
 // Map price IDs to plan names
 const getPlanFromPriceId = (priceId: string): string => {
@@ -36,7 +37,8 @@ export async function POST(request: NextRequest) {
       const userId = session.metadata?.supabase_user_id
       const plan = session.metadata?.plan || 'pro'
       if (userId) {
-        await supabase
+        // Update profile with subscription info
+        const { data: profile } = await supabase
           .from('profiles')
           .update({
             plan,
@@ -44,6 +46,21 @@ export async function POST(request: NextRequest) {
             stripe_subscription_id: session.subscription as string,
           })
           .eq('id', userId)
+          .select('full_name')
+          .single()
+
+        // Send subscription confirmation email
+        const customerEmail = session.customer_email || session.customer_details?.email
+        if (customerEmail) {
+          const name = profile?.full_name || customerEmail.split('@')[0]
+          const email = subscriptionConfirmedEmail(name, plan)
+          await sendEmail({
+            to: customerEmail,
+            subject: email.subject,
+            html: email.html,
+            text: email.text,
+          })
+        }
       }
       break
     }

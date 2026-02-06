@@ -33,11 +33,24 @@ export default function DashboardLayout({
   const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) {
         router.push('/login');
       } else {
         setUserEmail(data.session.user.email ?? '');
+        
+        // Trigger welcome email for new users (runs once)
+        try {
+          await fetch('/api/email/welcome', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${data.session.access_token}`,
+            },
+          });
+        } catch (e) {
+          // Silent fail - welcome email is not critical
+          console.log('Welcome email trigger:', e);
+        }
       }
     });
   }, [router]);
