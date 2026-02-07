@@ -225,7 +225,7 @@ export default function Home() {
               features={[
                 '10,000 analyses par mois',
                 'API illimitée',
-                'Intégration LMS (Canvas, Moodle, Blackboard, Google Classroom)',
+                'Intégration LMS (Canvas, Moodle, Blackboard, Brightspace, Google Classroom)',
                 'Dashboard administrateur',
                 'Support prioritaire',
               ]}
