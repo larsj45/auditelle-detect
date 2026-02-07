@@ -225,7 +225,7 @@ export default function Home() {
               features={[
                 '10,000 analyses par mois',
                 'API illimitée',
-                'Intégration LMS',
+                'Intégration LMS (Canvas, Moodle, Blackboard, Google Classroom)',
                 'Dashboard administrateur',
                 'Support prioritaire',
               ]}
@@ -239,10 +239,10 @@ export default function Home() {
               description="Pour organisations nationales"
               features={[
                 'Analyses illimitées',
+                'Intégration LMS complète (tous les systèmes)',
                 'White-label API',
                 'Account manager dédié',
                 'SLA 99.9%',
-                'Custom features',
               ]}
               cta="Nous contacter"
               href="mailto:contact@auditelle.fr"
