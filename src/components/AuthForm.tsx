@@ -29,13 +29,18 @@ export default function AuthForm({ mode }: AuthFormProps) {
         if (error) throw error
         window.location.href = '/dashboard'
       } else if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { data: { full_name: fullName } },
         })
         if (error) throw error
-        setSuccess('Vérifiez votre email pour confirmer votre inscription.')
+        // If session exists, user is logged in (no email confirmation required)
+        if (data.session) {
+          window.location.href = '/dashboard'
+        } else {
+          setSuccess('Vérifiez votre email pour confirmer votre inscription.')
+        }
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/dashboard/account`,
