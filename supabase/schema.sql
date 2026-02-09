@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   stripe_subscription_id TEXT,
   scans_today INTEGER DEFAULT 0,
   scans_reset_at TIMESTAMPTZ DEFAULT NOW(),
+  welcome_email_sent BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
