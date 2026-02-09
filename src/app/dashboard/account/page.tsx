@@ -7,6 +7,7 @@ export default function AccountPage() {
   const [user, setUser] = useState<{ email: string; full_name: string; plan: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [portalLoading, setPortalLoading] = useState(false)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   useEffect(() => {
     loadUser()
@@ -58,6 +59,41 @@ export default function AccountPage() {
       console.error('Failed to open billing portal')
     } finally {
       setPortalLoading(false)
+    }
+  }
+
+  async function handleCheckout(plan: 'pro' | 'university' | 'enterprise') {
+    setCheckoutLoading(true)
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) {
+        window.location.href = '/login?redirect=/dashboard/account'
+        return
+      }
+
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ plan }),
+      })
+
+      const data = await response.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else if (data.error) {
+        console.error('Checkout error:', data.error)
+        alert('Erreur lors du paiement. Veuillez réessayer.')
+      }
+    } catch (error) {
+      console.error('Failed to start checkout:', error)
+      alert('Erreur lors du paiement. Veuillez réessayer.')
+    } finally {
+      setCheckoutLoading(false)
     }
   }
 
@@ -114,9 +150,13 @@ export default function AccountPage() {
           </div>
           <div className="flex gap-3">
             {user?.plan === 'free' ? (
-              <a href="/signup?plan=pro" className="btn-primary text-sm">
-                Passer au Pro
-              </a>
+              <button
+                onClick={() => handleCheckout('pro')}
+                disabled={checkoutLoading}
+                className="btn-primary text-sm"
+              >
+                {checkoutLoading ? 'Chargement...' : 'Passer au Pro'}
+              </button>
             ) : (
               <button
                 onClick={openBillingPortal}
