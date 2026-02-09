@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: session.url })
   } catch (error: unknown) {
     console.error('Checkout error:', error)
-    return NextResponse.json({ error: 'Erreur de paiement' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Erreur de paiement'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

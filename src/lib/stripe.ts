@@ -2,6 +2,11 @@ import Stripe from 'stripe'
 
 const stripeKey = process.env.STRIPE_SECRET_KEY
 
-export const stripe = stripeKey
-  ? new Stripe(stripeKey, { apiVersion: '2025-12-18.acacia' as Stripe.LatestApiVersion })
-  : null as unknown as Stripe
+if (!stripeKey) {
+  console.warn('STRIPE_SECRET_KEY not set')
+}
+
+export const stripe = new Stripe(stripeKey || '', {
+  apiVersion: '2024-12-18.acacia',
+  typescript: true,
+})
