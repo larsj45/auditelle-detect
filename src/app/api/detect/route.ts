@@ -4,7 +4,10 @@ import { createClient } from '@supabase/supabase-js'
 
 const DAILY_LIMITS: Record<string, number> = {
   free: 5,
-  pro: 100,
+  student: 10,      // ~100/month
+  starter: 50,      // ~1000/month  
+  pro: 50,          // legacy, maps to starter
+  university: 500,  // ~10000/month
   enterprise: 10000,
 }
 

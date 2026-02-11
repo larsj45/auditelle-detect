@@ -7,11 +7,16 @@ import { sendEmail, subscriptionConfirmedEmail } from '@/lib/email'
 // Map price IDs to plan names
 const getPlanFromPriceId = (priceId: string): string => {
   const priceMap: Record<string, string> = {
-    [process.env.STRIPE_PRO_PRICE_ID || '']: 'pro',
+    // New plans
+    [process.env.STRIPE_STUDENT_PRICE_ID || '']: 'student',
+    [process.env.STRIPE_STARTER_PRICE_ID || '']: 'starter',
+    // Legacy plan (maps to starter if still used)
+    [process.env.STRIPE_PRO_PRICE_ID || '']: 'starter',
+    // Unchanged plans
     [process.env.STRIPE_UNIVERSITY_PRICE_ID || '']: 'university',
     [process.env.STRIPE_ENTERPRISE_PRICE_ID || '']: 'enterprise',
   }
-  return priceMap[priceId] || 'pro'
+  return priceMap[priceId] || 'starter'
 }
 
 export async function POST(request: NextRequest) {
@@ -35,7 +40,10 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.metadata?.supabase_user_id
-      const plan = session.metadata?.plan || 'pro'
+      // Normalize plan name: 'pro' -> 'starter' for backwards compatibility
+      let plan = session.metadata?.plan || 'starter'
+      if (plan === 'pro') plan = 'starter'
+      
       if (userId) {
         // Update profile with subscription info
         const { data: profile } = await supabase

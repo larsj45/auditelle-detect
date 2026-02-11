@@ -1,24 +1,40 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ArrowLeft } from 'lucide-react'
+import { Check, ArrowLeft, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 const plans = [
   {
-    id: 'pro',
-    name: 'Professionnel',
-    price: '25€',
+    id: 'student',
+    name: 'Student',
+    price: '4,99€',
+    period: '/mois',
+    description: 'Pour étudiants et doctorants',
+    features: [
+      '100 analyses par mois',
+      'Détection 99,9% précision',
+      'Export PDF',
+      'Historique 7 jours',
+    ],
+    popular: false,
+    badge: '🎓',
+  },
+  {
+    id: 'starter',
+    name: 'Starter',
+    price: '29€',
     period: '/mois',
     description: 'Pour enseignants et consultants',
     features: [
       '1 000 analyses par mois',
-      'Intégrations LMS',
+      'Intégrations LMS (Moodle)',
       'Export PDF/CSV',
       'Support email',
       'Historique 30 jours',
     ],
     popular: true,
+    badge: null,
   },
   {
     id: 'university',
@@ -35,6 +51,7 @@ const plans = [
       'Rapports personnalisés',
     ],
     popular: false,
+    badge: null,
   },
   {
     id: 'enterprise',
@@ -51,6 +68,7 @@ const plans = [
       'Facturation personnalisée',
     ],
     popular: false,
+    badge: null,
   },
 ]
 
@@ -95,7 +113,7 @@ export default function UpgradePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <div className="mb-8">
         <Link href="/dashboard/account" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[var(--navy)] mb-4">
           <ArrowLeft className="w-4 h-4" />
@@ -105,19 +123,21 @@ export default function UpgradePage() {
         <p className="text-gray-500 mt-1">Tous les plans incluent une précision de détection IA de 99,9%.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {plans.map((plan) => (
           <div
             key={plan.id}
             className={`card relative ${plan.popular ? 'ring-2 ring-[var(--accent)]' : ''}`}
           >
             {plan.popular && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-semibold px-3 py-1 rounded-full">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                <Sparkles className="w-3 h-3" />
                 POPULAIRE
               </div>
             )}
 
             <div className="text-center mb-6">
+              {plan.badge && <div className="text-2xl mb-2">{plan.badge}</div>}
               <h3 className="text-lg font-semibold text-[var(--navy)]">{plan.name}</h3>
               <p className="text-sm text-gray-500 mt-1">{plan.description}</p>
               <div className="mt-4">

@@ -13,12 +13,12 @@ export async function POST(request: NextRequest) {
     const token = authHeader.split(' ')[1]
     
     // 2. Parse body first (before any async operations)
-    let plan = 'pro'
+    let plan = 'starter'
     try {
       const body = await request.json()
-      plan = body.plan || 'pro'
+      plan = body.plan || 'starter'
     } catch {
-      // Default to pro if no body
+      // Default to starter if no body
     }
 
     // 3. Validate user
@@ -68,9 +68,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 5. Get price ID
+    // 5. Get price ID - support both old and new plan names
     const priceIds: Record<string, string | undefined> = {
-      pro: process.env.STRIPE_PRO_PRICE_ID,
+      // New plans
+      student: process.env.STRIPE_STUDENT_PRICE_ID,
+      starter: process.env.STRIPE_STARTER_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID, // fallback to pro
+      // Legacy plan name (maps to starter)
+      pro: process.env.STRIPE_STARTER_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID,
+      // Unchanged plans
       university: process.env.STRIPE_UNIVERSITY_PRICE_ID,
       enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID,
     }
