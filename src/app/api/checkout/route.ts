@@ -72,10 +72,13 @@ export async function POST(request: NextRequest) {
     const priceIds: Record<string, string | undefined> = {
       // New plans
       student: process.env.STRIPE_STUDENT_PRICE_ID,
-      starter: process.env.STRIPE_STARTER_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID, // fallback to pro
+      starter: process.env.STRIPE_STARTER_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID,
       // Legacy plan name (maps to starter)
       pro: process.env.STRIPE_STARTER_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID,
-      // Unchanged plans
+      // Team & department plans
+      equipe: process.env.STRIPE_EQUIPE_PRICE_ID,
+      departement: process.env.STRIPE_DEPARTEMENT_PRICE_ID,
+      // Legacy/unchanged
       university: process.env.STRIPE_UNIVERSITY_PRICE_ID,
       enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID,
     }

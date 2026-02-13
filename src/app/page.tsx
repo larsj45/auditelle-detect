@@ -187,13 +187,14 @@ export default function Home() {
               Technologie Pangram Labs. Service français. Commencez gratuitement, évoluez selon vos besoins.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto items-start">
             <PricingCard
-              name="Essai Gratuit"
+              name="Gratuit"
               price="0€"
               description="Découvrez la précision"
               features={[
                 '50 analyses par mois',
+                '1 utilisateur',
                 'Score IA 99.9% précis',
                 'Identification du modèle',
                 'Historique 7 jours',
@@ -202,44 +203,58 @@ export default function Home() {
               href="/signup"
             />
             <PricingCard
-              name="Professionnel"
+              name="Pro"
               price="25€"
               period="mois"
               description="Pour enseignants et consultants"
               features={[
                 '1,000 analyses par mois',
-                'API access (500 calls)',
+                '1 utilisateur',
+                'API (500 appels)',
                 'Export PDF/CSV',
                 'Support email',
-                'Historique 30 jours',
               ]}
               cta="Choisir Pro"
               href="/signup?plan=pro"
+            />
+            <PricingCard
+              name="Équipe"
+              price="99€"
+              period="mois"
+              description="Pour un groupe de professeurs"
+              features={[
+                '5,000 analyses par mois',
+                'Jusqu\'à 5 professeurs',
+                'API (2,500 appels)',
+                'Export PDF/CSV',
+                'Support prioritaire',
+              ]}
+              cta="Choisir Équipe"
+              href="/signup?plan=equipe"
               popular
             />
             <PricingCard
-              name="Université"
-              price="149€"
+              name="Département"
+              price="249€"
               period="mois"
-              description="Pour établissements d'enseignement"
+              description="Pour départements et facultés"
               features={[
-                '10,000 analyses par mois',
+                '20,000 analyses par mois',
+                'Jusqu\'à 20 professeurs',
                 'API illimitée',
-                'Intégration LMS (Canvas, Moodle, Blackboard, Brightspace, Google Classroom)',
+                'Intégration LMS',
                 'Dashboard administrateur',
-                'Support prioritaire',
               ]}
-              cta="Contacter"
-              href="mailto:contact@auditelle.fr"
+              cta="Choisir Département"
+              href="/signup?plan=departement"
             />
             <PricingCard
-              name="Enterprise"
-              price="499€"
-              period="mois"
-              description="Pour organisations nationales"
+              name="Institution"
+              price="Sur devis"
+              description="Pour établissements entiers"
               features={[
                 'Analyses illimitées',
-                'Intégration LMS complète (tous les systèmes)',
+                'Tous les professeurs',
                 'White-label API',
                 'Account manager dédié',
                 'SLA 99.9%',

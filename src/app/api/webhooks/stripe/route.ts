@@ -12,7 +12,10 @@ const getPlanFromPriceId = (priceId: string): string => {
     [process.env.STRIPE_STARTER_PRICE_ID || '']: 'starter',
     // Legacy plan (maps to starter if still used)
     [process.env.STRIPE_PRO_PRICE_ID || '']: 'starter',
-    // Unchanged plans
+    // Team & department plans
+    [process.env.STRIPE_EQUIPE_PRICE_ID || '']: 'equipe',
+    [process.env.STRIPE_DEPARTEMENT_PRICE_ID || '']: 'departement',
+    // Legacy
     [process.env.STRIPE_UNIVERSITY_PRICE_ID || '']: 'university',
     [process.env.STRIPE_ENTERPRISE_PRICE_ID || '']: 'enterprise',
   }
