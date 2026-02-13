@@ -245,7 +245,7 @@ export default function Home() {
                 'SLA 99.9%',
               ]}
               cta="Nous contacter"
-              href="mailto:contact@auditelle.fr"
+              href="/contact"
             />
           </div>
           <div className="text-center mt-12">

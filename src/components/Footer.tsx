@@ -45,8 +45,13 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
-                <a href="mailto:contact@auditelle.eu" className="hover:text-white transition-colors">
+                <Link href="/contact" className="hover:text-white transition-colors">
                   Contact
+                </Link>
+              </li>
+              <li>
+                <a href="mailto:contact@auditelle.fr" className="text-gray-500 hover:text-white transition-colors text-xs">
+                  contact@auditelle.fr
                 </a>
               </li>
               <li>
