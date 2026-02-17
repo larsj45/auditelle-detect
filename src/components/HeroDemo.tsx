@@ -27,11 +27,15 @@ export default function HeroDemo() {
     setResult(null)
 
     try {
-      const res = await fetch('/api/demo-detect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text.slice(0, 2000) }) // Max 2000 chars for demo
-      })
+      // Start analysis and minimum delay in parallel
+      const [res] = await Promise.all([
+        fetch('/api/demo-detect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text.slice(0, 2000) }) // Max 2000 chars for demo
+        }),
+        new Promise(resolve => setTimeout(resolve, 800)) // Minimum 800ms delay for UX
+      ])
 
       const data = await res.json()
 
@@ -74,7 +78,8 @@ export default function HeroDemo() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Collez votre texte ici pour une analyse instantanée... (min. 50 caractères)"
-        className="w-full h-32 p-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
+        disabled={loading}
+        className={`w-full h-32 p-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         maxLength={2000}
       />
       
@@ -83,17 +88,30 @@ export default function HeroDemo() {
         <span className="text-xs text-gray-400">Essayez :</span>
         <button 
           onClick={() => setText("J'adore explorer de nouveaux endroits. Chaque voyage m'apporte des souvenirs uniques et des perspectives différentes sur le monde.")}
-          className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full hover:bg-green-100 transition-colors"
+          disabled={loading}
+          className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Humain
         </button>
         <button 
           onClick={() => setText("L'intelligence artificielle représente une avancée technologique majeure qui transforme de nombreux secteurs de notre société moderne.")}
-          className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors"
+          disabled={loading}
+          className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           ChatGPT
         </button>
       </div>
+
+      {/* Loading state feedback */}
+      {loading && (
+        <div className="mt-3 p-3 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl flex items-center gap-3">
+          <Loader2 className="w-4 h-4 text-[var(--accent)] animate-spin" />
+          <div className="flex-1">
+            <div className="text-sm font-semibold text-gray-800">Analyse en cours...</div>
+            <div className="text-xs text-gray-500 mt-0.5">Détection des patterns IA avec Pangram</div>
+          </div>
+        </div>
+      )}
       
       <div className="flex items-center justify-between mt-4">
         <span className="text-gray-400 text-sm">{text.length}/2000</span>
