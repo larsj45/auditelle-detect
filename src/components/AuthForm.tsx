@@ -1,10 +1,31 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface AuthFormProps {
   mode: 'login' | 'signup' | 'reset'
+}
+
+async function redirectToCheckout(token: string, plan: string) {
+  try {
+    const response = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ plan }),
+    })
+    const data = await response.json()
+    if (data.url) {
+      window.location.href = data.url
+      return true
+    }
+  } catch {
+    // Fall through to dashboard if checkout fails
+  }
+  return false
 }
 
 export default function AuthForm({ mode }: AuthFormProps) {
@@ -14,6 +35,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [planParam, setPlanParam] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setPlanParam(params.get('plan'))
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,8 +52,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
       const { supabase } = await import('@/lib/supabase')
 
       if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
+        // If coming from a pricing page, redirect to checkout
+        const params = new URLSearchParams(window.location.search)
+        const plan = params.get('plan')
+        if (plan && data.session?.access_token) {
+          const redirected = await redirectToCheckout(data.session.access_token, plan)
+          if (redirected) return
+        }
         window.location.href = '/dashboard'
       } else if (mode === 'signup') {
         const { data, error } = await supabase.auth.signUp({
@@ -37,6 +71,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
         if (error) throw error
         // If session exists, user is logged in (no email confirmation required)
         if (data.session) {
+          // If a plan was selected, redirect to Stripe checkout
+          if (planParam && planParam !== 'free') {
+            setSuccess('Compte créé ! Redirection vers le paiement...')
+            const redirected = await redirectToCheckout(data.session.access_token, planParam)
+            if (redirected) return
+          }
           window.location.href = '/dashboard'
         } else {
           setSuccess('Vérifiez votre email pour confirmer votre inscription.')
@@ -56,6 +96,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
     }
   }
 
+  const planLabels: Record<string, string> = {
+    pro: 'Pro — 25€/mois',
+    equipe: 'Équipe — 99€/mois',
+    departement: 'Département — 249€/mois',
+    starter: 'Starter — 29€/mois',
+    student: 'Student — 4,99€/mois',
+    university: 'Université — 149€/mois',
+  }
+
   const titles = {
     login: 'Connexion',
     signup: 'Créer un compte',
@@ -63,8 +112,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   const subtitles = {
-    login: 'Accédez à votre tableau de bord de détection IA',
-    signup: 'Commencez à détecter le contenu IA gratuitement',
+    login: planParam && planLabels[planParam]
+      ? `Connectez-vous pour activer le plan ${planLabels[planParam]}`
+      : 'Accédez à votre tableau de bord de détection IA',
+    signup: planParam && planLabels[planParam]
+      ? `Créez votre compte pour activer le plan ${planLabels[planParam]}`
+      : 'Commencez à détecter le contenu IA gratuitement',
     reset: 'Entrez votre email pour recevoir un lien de réinitialisation',
   }
 
@@ -155,7 +208,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
             {mode === 'signup' && (
               <p>
                 Déjà un compte ?{' '}
-                <Link href="/login" className="text-[var(--accent)] hover:underline font-medium">
+                <Link
+                  href={planParam ? `/login?plan=${planParam}` : '/login'}
+                  className="text-[var(--accent)] hover:underline font-medium"
+                >
                   Connectez-vous
                 </Link>
               </p>
