@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DetectionResult from '@/components/DetectionResult'
 import { FileSearch, Loader2, CheckCircle } from 'lucide-react'
+import FileUpload from '@/components/FileUpload'
 
 interface DetectionResponse {
   ai_likelihood: number
@@ -123,6 +124,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="card mb-6">
+        <FileUpload onTextExtracted={(extractedText) => { if (extractedText) setText(extractedText) }} />
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}

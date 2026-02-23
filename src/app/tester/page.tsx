@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import DetectionResult from '@/components/DetectionResult'
 import { FileSearch, Loader2, Sparkles, ArrowRight } from 'lucide-react'
+import FileUpload from '@/components/FileUpload'
 
 interface DetectionResponse {
   ai_likelihood: number
@@ -98,6 +99,7 @@ export default function TesterPage() {
 
           {/* Main card */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+            <FileUpload onTextExtracted={(extractedText) => { if (extractedText) setText(extractedText) }} />
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
