@@ -97,7 +97,7 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
         ) : filename ? (
           <>
             <FileText className="w-5 h-5 text-green-600 shrink-0" />
-            <span className="text-sm text-gray-700 truncate flex-1">{filename}</span>
+            <span className="text-sm text-gray-700 truncate flex-1">{filename.replace(/[<>"'&]/g, '')}</span>
             <button
               onClick={(e) => { e.stopPropagation(); setFilename(''); onTextExtracted('', '') }}
               className="text-gray-400 hover:text-gray-600"

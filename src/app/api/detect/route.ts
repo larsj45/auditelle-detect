@@ -72,10 +72,20 @@ export async function POST(request: NextRequest) {
 
     const result = await detectAI(text.trim())
 
-    await serviceSupabase
+    // Atomic increment with optimistic locking — prevents race condition
+    const { error: updateError } = await serviceSupabase
       .from('profiles')
       .update({ scans_today: scansToday + 1 })
       .eq('id', user.id)
+      .eq('scans_today', scansToday) // only update if count hasn't changed
+
+    if (updateError) {
+      // Another concurrent request beat us — reject this one
+      return NextResponse.json({
+        error: 'Limite atteinte. Réessayez dans un instant.',
+        scans_remaining: 0,
+      }, { status: 429 })
+    }
 
     await serviceSupabase.from('scans').insert({
       user_id: user.id,
