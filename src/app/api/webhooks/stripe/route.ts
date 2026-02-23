@@ -62,7 +62,8 @@ export async function POST(request: NextRequest) {
         // Send subscription confirmation email
         const customerEmail = session.customer_email || session.customer_details?.email
         if (customerEmail) {
-          const name = profile?.full_name || customerEmail.split('@')[0]
+          const rawName = customerEmail.split('@')[0].split('+')[0]
+          const name = profile?.full_name || rawName.charAt(0).toUpperCase() + rawName.slice(1)
           const email = subscriptionConfirmedEmail(name, plan)
           await sendEmail({
             to: customerEmail,

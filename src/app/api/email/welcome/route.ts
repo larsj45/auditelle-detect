@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Email déjà envoyé' })
     }
 
-    const name = profile?.full_name || user.email.split('@')[0]
+    const rawName = user.email.split('@')[0].split('+')[0]
+    const name = profile?.full_name || rawName.charAt(0).toUpperCase() + rawName.slice(1)
     const email = welcomeEmail(name)
 
     const result = await sendEmail({
