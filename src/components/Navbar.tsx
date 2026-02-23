@@ -1,11 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, Shield } from 'lucide-react';
 
-export default function Navbar({ isAuth = false }: { isAuth?: boolean }) {
+export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(isAuthProp ?? false);
+
+  useEffect(() => {
+    // Check Supabase session on mount (client-side)
+    import('@/lib/supabase').then(({ supabase }) => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setIsAuth(!!session)
+      })
+      // Listen for auth changes (login/logout)
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setIsAuth(!!session)
+      })
+      return () => subscription.unsubscribe()
+    })
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
