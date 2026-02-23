@@ -63,7 +63,9 @@ export async function POST(request: NextRequest) {
         const customerEmail = session.customer_email || session.customer_details?.email
         if (customerEmail) {
           const rawName = customerEmail.split('@')[0].split('+')[0]
-          const name = profile?.full_name || rawName.charAt(0).toUpperCase() + rawName.slice(1)
+          // Prefer: Supabase profile > Stripe customer name > email prefix
+          const stripeName = (session.customer_details?.name as string | undefined)?.split(' ')[0]
+          const name = profile?.full_name?.split(' ')[0] || stripeName || rawName.charAt(0).toUpperCase() + rawName.slice(1)
           const email = subscriptionConfirmedEmail(name, plan)
           await sendEmail({
             to: customerEmail,
