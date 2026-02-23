@@ -21,6 +21,14 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
 
     try {
       const ext = file.name.split('.').pop()?.toLowerCase()
+      const allowedExts = ['pdf', 'docx', 'doc', 'txt', 'md']
+
+      if (!ext || !allowedExts.includes(ext)) {
+        setError('Format non supporté. Utilisez PDF, DOCX ou TXT.')
+        setFilename('')
+        setExtracting(false)
+        return
+      }
 
       if (ext === 'txt' || ext === 'md') {
         const text = await file.text()

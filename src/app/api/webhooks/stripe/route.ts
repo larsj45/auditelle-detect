@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       
       if (userId) {
         // Update profile with subscription info
-        const { data: profile } = await supabase
+        const { data: profile, error: profileUpdateError } = await supabase
           .from('profiles')
           .update({
             plan,
@@ -57,15 +57,23 @@ export async function POST(request: NextRequest) {
           })
           .eq('id', userId)
           .select('full_name')
-          .single()
+
+        if (profileUpdateError) {
+          console.error('[Stripe Webhook] Failed to upgrade user:', userId, profileUpdateError)
+        }
 
         // Send subscription confirmation email
         const customerEmail = session.customer_email || session.customer_details?.email
         if (customerEmail) {
-          const rawName = customerEmail.split('@')[0].split('+')[0]
+          const rawName = customerEmail.split('@')[0]?.split('+')[0] || 'User'
+          const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1)
+          const stripeName = (session.customer_details?.name as string | undefined)?.trim().split(' ')[0]
+          const profileRecord = Array.isArray(profile) ? profile[0] : profile
+          const profileFirstName = profileRecord?.full_name?.trim().split(' ')[0]
           // Prefer: Supabase profile > Stripe customer name > email prefix
-          const stripeName = (session.customer_details?.name as string | undefined)?.split(' ')[0]
-          const name = profile?.full_name?.split(' ')[0] || stripeName || rawName.charAt(0).toUpperCase() + rawName.slice(1)
+          const name = (profileFirstName && profileFirstName.length > 0)
+            ? profileFirstName
+            : stripeName || capitalized || 'Utilisateur'
           const email = subscriptionConfirmedEmail(name, plan)
           await sendEmail({
             to: customerEmail,

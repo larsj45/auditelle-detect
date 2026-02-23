@@ -48,7 +48,9 @@ export async function POST(request: NextRequest) {
     const resetAt = profile?.scans_reset_at ? new Date(profile.scans_reset_at) : null
     let scansToday = profile?.scans_today || 0
 
-    if (!resetAt || now.toDateString() !== resetAt.toDateString()) {
+    const todayUTC = now.toISOString().split('T')[0]
+    const resetDay = resetAt ? resetAt.toISOString().split('T')[0] : null
+    if (!resetAt || todayUTC !== resetDay) {
       scansToday = 0
       await serviceSupabase
         .from('profiles')
