@@ -47,7 +47,7 @@ const config: ResellerConfig = {
       },
       {
         name: 'Pro',
-        price: '25\u20ac',
+        price: '29\u20ac',
         period: 'mois',
         description: 'Pour enseignants et consultants',
         features: [
@@ -64,7 +64,7 @@ const config: ResellerConfig = {
       },
       {
         name: '\u00c9quipe',
-        price: '99\u20ac',
+        price: '149\u20ac',
         period: 'mois',
         description: 'Pour un groupe de professeurs',
         features: [
@@ -79,11 +79,11 @@ const config: ResellerConfig = {
       },
       {
         name: 'D\u00e9partement',
-        price: '249\u20ac',
+        price: '399\u20ac',
         period: 'mois',
         description: 'Pour d\u00e9partements et facult\u00e9s',
         features: [
-          '20,000 analyses par mois',
+          '15,000 analyses par mois',
           "Jusqu'\u00e0 20 professeurs",
           'API illimit\u00e9e',
           'Int\u00e9gration LMS',
@@ -111,11 +111,11 @@ const config: ResellerConfig = {
       {
         id: 'student',
         name: 'Student',
-        price: '4,99\u20ac',
+        price: '9,99\u20ac',
         period: '/mois',
         description: 'Pour \u00e9tudiants et doctorants',
         features: [
-          '100 analyses par mois',
+          '200 analyses par mois',
           'D\u00e9tection 99,9% pr\u00e9cision',
           'Export PDF',
           'Historique 7 jours',
@@ -125,7 +125,7 @@ const config: ResellerConfig = {
       {
         id: 'starter',
         name: 'Starter',
-        price: '29\u20ac',
+        price: '39\u20ac',
         period: '/mois',
         description: 'Pour enseignants et consultants',
         features: [
@@ -140,7 +140,7 @@ const config: ResellerConfig = {
       {
         id: 'university',
         name: 'Universit\u00e9',
-        price: '149\u20ac',
+        price: '299\u20ac',
         period: '/mois',
         description: 'Pour \u00e9tablissements \u00e9ducatifs',
         features: [
@@ -155,11 +155,11 @@ const config: ResellerConfig = {
       {
         id: 'enterprise',
         name: 'Enterprise',
-        price: '499\u20ac',
+        price: '799\u20ac',
         period: '/mois',
         description: 'Pour grandes organisations',
         features: [
-          'Analyses illimit\u00e9es',
+          '50 000 analyses par mois',
           'API d\u00e9di\u00e9e',
           'Account manager d\u00e9di\u00e9',
           'SLA 99,9%',
@@ -559,7 +559,7 @@ const config: ResellerConfig = {
           'Export PDF/CSV',
           'Support prioritaire',
         ],
-        upgradePrice: 'Seulement 25\u20ac/mois',
+        upgradePrice: 'Seulement 29\u20ac/mois',
         ctaButton: 'Passer \u00e0 Pro \u2192',
       },
 
@@ -588,7 +588,7 @@ const config: ResellerConfig = {
           'Export PDF/CSV',
           'Support prioritaire',
         ],
-        ctaButton: 'Passer \u00e0 Pro \u2014 25\u20ac/mois \u2192',
+        ctaButton: 'Passer \u00e0 Pro \u2014 29\u20ac/mois \u2192',
         question: 'Des questions ? R\u00e9pondez simplement \u00e0 cet email.',
       },
 
@@ -639,7 +639,7 @@ const config: ResellerConfig = {
       },
       enterprise: {
         name: 'Enterprise',
-        features: ['Analyses illimit\u00e9es', 'White-label API', 'Account manager', 'SLA 99.9%', 'Custom features'],
+        features: ['50 000 analyses par mois', 'White-label API', 'Account manager', 'SLA 99.9%', 'Custom features'],
       },
     },
   },
