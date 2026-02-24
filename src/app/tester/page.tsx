@@ -10,8 +10,11 @@ import FileUpload from '@/components/FileUpload'
 
 interface DetectionResponse {
   ai_likelihood: number
-  detected_model?: string
-  sentences?: Array<{ text: string; ai_likelihood: number; detected_model?: string }>
+  ai_assisted_likelihood?: number
+  human_likelihood?: number
+  headline?: string
+  dashboard_link?: string
+  sentences?: Array<{ text: string; ai_likelihood: number; label?: string; confidence?: string }>
   tests_remaining?: number
   limit_reached?: boolean
 }
@@ -141,7 +144,10 @@ export default function TesterPage() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
               <DetectionResult
                 score={Math.round(result.ai_likelihood * 100)}
-                detectedModel={result.detected_model}
+                headline={result.headline}
+                aiAssistedScore={result.ai_assisted_likelihood}
+                humanScore={result.human_likelihood}
+                dashboardLink={result.dashboard_link}
                 sentences={result.sentences?.map(s => ({
                   ...s,
                   ai_likelihood: Math.round(s.ai_likelihood * 100),

@@ -3,81 +3,17 @@
 import { useState } from 'react'
 import { Check, ArrowLeft, Sparkles } from 'lucide-react'
 import Link from 'next/link'
-
-const plans = [
-  {
-    id: 'student',
-    name: 'Student',
-    price: '4,99€',
-    period: '/mois',
-    description: 'Pour étudiants et doctorants',
-    features: [
-      '100 analyses par mois',
-      'Détection 99,9% précision',
-      'Export PDF',
-      'Historique 7 jours',
-    ],
-    popular: false,
-    badge: '🎓',
-  },
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: '29€',
-    period: '/mois',
-    description: 'Pour enseignants et consultants',
-    features: [
-      '1 000 analyses par mois',
-      'Intégrations LMS (Moodle)',
-      'Export PDF/CSV',
-      'Support email',
-      'Historique 30 jours',
-    ],
-    popular: true,
-    badge: null,
-  },
-  {
-    id: 'university',
-    name: 'Université',
-    price: '149€',
-    period: '/mois',
-    description: 'Pour établissements éducatifs',
-    features: [
-      '10 000 analyses par mois',
-      'Multi-utilisateurs',
-      'API illimitée',
-      'Dashboard admin',
-      'Support prioritaire',
-      'Rapports personnalisés',
-    ],
-    popular: false,
-    badge: null,
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: '499€',
-    period: '/mois',
-    description: 'Pour grandes organisations',
-    features: [
-      'Analyses illimitées',
-      'API dédiée',
-      'Account manager dédié',
-      'SLA 99,9%',
-      'Fonctionnalités sur mesure',
-      'Facturation personnalisée',
-    ],
-    popular: false,
-    badge: null,
-  },
-]
+import { useConfig } from '@/components/ConfigProvider'
 
 export default function UpgradePage() {
+  const config = useConfig()
+  const s = config.strings.dashboard
+  const plans = config.plans.upgrade
   const [loading, setLoading] = useState<string | null>(null)
 
   async function handleUpgrade(planId: string) {
     if (planId === 'enterprise') {
-      window.location.href = 'mailto:contact@auditelle.fr?subject=Demande%20Plan%20Enterprise'
+      window.location.href = `mailto:${config.supportEmail}?subject=Demande%20Plan%20Enterprise`
       return
     }
 
@@ -103,10 +39,10 @@ export default function UpgradePage() {
       if (data.url) {
         window.location.href = data.url
       } else {
-        alert(data.error || 'Échec du paiement. Veuillez réessayer.')
+        alert(data.error || s.upgradeError)
       }
     } catch {
-      alert('Échec du paiement. Veuillez réessayer.')
+      alert(s.upgradeError)
     } finally {
       setLoading(null)
     }
@@ -117,10 +53,10 @@ export default function UpgradePage() {
       <div className="mb-8">
         <Link href="/dashboard/account" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[var(--navy)] mb-4">
           <ArrowLeft className="w-4 h-4" />
-          Retour au compte
+          {s.upgradeBack}
         </Link>
-        <h1 className="text-2xl font-bold text-[var(--navy)]">Choisir votre plan</h1>
-        <p className="text-gray-500 mt-1">Tous les plans incluent une précision de détection IA de 99,9%.</p>
+        <h1 className="text-2xl font-bold text-[var(--navy)]">{s.upgradeTitle}</h1>
+        <p className="text-gray-500 mt-1">{s.upgradeSubtitle}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -132,7 +68,7 @@ export default function UpgradePage() {
             {plan.popular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
                 <Sparkles className="w-3 h-3" />
-                POPULAIRE
+                {s.upgradePopular}
               </div>
             )}
 
@@ -165,17 +101,17 @@ export default function UpgradePage() {
               } disabled:opacity-50`}
             >
               {loading === plan.id
-                ? 'Chargement...'
+                ? s.upgradeLoading
                 : plan.id === 'enterprise'
-                ? 'Nous contacter'
-                : `Choisir ${plan.name}`}
+                ? s.upgradeContact
+                : s.upgradeChoose.replace('{plan}', plan.name)}
             </button>
           </div>
         ))}
       </div>
 
       <div className="text-center mt-8 text-sm text-gray-400">
-        Tous les plans sont facturés mensuellement. Annulation possible à tout moment. Paiement sécurisé par Stripe.
+        {s.upgradeFooter}
       </div>
     </div>
   )

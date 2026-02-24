@@ -2,14 +2,17 @@ const PANGRAM_API_URL = 'https://text.api.pangramlabs.com/v3'
 
 export interface PangramResult {
   ai_likelihood: number
-  detected_model?: string
+  ai_assisted_likelihood: number
+  human_likelihood: number
+  headline: string
   prediction?: string
   prediction_short?: string
+  dashboard_link?: string
   sentences?: Array<{
     text: string
     ai_likelihood: number
-    detected_model?: string
     label?: string
+    confidence?: string
   }>
 }
 
@@ -25,6 +28,7 @@ interface PangramV3Response {
   num_ai_segments: number
   num_ai_assisted_segments: number
   num_human_segments: number
+  dashboard_link?: string
   windows: Array<{
     text: string
     label: string
@@ -49,7 +53,7 @@ export async function detectAI(text: string): Promise<PangramResult> {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
     },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ text, public_dashboard_link: true }),
   })
 
   if (!response.ok) {
@@ -59,16 +63,19 @@ export async function detectAI(text: string): Promise<PangramResult> {
 
   const data: PangramV3Response = await response.json()
 
-  // Transform Pangram v3 response to our format
   return {
     ai_likelihood: data.fraction_ai,
+    ai_assisted_likelihood: data.fraction_ai_assisted,
+    human_likelihood: data.fraction_human,
+    headline: data.headline,
     prediction: data.prediction,
     prediction_short: data.prediction_short,
-    detected_model: data.fraction_ai > 0.5 ? 'AI Generated' : undefined,
+    dashboard_link: data.dashboard_link,
     sentences: data.windows?.map(w => ({
       text: w.text,
       ai_likelihood: w.ai_assistance_score,
       label: w.label,
+      confidence: w.confidence,
     })),
   }
 }

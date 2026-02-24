@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { detectAI } from '@/lib/pangram'
+import { getResellerConfig } from '@/lib/config'
 
 // Simple in-memory rate limiting (resets on server restart)
 // For production, use Redis or similar
@@ -20,6 +21,9 @@ function getClientIP(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  const config = await getResellerConfig()
+  const errors = config.strings.errors
+
   try {
     const ip = getClientIP(request)
     const now = Date.now()
@@ -33,7 +37,7 @@ export async function POST(request: NextRequest) {
         ipUsage.set(ip, { count: 0, resetAt: now + dayMs })
       } else if (usage.count >= FREE_DEMO_LIMIT) {
         return NextResponse.json({
-          error: 'Limite atteinte. Créez un compte gratuit pour plus d\'analyses.',
+          error: errors.demoLimitReached,
           limit_reached: true,
           tests_remaining: 0,
         }, { status: 429 })
@@ -46,14 +50,14 @@ export async function POST(request: NextRequest) {
     const { text } = body
 
     if (!text || typeof text !== 'string' || text.trim().length < 50) {
-      return NextResponse.json({ 
-        error: 'Le texte doit contenir au moins 50 caractères.' 
+      return NextResponse.json({
+        error: errors.textTooShort
       }, { status: 400 })
     }
 
     if (text.trim().length > 5000) {
-      return NextResponse.json({ 
-        error: 'Le texte ne doit pas dépasser 5000 caractères pour le test gratuit.' 
+      return NextResponse.json({
+        error: errors.demoTextTooLong
       }, { status: 400 })
     }
 
@@ -70,7 +74,9 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: unknown) {
     console.error('Public detection error:', error)
-    const message = error instanceof Error ? error.message : 'Erreur interne'
+    // Security fix: don't leak internal error messages in production
+    const isDev = process.env.NODE_ENV === 'development'
+    const message = isDev && error instanceof Error ? error.message : errors.internalError
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

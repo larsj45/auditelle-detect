@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       user_id: user.id,
       text_snippet: text.trim().substring(0, 200),
       ai_score: Math.round(result.ai_likelihood * 100),
-      detected_model: result.detected_model || null,
+      detected_model: result.headline || null,
       full_result: result,
     })
 

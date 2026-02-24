@@ -2,12 +2,15 @@
 
 import { useRef, useState } from 'react'
 import { Upload, FileText, Loader2, X } from 'lucide-react'
+import { useConfig } from '@/components/ConfigProvider'
 
 interface FileUploadProps {
   onTextExtracted: (text: string, filename: string) => void
 }
 
 export default function FileUpload({ onTextExtracted }: FileUploadProps) {
+  const config = useConfig()
+  const s = config.strings.fileUpload
   const inputRef = useRef<HTMLInputElement>(null)
   const [extracting, setExtracting] = useState(false)
   const [error, setError] = useState('')
@@ -24,7 +27,7 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
       const allowedExts = ['pdf', 'docx', 'doc', 'txt', 'md']
 
       if (!ext || !allowedExts.includes(ext)) {
-        setError('Format non supporté. Utilisez PDF, DOCX ou TXT.')
+        setError(s.unsupported)
         setFilename('')
         setExtracting(false)
         return
@@ -48,12 +51,12 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
         onTextExtracted(result.value, file.name)
 
       } else {
-        setError('Format non supporté. Utilisez PDF, DOCX ou TXT.')
+        setError(s.unsupported)
         setFilename('')
       }
     } catch (err) {
       console.error(err)
-      setError('Impossible d\'extraire le texte. Vérifiez que le fichier n\'est pas protégé.')
+      setError(s.extractError)
       setFilename('')
     } finally {
       setExtracting(false)
@@ -63,7 +66,7 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
   function handleFile(file: File) {
     const maxSize = 10 * 1024 * 1024 // 10MB
     if (file.size > maxSize) {
-      setError('Fichier trop volumineux (max 10 Mo).')
+      setError(s.tooLarge)
       return
     }
     extractText(file)
@@ -100,7 +103,7 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
         {extracting ? (
           <>
             <Loader2 className="w-5 h-5 text-[var(--accent)] animate-spin shrink-0" />
-            <span className="text-sm text-gray-500">Extraction en cours…</span>
+            <span className="text-sm text-gray-500">{s.extracting}</span>
           </>
         ) : filename ? (
           <>
@@ -118,9 +121,9 @@ export default function FileUpload({ onTextExtracted }: FileUploadProps) {
             <Upload className="w-5 h-5 text-gray-400 shrink-0" />
             <div>
               <span className="text-sm text-gray-600">
-                Glisser un fichier ou <span className="text-[var(--accent)] font-medium">parcourir</span>
+                {s.dropOrBrowse} <span className="text-[var(--accent)] font-medium">{s.browse}</span>
               </span>
-              <p className="text-xs text-gray-400 mt-0.5">PDF, DOCX, TXT — max 10 Mo</p>
+              <p className="text-xs text-gray-400 mt-0.5">{s.formats}</p>
             </div>
           </>
         )}

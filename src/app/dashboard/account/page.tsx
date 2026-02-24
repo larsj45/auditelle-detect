@@ -3,8 +3,11 @@
 import { useEffect, useState } from 'react'
 import { CreditCard, User } from 'lucide-react'
 import Link from 'next/link'
+import { useConfig } from '@/components/ConfigProvider'
 
 export default function AccountPage() {
+  const config = useConfig()
+  const s = config.strings.dashboard
   const [user, setUser] = useState<{ email: string; full_name: string; plan: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [portalLoading, setPortalLoading] = useState(false)
@@ -62,64 +65,56 @@ export default function AccountPage() {
     }
   }
 
-  const planLabels: Record<string, string> = {
-    free: 'Gratuit',
-    pro: 'Pro',
-    enterprise: 'Entreprise',
+  // Build plan labels from config
+  const planLabels: Record<string, string> = { free: config.plans.homepage[0]?.name || 'Free' }
+  for (const plan of config.plans.upgrade) {
+    planLabels[plan.id] = plan.name
   }
 
   if (loading) {
-    return <div className="card text-center text-gray-500 py-12">Chargement...</div>
+    return <div className="card text-center text-gray-500 py-12">{s.historyLoading}</div>
   }
+
+  const userPlan = user?.plan || 'free'
+  const scansLabel = s.scansPerDay[userPlan] || s.scansPerDay['default'] || ''
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--navy)]">Paramètres du compte</h1>
+      <h1 className="text-2xl font-bold text-[var(--navy)]">{s.accountTitle}</h1>
 
-      {/* Profile */}
       <div className="card">
         <div className="flex items-center gap-3 mb-6">
           <User className="w-5 h-5 text-[var(--accent)]" />
-          <h2 className="text-lg font-semibold text-[var(--navy)]">Profil</h2>
+          <h2 className="text-lg font-semibold text-[var(--navy)]">{s.profileLabel}</h2>
         </div>
         <div className="space-y-4">
           <div>
-            <label className="text-sm text-gray-500">Nom</label>
-            <p className="font-medium text-[var(--navy)]">{user?.full_name || '—'}</p>
+            <label className="text-sm text-gray-500">{s.nameLabel}</label>
+            <p className="font-medium text-[var(--navy)]">{user?.full_name || '\u2014'}</p>
           </div>
           <div>
-            <label className="text-sm text-gray-500">Email</label>
+            <label className="text-sm text-gray-500">{s.emailLabel}</label>
             <p className="font-medium text-[var(--navy)]">{user?.email}</p>
           </div>
         </div>
       </div>
 
-      {/* Plan */}
       <div className="card">
         <div className="flex items-center gap-3 mb-6">
           <CreditCard className="w-5 h-5 text-[var(--accent)]" />
-          <h2 className="text-lg font-semibold text-[var(--navy)]">Abonnement</h2>
+          <h2 className="text-lg font-semibold text-[var(--navy)]">{s.subscriptionLabel}</h2>
         </div>
         <div className="flex items-center justify-between">
           <div>
             <p className="font-medium text-[var(--navy)]">
-              Plan {planLabels[user?.plan || 'free']}
+              {s.plan} {planLabels[userPlan] || userPlan}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
-              {user?.plan === 'free'
-                ? '5 analyses par jour'
-                : user?.plan === 'pro'
-                ? '100 analyses par jour'
-                : 'Analyses illimitées'}
-            </p>
+            <p className="text-sm text-gray-500 mt-1">{scansLabel}</p>
           </div>
           <div className="flex gap-3">
-            {user?.plan === 'free' ? (
-              <Link
-                href="/dashboard/upgrade"
-                className="btn-primary text-sm"
-              >
-                Passer au Pro
+            {userPlan === 'free' ? (
+              <Link href="/dashboard/upgrade" className="btn-primary text-sm">
+                {s.upgradeToPro}
               </Link>
             ) : (
               <button
@@ -127,7 +122,7 @@ export default function AccountPage() {
                 disabled={portalLoading}
                 className="btn-secondary text-sm"
               >
-                {portalLoading ? 'Chargement...' : 'Gérer l\'abonnement'}
+                {portalLoading ? s.managingSubscription : s.manageSubscription}
               </button>
             )}
           </div>

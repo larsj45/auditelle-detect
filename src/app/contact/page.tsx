@@ -4,8 +4,11 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Mail, Building2, Send } from 'lucide-react'
 import { useState } from 'react'
+import { useConfig } from '@/components/ConfigProvider'
 
 export default function ContactPage() {
+  const config = useConfig()
+  const s = config.strings.contact
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,12 +23,11 @@ export default function ContactPage() {
     e.preventDefault()
     setSending(true)
 
-    // Send via mailto fallback for now (no backend yet)
-    const subject = encodeURIComponent(formData.subject || 'Contact via auditelle.fr')
+    const subject = encodeURIComponent(formData.subject || `Contact via ${config.domain}`)
     const body = encodeURIComponent(
       `Nom: ${formData.name}\nOrganisation: ${formData.organization}\nEmail: ${formData.email}\n\n${formData.message}`
     )
-    window.location.href = `mailto:contact@auditelle.fr?subject=${subject}&body=${body}`
+    window.location.href = `mailto:${config.supportEmail}?subject=${subject}&body=${body}`
 
     setSending(false)
     setSubmitted(true)
@@ -37,61 +39,58 @@ export default function ContactPage() {
       <section className="gradient-hero pt-32 pb-12 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Contactez-nous
+            {s.title}
           </h1>
           <p className="text-gray-300 text-lg">
-            Une question ? Un projet d&apos;intégration ? Notre équipe vous répond sous 24h.
+            {s.subtitle}
           </p>
         </div>
       </section>
 
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-12">
-          {/* Contact Info */}
           <div className="space-y-8">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <Mail className="h-5 w-5 text-blue-500" />
-                <h3 className="font-semibold text-gray-900">Email</h3>
+                <h3 className="font-semibold text-gray-900">{s.emailLabel}</h3>
               </div>
               <a
-                href="mailto:contact@auditelle.fr"
+                href={`mailto:${config.supportEmail}`}
                 className="text-blue-600 hover:underline"
               >
-                contact@auditelle.fr
+                {config.supportEmail}
               </a>
             </div>
 
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <Building2 className="h-5 w-5 text-blue-500" />
-                <h3 className="font-semibold text-gray-900">Auditelle SASU</h3>
+                <h3 className="font-semibold text-gray-900">{s.companyName}</h3>
               </div>
               <p className="text-gray-600 text-sm">
-                SIREN 945117000<br />
-                France
+                {config.registrationLabel} {config.registrationNumber}<br />
+                {config.country}
               </p>
             </div>
 
             <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-2">Universités & Institutions</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{s.institutionCta}</h3>
               <p className="text-gray-600 text-sm">
-                Vous souhaitez intégrer Auditelle dans votre établissement ?
-                Contactez-nous pour un devis personnalisé et une démonstration.
+                {s.institutionDescription}
               </p>
             </div>
           </div>
 
-          {/* Form */}
           <div className="md:col-span-2">
             {submitted ? (
               <div className="bg-white rounded-xl p-12 border border-gray-200 text-center">
-                <div className="text-green-500 text-5xl mb-4">✓</div>
+                <div className="text-green-500 text-5xl mb-4">&#x2713;</div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  Merci pour votre message !
+                  {s.formSuccess}
                 </h3>
                 <p className="text-gray-600">
-                  Nous vous répondrons dans les plus brefs délais.
+                  {s.formSuccessDetail}
                 </p>
               </div>
             ) : (
@@ -99,7 +98,7 @@ export default function ContactPage() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nom complet *
+                      {s.formFullName}
                     </label>
                     <input
                       type="text"
@@ -107,12 +106,12 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Jean Dupont"
+                      placeholder={s.namePlaceholder}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email professionnel *
+                      {s.formEmail}
                     </label>
                     <input
                       type="email"
@@ -120,27 +119,27 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="jean.dupont@universite.fr"
+                      placeholder={s.emailPlaceholder}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Organisation
+                    {s.formOrganization}
                   </label>
                   <input
                     type="text"
                     value={formData.organization}
                     onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Université de Paris"
+                    placeholder={s.orgPlaceholder}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Sujet *
+                    {s.formSubject}
                   </label>
                   <select
                     required
@@ -148,19 +147,16 @@ export default function ContactPage() {
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="">Sélectionnez un sujet</option>
-                    <option value="Demande de démonstration">Demande de démonstration</option>
-                    <option value="Devis université/institution">Devis université / institution</option>
-                    <option value="Intégration LMS">Intégration LMS</option>
-                    <option value="Support technique">Support technique</option>
-                    <option value="Partenariat">Partenariat</option>
-                    <option value="Autre">Autre</option>
+                    <option value="">{s.selectSubject}</option>
+                    {s.subjectOptions.map((opt) => (
+                      <option key={opt.value} value={opt.label}>{opt.label}</option>
+                    ))}
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Message *
+                    {s.formMessage}
                   </label>
                   <textarea
                     required
@@ -168,7 +164,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    placeholder="Décrivez votre besoin..."
+                    placeholder={s.messagePlaceholder}
                   />
                 </div>
 
@@ -178,7 +174,7 @@ export default function ContactPage() {
                   className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                 >
                   <Send className="h-4 w-4" />
-                  {sending ? 'Envoi en cours...' : 'Envoyer le message'}
+                  {sending ? s.formSending : s.formSubmit}
                 </button>
               </form>
             )}

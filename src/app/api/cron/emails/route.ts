@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { 
-  sendEmail, 
-  upgradeReminderEmail, 
+import { getResellerConfig } from '@/lib/config'
+import {
+  sendEmail,
+  upgradeReminderEmail,
   trialExpiringEmail,
-  trialEndedEmail 
+  trialEndedEmail
 } from '@/lib/email'
 
 // Verify cron secret to prevent unauthorized access
@@ -16,6 +17,8 @@ export async function GET(request: NextRequest) {
   if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const config = await getResellerConfig()
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,7 +44,7 @@ export async function GET(request: NextRequest) {
       const usagePercent = Math.round((user.monthly_usage / user.monthly_limit) * 100)
       
       if (usagePercent >= 80) {
-        const email = upgradeReminderEmail(user.full_name || user.email, usagePercent)
+        const email = upgradeReminderEmail(config, user.full_name || user.email, usagePercent)
         const result = await sendEmail({
           to: user.email,
           subject: email.subject,
@@ -80,7 +83,7 @@ export async function GET(request: NextRequest) {
       
       for (const reminderDay of reminderDays) {
         if (daysLeft <= reminderDay && !sentDays.includes(reminderDay)) {
-          const email = trialExpiringEmail(user.full_name || user.email, daysLeft)
+          const email = trialExpiringEmail(config, user.full_name || user.email, daysLeft)
           const result = await sendEmail({
             to: user.email,
             subject: email.subject,
@@ -113,7 +116,7 @@ export async function GET(request: NextRequest) {
       .eq('trial_ended_email_sent', false)
 
     for (const user of expiredUsers || []) {
-      const email = trialEndedEmail(user.full_name || user.email)
+      const email = trialEndedEmail(config, user.full_name || user.email)
       const result = await sendEmail({
         to: user.email,
         subject: email.subject,

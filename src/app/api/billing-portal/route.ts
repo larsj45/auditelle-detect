@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
+import { getResellerConfig } from '@/lib/config'
 
 export async function POST(request: NextRequest) {
+  const config = await getResellerConfig()
+  const errors = config.strings.errors
+
   try {
     const authHeader = request.headers.get('Authorization')
     if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return NextResponse.json({ error: errors.unauthorized }, { status: 401 })
     }
 
-    const token = authHeader.split(' ')[1]
+    const match = authHeader.match(/^Bearer\s+(.+)$/)
+    if (!match) return NextResponse.json({ error: errors.unauthorized }, { status: 401 })
+    const token = match[1]
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -18,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return NextResponse.json({ error: errors.unauthorized }, { status: 401 })
     }
 
     const serviceSupabase = createClient(
@@ -33,7 +40,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (!profile?.stripe_customer_id) {
-      return NextResponse.json({ error: 'Aucun abonnement trouvé' }, { status: 400 })
+      return NextResponse.json({ error: errors.noSubscription }, { status: 400 })
     }
 
     const session = await stripe.billingPortal.sessions.create({
@@ -44,6 +51,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: session.url })
   } catch (error: unknown) {
     console.error('Billing portal error:', error)
-    return NextResponse.json({ error: 'Erreur de facturation' }, { status: 500 })
+    return NextResponse.json({ error: errors.billingError }, { status: 500 })
   }
 }

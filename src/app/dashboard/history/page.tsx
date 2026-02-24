@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { History, Bot, User, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useConfig } from '@/components/ConfigProvider';
 
 interface Scan {
   id: string;
@@ -36,6 +37,8 @@ function ScoreBadge({ score }: { score: number }) {
 }
 
 export default function HistoryPage() {
+  const config = useConfig();
+  const s = config.strings.dashboard;
   const [scans, setScans] = useState<Scan[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,17 +65,17 @@ export default function HistoryPage() {
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <History className="w-6 h-6 text-accent" />
-        <h1 className="text-2xl font-bold text-navy">Historique des analyses</h1>
+        <h1 className="text-2xl font-bold text-navy">{s.historyTitle}</h1>
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-gray-400">Chargement…</div>
+        <div className="text-center py-20 text-gray-400">{s.historyLoading}</div>
       ) : scans.length === 0 ? (
         <div className="text-center py-20">
           <History className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">Aucune analyse pour le moment.</p>
+          <p className="text-gray-500">{s.historyEmpty}</p>
           <p className="text-gray-400 text-sm mt-1">
-            Lancez votre première analyse depuis le tableau de bord.
+            {s.historyEmptyHint}
           </p>
         </div>
       ) : (
@@ -87,7 +90,7 @@ export default function HistoryPage() {
                   <p className="text-sm text-gray-700 line-clamp-2">{scan.text_snippet}</p>
                   <div className="flex items-center gap-3 mt-2">
                     <span className="text-xs text-gray-400">
-                      {new Date(scan.created_at).toLocaleDateString('fr-FR', {
+                      {new Date(scan.created_at).toLocaleDateString(config.locale.replace('_', '-'), {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric',
@@ -97,7 +100,7 @@ export default function HistoryPage() {
                     </span>
                     {scan.detected_model && (
                       <span className="text-xs text-gray-400">
-                        Modèle : {scan.detected_model}
+                        {s.historyModel} : {scan.detected_model}
                       </span>
                     )}
                   </div>

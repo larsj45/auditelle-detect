@@ -4,33 +4,28 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Shield,
-  Search,
-  History,
-  User,
-  LogOut,
-  Menu,
-  X,
-} from 'lucide-react';
+import { Search, History, User, LogOut, Menu, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
-
-const navItems = [
-  { href: '/dashboard', label: 'Détection', icon: Search },
-  { href: '/dashboard/history', label: 'Historique', icon: History },
-  { href: '/dashboard/account', label: 'Compte', icon: User },
-];
+import { useConfig } from '@/components/ConfigProvider';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const config = useConfig();
+  const s = config.strings.dashboard;
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+
+  const navItems = [
+    { href: '/dashboard', label: s.detection, icon: Search },
+    { href: '/dashboard/history', label: s.history, icon: History },
+    { href: '/dashboard/account', label: s.account, icon: User },
+  ];
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
@@ -38,8 +33,7 @@ export default function DashboardLayout({
         router.push('/login');
       } else {
         setUserEmail(data.session.user.email ?? '');
-        
-        // Trigger welcome email for new users (runs once)
+
         try {
           await fetch('/api/email/welcome', {
             method: 'POST',
@@ -48,7 +42,6 @@ export default function DashboardLayout({
             },
           });
         } catch (e) {
-          // Silent fail - welcome email is not critical
           console.log('Welcome email trigger:', e);
         }
       }
@@ -62,12 +55,10 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-light flex">
-      {/* Sidebar - desktop */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0">
         <div className="p-6">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/images/logo-color.svg" alt="Auditelle" className="h-8" />
-            
+            <img src={config.logoColor} alt={config.name} className="h-8" />
           </Link>
         </div>
 
@@ -98,23 +89,20 @@ export default function DashboardLayout({
             className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-600 hover:bg-gray-50 hover:text-navy w-full transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            Déconnexion
+            {s.signOut}
           </button>
         </div>
       </aside>
 
-      {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/images/logo-color.svg" alt="Auditelle" className="h-7" />
-          
+          <img src={config.logoColor} alt={config.name} className="h-7" />
         </Link>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Menu">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-30">
           <div className="absolute inset-0 bg-black/30" onClick={() => setSidebarOpen(false)} />
@@ -142,13 +130,12 @@ export default function DashboardLayout({
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-600 hover:bg-gray-50 w-full mt-4"
             >
               <LogOut className="w-5 h-5" />
-              Déconnexion
+              {s.signOut}
             </button>
           </aside>
         </div>
       )}
 
-      {/* Main content */}
       <main className="flex-1 lg:ml-64 pt-20 lg:pt-8 p-4 sm:p-8">
         {children}
       </main>

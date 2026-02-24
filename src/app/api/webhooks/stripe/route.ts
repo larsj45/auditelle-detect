@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
+import { getResellerConfig } from '@/lib/config'
 import { sendEmail, subscriptionConfirmedEmail } from '@/lib/email'
 
 // Map price IDs to plan names
@@ -33,6 +34,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
+  const config = await getResellerConfig()
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -45,7 +48,7 @@ export async function POST(request: NextRequest) {
       // Normalize plan name: 'pro' -> 'starter' for backwards compatibility
       let plan = session.metadata?.plan || 'starter'
       if (plan === 'pro') plan = 'starter'
-      
+
       if (userId) {
         // Update profile with subscription info
         const { data: profile, error: profileUpdateError } = await supabase
@@ -74,7 +77,7 @@ export async function POST(request: NextRequest) {
           const name = (profileFirstName && profileFirstName.length > 0)
             ? profileFirstName
             : stripeName || capitalized || 'Utilisateur'
-          const email = subscriptionConfirmedEmail(name, plan)
+          const email = subscriptionConfirmedEmail(config, name, plan)
           await sendEmail({
             to: customerEmail,
             subject: email.subject,

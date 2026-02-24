@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getResellerConfig } from '@/lib/config'
 
 // Simple in-memory rate limiter (resets on deploy)
 const rateLimit = new Map<string, { count: number; resetAt: number }>()
@@ -9,11 +10,11 @@ const DAY_MS = 24 * 60 * 60 * 1000
 function getRateLimitInfo(ip: string) {
   const now = Date.now()
   const entry = rateLimit.get(ip)
-  
+
   if (!entry || now > entry.resetAt) {
     return { count: 0, resetAt: now + DAY_MS }
   }
-  
+
   return entry
 }
 
@@ -23,36 +24,36 @@ function incrementRateLimit(ip: string) {
 }
 
 export async function POST(request: NextRequest) {
+  const config = await getResellerConfig()
+  const errors = config.strings.errors
+
   try {
-    // Get client IP
     const forwardedFor = request.headers.get('x-forwarded-for')
     const ip = forwardedFor?.split(',')[0]?.trim() || 'unknown'
-    
-    // Check rate limit
+
     const limitInfo = getRateLimitInfo(ip)
     if (limitInfo.count >= DAILY_LIMIT) {
       return NextResponse.json(
-        { error: 'Limite quotidienne atteinte. Créez un compte gratuit pour continuer.' },
+        { error: errors.demoLimitReached },
         { status: 429 }
       )
     }
-    
+
     const { text } = await request.json()
-    
+
     if (!text || typeof text !== 'string') {
-      return NextResponse.json({ error: 'Texte requis' }, { status: 400 })
+      return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
     }
-    
+
     if (text.trim().length < 50) {
-      return NextResponse.json({ error: 'Minimum 50 caractères requis' }, { status: 400 })
+      return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
     }
-    
-    // Call Pangram API v3
+
     const pangramKey = process.env.PANGRAM_API_KEY
     if (!pangramKey) {
-      return NextResponse.json({ error: 'Service temporairement indisponible' }, { status: 503 })
+      return NextResponse.json({ error: errors.serviceUnavailable }, { status: 503 })
     }
-    
+
     const pangramRes = await fetch('https://text.api.pangramlabs.com/v3', {
       method: 'POST',
       headers: {
@@ -61,29 +62,30 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({ text: text.slice(0, 2000) })
     })
-    
+
     if (!pangramRes.ok) {
-      console.error('Pangram API error:', await pangramRes.text())
-      return NextResponse.json({ error: 'Erreur d\'analyse' }, { status: 500 })
+      console.error('Pangram API error:', (await pangramRes.text()).substring(0, 200))
+      return NextResponse.json({ error: errors.analysisError }, { status: 500 })
     }
-    
+
     const pangramData = await pangramRes.json()
-    
-    // Increment rate limit on success
+
     incrementRateLimit(ip)
-    
-    // Return simplified result for demo (v3 API format)
+
     const aiScore = Math.round((pangramData.fraction_ai || 0) * 100)
+    const heroStrings = config.strings.heroDemo
+    const verdict = pangramData.headline
+      || (aiScore >= 80 ? heroStrings.veryLikelyAI : aiScore >= 50 ? heroStrings.possiblyAI : heroStrings.probablyHuman)
     return NextResponse.json({
       score: aiScore,
-      model: pangramData.prediction_short === 'AI' ? 'IA Générative' : null,
-      verdict: pangramData.headline || (aiScore >= 50 ? 'Contenu IA détecté' : 'Contenu humain'),
+      model: pangramData.prediction_short || null,
+      verdict,
       isAI: aiScore >= 50,
       remaining: DAILY_LIMIT - limitInfo.count - 1
     })
-    
+
   } catch (error) {
     console.error('Demo detect error:', error)
-    return NextResponse.json({ error: 'Erreur interne' }, { status: 500 })
+    return NextResponse.json({ error: errors.internalError }, { status: 500 })
   }
 }

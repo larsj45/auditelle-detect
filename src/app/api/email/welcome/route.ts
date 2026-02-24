@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getResellerConfig } from '@/lib/config'
 import { sendEmail, welcomeEmail } from '@/lib/email'
 
 // This endpoint is called after successful signup
 export async function POST(request: NextRequest) {
+  const config = await getResellerConfig()
+  const errors = config.strings.errors
+
   try {
     const authHeader = request.headers.get('Authorization')
     if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return NextResponse.json({ error: errors.unauthorized }, { status: 401 })
     }
 
-    const token = authHeader.split(' ')[1]
+    const match = authHeader.match(/^Bearer\s+(.+)$/)
+    if (!match) return NextResponse.json({ error: errors.unauthorized }, { status: 401 })
+    const token = match[1]
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -19,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !user.email) {
-      return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
+      return NextResponse.json({ error: errors.userNotFound }, { status: 404 })
     }
 
     // Get user profile for name
@@ -36,12 +43,12 @@ export async function POST(request: NextRequest) {
 
     // Don't send if already sent
     if (profile?.welcome_email_sent) {
-      return NextResponse.json({ message: 'Email déjà envoyé' })
+      return NextResponse.json({ message: errors.emailAlreadySent })
     }
 
     const rawName = user.email.split('@')[0].split('+')[0]
     const name = profile?.full_name || rawName.charAt(0).toUpperCase() + rawName.slice(1)
-    const email = welcomeEmail(name)
+    const email = welcomeEmail(config, name)
 
     const result = await sendEmail({
       to: user.email,
@@ -61,6 +68,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: result.success })
   } catch (error) {
     console.error('Welcome email error:', error)
-    return NextResponse.json({ error: 'Erreur interne' }, { status: 500 })
+    return NextResponse.json({ error: errors.internalError }, { status: 500 })
   }
 }

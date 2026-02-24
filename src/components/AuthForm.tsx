@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useConfig } from '@/components/ConfigProvider'
 
 interface AuthFormProps {
   mode: 'login' | 'signup' | 'reset'
@@ -29,6 +30,8 @@ async function redirectToCheckout(token: string, plan: string) {
 }
 
 export default function AuthForm({ mode }: AuthFormProps) {
+  const config = useConfig()
+  const s = config.strings.auth
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
@@ -54,7 +57,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
       if (mode === 'login') {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
-        // If coming from a pricing page, redirect to checkout
         const params = new URLSearchParams(window.location.search)
         const plan = params.get('plan')
         if (plan && data.session?.access_token) {
@@ -69,56 +71,58 @@ export default function AuthForm({ mode }: AuthFormProps) {
           options: { data: { full_name: fullName } },
         })
         if (error) throw error
-        // If session exists, user is logged in (no email confirmation required)
         if (data.session) {
-          // If a plan was selected, redirect to Stripe checkout
           if (planParam && planParam !== 'free') {
-            setSuccess('Compte créé ! Redirection vers le paiement...')
+            setSuccess(s.accountCreatedRedirect)
             const redirected = await redirectToCheckout(data.session.access_token, planParam)
             if (redirected) return
           }
           window.location.href = '/dashboard'
         } else {
-          setSuccess('Vérifiez votre email pour confirmer votre inscription.')
+          setSuccess(s.checkEmail)
         }
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/dashboard/account`,
         })
         if (error) throw error
-        setSuccess('Un lien de réinitialisation a été envoyé à votre adresse email.')
+        setSuccess(s.resetEmailSent)
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Une erreur est survenue'
+      const message = err instanceof Error ? err.message : config.strings.errors.internalError
       setError(message)
     } finally {
       setLoading(false)
     }
   }
 
-  const planLabels: Record<string, string> = {
-    pro: 'Pro — 25€/mois',
-    equipe: 'Équipe — 99€/mois',
-    departement: 'Département — 249€/mois',
-    starter: 'Starter — 29€/mois',
-    student: 'Student — 4,99€/mois',
-    university: 'Université — 149€/mois',
+  // Build plan labels from upgrade plans config
+  const planLabels: Record<string, string> = {}
+  for (const plan of config.plans.upgrade) {
+    planLabels[plan.id] = `${plan.name} \u2014 ${plan.price}${plan.period}`
+  }
+  // Also add homepage plans that have href with ?plan=
+  for (const plan of config.plans.homepage) {
+    const match = plan.href.match(/plan=(\w+)/)
+    if (match && !planLabels[match[1]]) {
+      planLabels[match[1]] = `${plan.name} \u2014 ${plan.price}${plan.period ? '/' + plan.period : ''}`
+    }
   }
 
   const titles = {
-    login: 'Connexion',
-    signup: 'Créer un compte',
-    reset: 'Réinitialiser le mot de passe',
+    login: s.login,
+    signup: s.signup,
+    reset: s.resetPassword,
   }
 
   const subtitles = {
     login: planParam && planLabels[planParam]
-      ? `Connectez-vous pour activer le plan ${planLabels[planParam]}`
-      : 'Accédez à votre tableau de bord de détection IA',
+      ? s.loginSubtitlePlan.replace('{plan}', planLabels[planParam])
+      : s.loginSubtitle,
     signup: planParam && planLabels[planParam]
-      ? `Créez votre compte pour activer le plan ${planLabels[planParam]}`
-      : 'Commencez à détecter le contenu IA gratuitement',
-    reset: 'Entrez votre email pour recevoir un lien de réinitialisation',
+      ? s.signupSubtitlePlan.replace('{plan}', planLabels[planParam])
+      : s.signupSubtitle,
+    reset: s.resetSubtitle,
   }
 
   return (
@@ -126,7 +130,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center mb-6">
-            <img src="/images/logo-color.svg" alt="Auditelle" className="h-10" />
+            <img src={config.logoColor} alt={config.name} className="h-10" />
           </Link>
           <h1 className="text-2xl font-bold text-[var(--navy)]">{titles[mode]}</h1>
           <p className="text-gray-500 mt-2">{subtitles[mode]}</p>
@@ -142,33 +146,33 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
           {mode === 'signup' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{s.fullName}</label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 outline-none transition"
-                placeholder="Jean Dupont"
+                placeholder={s.namePlaceholder}
                 required
               />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{s.email}</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 outline-none transition"
-              placeholder="vous@email.com"
+              placeholder={s.emailPlaceholder}
               required
             />
           </div>
 
           {mode !== 'reset' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{s.password}</label>
               <input
                 type="password"
                 value={password}
@@ -186,7 +190,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Chargement...' : titles[mode]}
+            {loading ? s.loading : titles[mode]}
           </button>
 
           <div className="text-center text-sm text-gray-500 space-y-2">
@@ -194,32 +198,32 @@ export default function AuthForm({ mode }: AuthFormProps) {
               <>
                 <p>
                   <Link href="/reset-password" className="text-[var(--accent)] hover:underline">
-                    Mot de passe oublié ?
+                    {s.forgotPassword}
                   </Link>
                 </p>
                 <p>
-                  Pas encore de compte ?{' '}
+                  {s.noAccount}{' '}
                   <Link href="/signup" className="text-[var(--accent)] hover:underline font-medium">
-                    Inscrivez-vous
+                    {s.signup}
                   </Link>
                 </p>
               </>
             )}
             {mode === 'signup' && (
               <p>
-                Déjà un compte ?{' '}
+                {s.hasAccount}{' '}
                 <Link
                   href={planParam ? `/login?plan=${planParam}` : '/login'}
                   className="text-[var(--accent)] hover:underline font-medium"
                 >
-                  Connectez-vous
+                  {s.login}
                 </Link>
               </p>
             )}
             {mode === 'reset' && (
               <p>
                 <Link href="/login" className="text-[var(--accent)] hover:underline">
-                  Retour à la connexion
+                  {s.backToLogin}
                 </Link>
               </p>
             )}
