@@ -42,6 +42,7 @@ export interface ResellerConfig {
   // ── Analytics (optional) ──────────────────────────────────────────────────
   googleAdsId?: string
   googleAdsConversionLabel?: string
+  googleAdsSignupConversionLabel?: string
 
   // ── Feature flags ─────────────────────────────────────────────────────────
   features: {

@@ -173,6 +173,7 @@ const config: ResellerConfig = {
   // ── Analytics ─────────────────────────────────────────────────────────────
   googleAdsId: 'AW-17962560127',
   googleAdsConversionLabel: 'AW-17962560127/0yGyCKHUs_sbEP_Um_VC',
+  googleAdsSignupConversionLabel: 'AW-17962560127/QuvLCODYof4bEP_Um_VC',
 
   // ── Feature flags ─────────────────────────────────────────────────────────
   features: {

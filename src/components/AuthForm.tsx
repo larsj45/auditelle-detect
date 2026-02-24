@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
 
+declare function gtag(...args: unknown[]): void
+
 interface AuthFormProps {
   mode: 'login' | 'signup' | 'reset'
 }
@@ -71,6 +73,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
           options: { data: { full_name: fullName } },
         })
         if (error) throw error
+        // Fire signup conversion
+        if (typeof gtag !== 'undefined' && config.googleAdsSignupConversionLabel) {
+          gtag('event', 'conversion', {
+            send_to: config.googleAdsSignupConversionLabel,
+          })
+        }
         if (data.session) {
           if (planParam && planParam !== 'free') {
             setSuccess(s.accountCreatedRedirect)
