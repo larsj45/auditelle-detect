@@ -32,7 +32,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
           </Link>
 
           {/* Desktop */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             <Link href="/#features" className="text-sm text-gray-600 hover:text-navy transition-colors">
               {s.features}
             </Link>
@@ -47,8 +47,8 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
                 {s.dashboard}
               </Link>
             ) : (
-              <div className="flex items-center gap-4">
-                <Link href="/login" className="text-sm text-gray-600 hover:text-navy transition-colors">
+              <>
+                <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-navy transition-colors">
                   {s.login}
                 </Link>
                 <Link
@@ -57,7 +57,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
                 >
                   {s.freeTrial}
                 </Link>
-              </div>
+              </>
             )}
           </div>
 
