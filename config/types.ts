@@ -83,6 +83,7 @@ export interface HomepagePlan {
   cta: string
   href: string
   popular?: boolean
+  popularBadge?: string        // e.g. "POPULAIRE" — config-driven badge text
 }
 
 export interface UpgradePlan {
@@ -160,6 +161,17 @@ export interface ResellerStrings {
     title: string
     subtitle: string
     footer: string
+  }
+
+  // Competitor comparison
+  comparison: {
+    title: string
+    subtitle: string
+    competitors: string[]
+    rows: Array<{
+      label: string
+      values: Array<string | boolean>
+    }>
   }
 
   // CTA section
@@ -289,6 +301,10 @@ export interface ResellerStrings {
     possiblyAI: string
     probablyHuman: string
     connectionError: string
+    ctaButton: string           // big CTA button text after demo scan
+    ctaTeaser: string           // teaser line below CTA button
+    unlockLabel: string         // blurred preview overlay text
+    scansRemaining: string      // "{count} analyses gratuites restantes aujourd'hui"
   }
 
   // File upload

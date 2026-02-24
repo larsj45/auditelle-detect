@@ -11,6 +11,7 @@ interface PricingCardProps {
   cta: string
   href: string
   popular?: boolean
+  popularBadge?: string
 }
 
 export default function PricingCard({
@@ -22,12 +23,13 @@ export default function PricingCard({
   cta,
   href,
   popular = false,
+  popularBadge,
 }: PricingCardProps) {
   return (
     <div className={`card relative ${popular ? 'border-2 border-[var(--accent)] scale-105' : 'border border-gray-200'}`}>
       {popular && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-bold px-4 py-1 rounded-full">
-          POPULAIRE
+          {popularBadge || 'POPULAIRE'}
         </div>
       )}
       <h3 className="text-xl font-bold text-[var(--navy)]">{name}</h3>

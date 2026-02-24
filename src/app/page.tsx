@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PricingCard from '@/components/PricingCard'
 import HeroDemo from '@/components/HeroDemo'
-import { Shield, Brain, FileSearch, BarChart3, Zap, Globe } from 'lucide-react'
+import { Shield, Brain, FileSearch, BarChart3, Zap, Globe, Check, X } from 'lucide-react'
 import Link from 'next/link'
 import { getResellerConfig } from '@/lib/config'
 
@@ -55,7 +55,7 @@ export default async function Home() {
                 <Link href="/signup" className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
                   {s.hero.ctaPrimary}
                 </Link>
-                <Link href="/#features" className="btn-secondary text-lg px-8 py-4 rounded-xl">
+                <Link href="/#how-it-works" className="btn-secondary text-lg px-8 py-4 rounded-xl">
                   {s.hero.ctaSecondary}
                 </Link>
               </div>
@@ -108,7 +108,7 @@ export default async function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-4 bg-[var(--bg-light)]">
+      <section id="how-it-works" className="py-24 px-4 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
@@ -139,6 +139,73 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Competitor Comparison */}
+      <section className="py-24 px-4 bg-[var(--bg-light)]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
+              {s.comparison.title}
+            </h2>
+            <p className="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">
+              {s.comparison.subtitle}
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th className="py-4 px-4 text-sm font-semibold text-gray-500"></th>
+                  {s.comparison.competitors.map((name, i) => (
+                    <th
+                      key={name}
+                      className={`py-4 px-4 text-sm font-bold text-center ${
+                        i === 0
+                          ? 'text-[var(--accent)] bg-orange-50 rounded-t-xl'
+                          : 'text-[var(--navy)]'
+                      }`}
+                    >
+                      {name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {s.comparison.rows.map((row, rowIdx) => (
+                  <tr
+                    key={row.label}
+                    className={rowIdx % 2 === 0 ? 'bg-white' : ''}
+                  >
+                    <td className="py-4 px-4 text-sm font-medium text-[var(--navy)]">
+                      {row.label}
+                    </td>
+                    {row.values.map((val, colIdx) => (
+                      <td
+                        key={colIdx}
+                        className={`py-4 px-4 text-sm text-center ${
+                          colIdx === 0
+                            ? 'font-semibold text-[var(--accent)] bg-orange-50'
+                            : 'text-gray-600'
+                        }`}
+                      >
+                        {typeof val === 'boolean' ? (
+                          val ? (
+                            <Check className="w-5 h-5 text-emerald-500 mx-auto" />
+                          ) : (
+                            <X className="w-5 h-5 text-gray-300 mx-auto" />
+                          )
+                        ) : (
+                          val
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="py-24 px-4 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto">
@@ -162,6 +229,7 @@ export default async function Home() {
                 cta={plan.cta}
                 href={plan.href}
                 popular={plan.popular}
+                popularBadge={plan.popularBadge}
               />
             ))}
           </div>

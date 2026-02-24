@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Sparkles, AlertCircle } from 'lucide-react'
+import { Loader2, Sparkles, AlertCircle, Lock } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 
 interface DemoResult {
@@ -9,15 +9,18 @@ interface DemoResult {
   model: string | null
   verdict: string
   isAI: boolean
+  remaining: number
 }
 
 export default function HeroDemo() {
   const config = useConfig()
   const s = config.strings.heroDemo
+  const r = config.strings.results
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<DemoResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [remaining, setRemaining] = useState<number | null>(null)
 
   const analyze = async () => {
     if (text.trim().length < 50) {
@@ -47,6 +50,9 @@ export default function HeroDemo() {
       }
 
       setResult(data)
+      if (typeof data.remaining === 'number') {
+        setRemaining(data.remaining)
+      }
     } catch {
       setError(s.connectionError)
     } finally {
@@ -138,37 +144,103 @@ export default function HeroDemo() {
         </div>
       )}
 
-      {result && (
-        <div className="mt-4 p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className={`text-4xl font-bold ${getScoreColor(result.score)}`}>
-                {result.score}%
-              </div>
-              <div className="text-gray-600 text-sm mt-1 font-medium">
-                {result.verdict}
-              </div>
-            </div>
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center ${result.isAI ? 'bg-red-100' : 'bg-green-100'}`}>
-              {result.isAI ? (
-                <span className="text-2xl">🤖</span>
-              ) : (
-                <span className="text-2xl">👤</span>
-              )}
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <a
-              href="/signup"
-              className="inline-flex items-center gap-2 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors text-sm font-semibold"
-            >
-              {s.createAccountFull}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-          </div>
+      {/* Improvement 3: Scarcity counter — remaining scans */}
+      {remaining !== null && remaining >= 0 && !loading && (
+        <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
+          <span className="text-sm font-medium text-amber-700">
+            {s.scansRemaining.replace('{count}', String(remaining))}
+          </span>
         </div>
+      )}
+
+      {result && (
+        <>
+          {/* Score result */}
+          <div className="mt-4 p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className={`text-4xl font-bold ${getScoreColor(result.score)}`}>
+                  {result.score}%
+                </div>
+                <div className="text-gray-600 text-sm mt-1 font-medium">
+                  {result.verdict}
+                </div>
+              </div>
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center ${result.isAI ? 'bg-red-100' : 'bg-green-100'}`}>
+                {result.isAI ? (
+                  <span className="text-2xl">🤖</span>
+                ) : (
+                  <span className="text-2xl">👤</span>
+                )}
+              </div>
+            </div>
+
+            {/* Improvement 1: Big CTA button + teaser */}
+            <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+              <a
+                href="/signup"
+                className="inline-block w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20"
+              >
+                {s.ctaButton}
+              </a>
+              <p className="text-xs text-gray-500 mt-2">
+                {s.ctaTeaser}
+              </p>
+            </div>
+          </div>
+
+          {/* Improvement 2: Blurred preview of full report */}
+          <div className="mt-4 relative">
+            <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
+              {/* Fake breakdown bar */}
+              <p className="text-sm font-semibold text-gray-700 mb-2">{r.breakdown}</p>
+              <div className="flex h-3 rounded-full overflow-hidden bg-gray-100">
+                <div className="bg-red-400" style={{ width: '65%' }} />
+                <div className="bg-amber-400" style={{ width: '15%' }} />
+                <div className="bg-emerald-400" style={{ width: '20%' }} />
+              </div>
+              <div className="flex gap-4 mt-2 text-xs text-gray-500">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                  {r.aiGenerated} 65%
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                  {r.aiAssisted} 15%
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                  {r.humanWritten} 20%
+                </span>
+              </div>
+              {/* Fake sentence analysis rows */}
+              <div className="mt-4 space-y-2">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100">
+                    <div className="w-2 h-2 rounded-full bg-red-400 mt-2 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="h-3 bg-gray-200 rounded w-full mb-1" />
+                      <div className="h-2 bg-gray-100 rounded w-1/3" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Lock overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
+              <Lock className="w-8 h-8 text-gray-400 mb-2" />
+              <p className="text-sm font-semibold text-gray-700 text-center px-4">
+                {s.unlockLabel}
+              </p>
+              <a
+                href="/signup"
+                className="mt-2 text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+              >
+                {s.ctaButton}
+              </a>
+            </div>
+          </div>
+        </>
       )}
     </div>
   )

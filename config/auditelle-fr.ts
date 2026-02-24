@@ -36,7 +36,7 @@ const config: ResellerConfig = {
         price: '0\u20ac',
         description: 'D\u00e9couvrez la pr\u00e9cision',
         features: [
-          '50 analyses par mois',
+          '10 analyses par mois',
           '1 utilisateur',
           'Score IA 99.9% pr\u00e9cis',
           'Identification du mod\u00e8le',
@@ -59,6 +59,8 @@ const config: ResellerConfig = {
         ],
         cta: 'Choisir Pro',
         href: '/signup?plan=pro',
+        popular: true,
+        popularBadge: 'POPULAIRE',
       },
       {
         name: '\u00c9quipe',
@@ -74,7 +76,6 @@ const config: ResellerConfig = {
         ],
         cta: 'Choisir \u00c9quipe',
         href: '/signup?plan=equipe',
-        popular: true,
       },
       {
         name: 'D\u00e9partement',
@@ -299,6 +300,21 @@ const config: ResellerConfig = {
       ],
     },
 
+    // Competitor comparison
+    comparison: {
+      title: 'Pourquoi choisir Auditelle ?',
+      subtitle: 'Comparez les principales solutions de d\u00e9tection IA',
+      competitors: ['Auditelle', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      rows: [
+        { label: 'Pr\u00e9cision', values: ['99,9%', '~85%', '~80%', '~94%'] },
+        { label: 'Taux de faux positifs', values: ['Quasi nul', '\u00c9lev\u00e9', 'Mod\u00e9r\u00e9', 'Mod\u00e9r\u00e9'] },
+        { label: 'Support fran\u00e7ais', values: [true, false, false, false] },
+        { label: 'Prix (\u00e0 partir de)', values: ['Gratuit', '$9.99/mois', 'Sur devis', '$14.95/mois'] },
+        { label: 'Analyse par section', values: [true, false, false, true] },
+        { label: 'Identification du mod\u00e8le', values: [true, true, false, false] },
+      ],
+    },
+
     // Pricing (homepage section)
     pricing: {
       title: 'Tarification transparente et comp\u00e9titive',
@@ -436,6 +452,10 @@ const config: ResellerConfig = {
       possiblyAI: 'Possiblement IA',
       probablyHuman: 'Probablement humain',
       connectionError: 'Erreur de connexion',
+      ctaButton: 'Cr\u00e9er un compte gratuit \u2192',
+      ctaTeaser: "D\u00e9bloquez l'analyse par section, l'identification du mod\u00e8le et plus",
+      unlockLabel: "Cr\u00e9ez un compte pour d\u00e9bloquer l'analyse compl\u00e8te",
+      scansRemaining: '{count} analyses gratuites restantes aujourd\u2019hui',
     },
 
     // File upload
@@ -488,7 +508,7 @@ const config: ResellerConfig = {
       videoPlaceholder: 'Vid\u00e9o de d\u00e9monstration',
       videoSoon: 'Bient\u00f4t disponible',
       readyCta: 'Pr\u00eat \u00e0 essayer ?',
-      readySubtitle: "Cr\u00e9ez votre compte gratuit et analysez jusqu'\u00e0 50 textes par mois",
+      readySubtitle: "Cr\u00e9ez votre compte gratuit et analysez jusqu'\u00e0 10 textes par mois",
       readyButton: "Commencer l'essai gratuit \u2192",
       featureCards: [
         { emoji: '\ud83c\udfaf', title: '99,9% de pr\u00e9cision', description: "Valid\u00e9e par l'Universit\u00e9 du Maryland" },
@@ -508,7 +528,7 @@ const config: ResellerConfig = {
         intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Auditelle. Vous avez maintenant acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9, v\u00e9rifi\u00e9 par l'Universit\u00e9 du Maryland.",
         trialTitle: '\ud83c\udf81 Votre essai gratuit inclut :',
         trialFeatures: [
-          '50 analyses par mois',
+          '10 analyses par mois',
           'Pr\u00e9cision de 99,9%',
           'Identification du mod\u00e8le IA',
           'Historique de 7 jours',
