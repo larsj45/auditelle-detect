@@ -14,6 +14,16 @@ export interface ResellerConfig {
   logoColor: string     // path: e.g. "/brands/auditelle/logo-color.svg"
   logoWhite: string     // path: e.g. "/brands/auditelle/logo-white.svg"
 
+  // ── Theme (CSS custom properties) ───────────────────────────────────────
+  theme: {
+    accent: string          // primary CTA color, e.g. "#e85d04"
+    accentHover: string     // CTA hover,         e.g. "#dc2f02"
+    accentLight: string     // light tint,         e.g. "#fff4e6"
+    navy: string            // dark text / bg,     e.g. "#1a1a2e"
+    navyLight: string       // lighter variant,    e.g. "#16213e"
+    heroGradient: string    // CSS gradient for hero section
+  }
+
   // ── Locale ────────────────────────────────────────────────────────────────
   locale: string        // e.g. "fr_FR"
   htmlLang: string      // e.g. "fr"

@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #1a1a2e;
-  --color-navy-light: #16213e;
-  --color-accent: #e85d04;
-  --color-accent-hover: #dc2f02;
-  --color-accent-light: #fff4e6;
+  /* Tailwind theme tokens — reference CSS custom properties so they adapt
+     per-reseller via inline style on <body> in layout.tsx (see config.theme).
+     The var() fallbacks match Auditelle (the default reseller). */
+  --color-navy: var(--navy, #1a1a2e);
+  --color-navy-light: var(--navy-light, #16213e);
+  --color-accent: var(--accent, #e85d04);
+  --color-accent-hover: var(--accent-hover, #dc2f02);
+  --color-accent-light: var(--accent-light, #fff4e6);
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
@@ -14,6 +17,7 @@
 }
 
 :root {
+  /* These are the fallback values; the body style overrides per-reseller */
   --navy: #1a1a2e;
   --navy-light: #16213e;
   --accent: #e85d04;
@@ -23,6 +27,7 @@
   --text-secondary: #6b7280;
   --bg-light: #fefcf3;
   --bg-warm: #fef9ef;
+  --hero-gradient: linear-gradient(180deg, #fef3c7 0%, #fef9ef 50%, #ffffff 100%);
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -36,7 +41,7 @@ body {
 }
 
 .gradient-hero {
-  background: linear-gradient(180deg, #fef3c7 0%, #fef9ef 50%, #ffffff 100%);
+  background: var(--hero-gradient);
 }
 
 .gradient-hero-alt {

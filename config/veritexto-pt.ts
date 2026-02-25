@@ -9,6 +9,16 @@ const config: ResellerConfig = {
   logoColor: '/brands/veritexto/logo-color.svg',
   logoWhite: '/brands/veritexto/logo-white.svg',
 
+  // ── Theme ───────────────────────────────────────────────────────────────
+  theme: {
+    accent: '#3B82F6',           // bright blue from logo
+    accentHover: '#2563EB',      // darker blue on hover
+    accentLight: '#EFF6FF',      // blue-50 tint
+    navy: '#1E3A5F',             // navy from logo
+    navyLight: '#2A4A6B',        // lighter navy
+    heroGradient: 'linear-gradient(180deg, #EFF6FF 0%, #F8FAFC 50%, #ffffff 100%)',
+  },
+
   // ── Locale ────────────────────────────────────────────────────────────────
   locale: 'pt_BR',
   htmlLang: 'pt',

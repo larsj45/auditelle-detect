@@ -27,9 +27,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const themeVars = {
+    '--navy': config.theme.navy,
+    '--navy-light': config.theme.navyLight,
+    '--accent': config.theme.accent,
+    '--accent-hover': config.theme.accentHover,
+    '--accent-light': config.theme.accentLight,
+    '--text-primary': config.theme.navy,
+    '--hero-gradient': config.theme.heroGradient,
+  } as React.CSSProperties
+
   return (
     <html lang={config.htmlLang}>
-      <body className={inter.className}>
+      <body className={inter.className} style={themeVars}>
         <ConfigProvider config={config}>
           {children}
           {config.googleAdsId && <CookieConsent />}

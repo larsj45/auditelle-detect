@@ -1,17 +1,27 @@
 import type { ResellerConfig } from './types'
 
 const config: ResellerConfig = {
-  id: 'auditelle-fr',
+  id: 'veritexto-es',
 
   // ── Branding ──────────────────────────────────────────────────────────────
-  name: 'Auditelle',
-  domain: 'auditelle.fr',
-  logoColor: '/images/logo-color.svg',
-  logoWhite: '/images/logo-white.svg',
+  name: 'VeriTexto',
+  domain: 'veritexto.es',
+  logoColor: '/brands/veritexto-es/logo-color.svg',
+  logoWhite: '/brands/veritexto-es/logo-white.svg',
+
+  // ── Theme ───────────────────────────────────────────────────────────────
+  theme: {
+    accent: '#3B82F6',           // bright blue from logo
+    accentHover: '#2563EB',      // darker blue on hover
+    accentLight: '#EFF6FF',      // blue-50 tint
+    navy: '#1E3A5F',             // navy from logo
+    navyLight: '#2A4A6B',        // lighter navy
+    heroGradient: 'linear-gradient(180deg, #EFF6FF 0%, #F8FAFC 50%, #ffffff 100%)',
+  },
 
   // ── Locale ────────────────────────────────────────────────────────────────
-  locale: 'fr_FR',
-  htmlLang: 'fr',
+  locale: 'es_ES',
+  htmlLang: 'es',
   currency: 'EUR',
   currencySymbol: '\u20ac',
   timezone: 'Europe/Paris',

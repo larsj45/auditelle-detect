@@ -9,6 +9,16 @@ const config: ResellerConfig = {
   logoColor: '/images/logo-color.svg',
   logoWhite: '/images/logo-white.svg',
 
+  // ── Theme ───────────────────────────────────────────────────────────────
+  theme: {
+    accent: '#e85d04',
+    accentHover: '#dc2f02',
+    accentLight: '#fff4e6',
+    navy: '#1a1a2e',
+    navyLight: '#16213e',
+    heroGradient: 'linear-gradient(180deg, #fef3c7 0%, #fef9ef 50%, #ffffff 100%)',
+  },
+
   // ── Locale ────────────────────────────────────────────────────────────────
   locale: 'fr_FR',
   htmlLang: 'fr',
