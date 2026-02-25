@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig } from '@/lib/config'
 import { sendEmail, welcomeEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
+
 // This endpoint is called after successful signup
 export async function POST(request: NextRequest) {
   const config = await getResellerConfig()

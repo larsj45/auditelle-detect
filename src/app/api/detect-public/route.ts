@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { detectAI, detectPlagiarism } from '@/lib/pangram'
 import { getResellerConfig } from '@/lib/config'
 
+export const dynamic = 'force-dynamic'
+
+
 // Simple in-memory rate limiting (resets on server restart)
 // For production, use Redis or similar
 const ipUsage = new Map<string, { count: number; resetAt: number }>()

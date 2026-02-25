@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig } from '@/lib/config'
 import {
+
   sendEmail,
   upgradeReminderEmail,
   trialExpiringEmail,
   trialEndedEmail
 } from '@/lib/email'
+
+export const dynamic = 'force-dynamic'
 
 // Verify cron secret to prevent unauthorized access
 const CRON_SECRET = process.env.CRON_SECRET

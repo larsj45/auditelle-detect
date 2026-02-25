@@ -3,7 +3,8 @@
 **Prepared by:** Lars Janér (Global Edtech Ventures)
 **Date:** 23 February 2026
 **For:** OpenClaw collaboration
-**Status:** Agreed — ready for implementation
+**Status:** Implemented — 3 resellers live (auditelle-fr, veritexto-es, veritexto-pt) as of 2026-02-25
+**Note:** Repo was NOT renamed to `pangram-resellers` as proposed — still `auditelle-detect`.
 
 ---
 
@@ -13,7 +14,8 @@ We are building white-label SaaS platforms that wrap the Pangram AI detection AP
 
 - **Auditelle** (France) — full SaaS, auditelle.fr
 - **NovaLearn** (UK) — live, novalearn.co.uk
-- **VeriTexto** (Spain) — next to launch
+- **VeriTexto** (Spain) — live, veritexto.es
+- **VeriTexto** (Brazil) — live, veritexto.com.br
 
 **Goal:** Launch **10+ reseller platforms** with the same core functionality but localised branding, language, pricing, legal entities, and payment infrastructure.
 

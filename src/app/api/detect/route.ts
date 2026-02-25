@@ -4,6 +4,9 @@ import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS } from '@/lib/config'
 import { sendEmail, limitReachedEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
+
 export async function POST(request: NextRequest) {
   const config = await getResellerConfig()
   const errors = config.strings.errors

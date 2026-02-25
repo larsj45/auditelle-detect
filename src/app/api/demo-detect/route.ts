@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getResellerConfig } from '@/lib/config'
 
+export const dynamic = 'force-dynamic'
+
+
 // Simple in-memory rate limiter (resets on deploy)
 const rateLimit = new Map<string, { count: number; resetAt: number }>()
 

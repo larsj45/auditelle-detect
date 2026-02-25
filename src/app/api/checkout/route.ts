@@ -3,6 +3,9 @@ import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, VALID_PLAN_IDS } from '@/lib/config'
 
+export const dynamic = 'force-dynamic'
+
+
 export async function POST(request: NextRequest) {
   const config = await getResellerConfig()
   const errors = config.strings.errors

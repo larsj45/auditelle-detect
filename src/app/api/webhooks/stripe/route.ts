@@ -5,6 +5,9 @@ import Stripe from 'stripe'
 import { getResellerConfig } from '@/lib/config'
 import { sendEmail, subscriptionConfirmedEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
+
 // Map price IDs to plan names
 const getPlanFromPriceId = (priceId: string): string => {
   const priceMap: Record<string, string> = {
