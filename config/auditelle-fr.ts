@@ -478,6 +478,13 @@ const config: ResellerConfig = {
       copiedButton: 'Texte copié',
     },
 
+    // Cookie consent
+    cookieConsent: {
+      message: 'Ce site utilise des cookies pour mesurer les performances publicitaires et am\u00e9liorer votre exp\u00e9rience. Aucune donn\u00e9e personnelle n\u2019est vendue.',
+      accept: 'Accepter',
+      decline: 'Refuser',
+    },
+
     // File upload
     fileUpload: {
       dropOrBrowse: 'Glisser un fichier ou',

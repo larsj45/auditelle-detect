@@ -327,6 +327,13 @@ export interface ResellerStrings {
     copiedButton: string
   }
 
+  // Cookie consent banner
+  cookieConsent: {
+    message: string
+    accept: string
+    decline: string
+  }
+
   // File upload
   fileUpload: {
     dropOrBrowse: string

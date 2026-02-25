@@ -473,6 +473,13 @@ const config: ResellerConfig = {
       copiedButton: 'Texto copiado',
     },
 
+    // Cookie consent
+    cookieConsent: {
+      message: 'Este site utiliza cookies para medir o desempenho dos an\u00fancios e melhorar sua experi\u00eancia. Nenhum dado pessoal \u00e9 vendido.',
+      accept: 'Aceitar',
+      decline: 'Recusar',
+    },
+
     // File upload
     fileUpload: {
       dropOrBrowse: 'Arraste um arquivo ou',
