@@ -3,9 +3,11 @@ import { getResellerConfig } from '@/lib/config'
 import type { ResellerConfig } from '@/lib/config'
 import { escapeHtml } from '@/lib/sanitize'
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null
+// Lazy init — avoids module-level evaluation during build
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null
+  return new Resend(process.env.RESEND_API_KEY)
+}
 
 export interface EmailParams {
   to: string
@@ -18,6 +20,7 @@ export async function sendEmail({ to, subject, html, text }: EmailParams) {
   const config = await getResellerConfig()
   const fromEmail = `${config.name} <${config.noReplyEmail}>`
 
+  const resend = getResend()
   if (!resend) {
     console.warn('Resend not configured, skipping email:', subject)
     return { success: false, error: 'Email service not configured' }
