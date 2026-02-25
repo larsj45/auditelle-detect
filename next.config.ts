@@ -1,26 +1,12 @@
 import type { NextConfig } from "next";
 
-// Redirects are build-time config — imported directly rather than via
-// the async config loader (which can't run during next.config compilation).
-// When adding a new reseller, add a conditional block based on RESELLER_ID.
-import auditelleFr from "./config/auditelle-fr";
-import veritextoEs from "./config/veritexto-es";
+import redirectConfig from "./config/redirects";
 
 const resellerId = process.env.RESELLER_ID || 'auditelle-fr'
 
-function getResellerRedirects() {
-  switch (resellerId) {
-    case 'veritexto-es':
-      return veritextoEs.redirects || []
-    case 'auditelle-fr':
-    default:
-      return auditelleFr.redirects || []
-  }
-}
-
 const nextConfig: NextConfig = {
   async redirects() {
-    return getResellerRedirects()
+    return redirectConfig[resellerId] || redirectConfig['auditelle-fr'] || []
   },
   async headers() {
     return [
