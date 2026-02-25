@@ -13,6 +13,7 @@ export interface ResellerConfig {
   domain: string        // e.g. "auditelle.fr"
   logoColor: string     // path: e.g. "/brands/auditelle/logo-color.svg"
   logoWhite: string     // path: e.g. "/brands/auditelle/logo-white.svg"
+  logoHeight?: string   // CSS height for logo img: e.g. "2rem", "3rem" (default "2rem")
 
   // ── Theme (CSS custom properties) ───────────────────────────────────────
   theme: {

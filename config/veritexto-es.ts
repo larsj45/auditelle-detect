@@ -8,6 +8,7 @@ const config: ResellerConfig = {
   domain: 'veritexto.es',
   logoColor: '/brands/veritexto-es/logo-color.svg',
   logoWhite: '/brands/veritexto-es/logo-white.svg',
+  logoHeight: '3rem',
 
   // ── Theme ───────────────────────────────────────────────────────────────
   theme: {
