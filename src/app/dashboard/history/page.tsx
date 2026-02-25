@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { History, Bot, User, AlertTriangle } from 'lucide-react';
+import { History, Bot, User, AlertTriangle, Search } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useConfig } from '@/components/ConfigProvider';
 
@@ -10,10 +10,35 @@ interface Scan {
   text_snippet: string;
   ai_score: number;
   detected_model: string | null;
+  scan_type: string | null;
   created_at: string;
 }
 
-function ScoreBadge({ score }: { score: number }) {
+function ScoreBadge({ score, scanType }: { score: number; scanType?: string | null }) {
+  if (scanType === 'plagiarism') {
+    if (score >= 30)
+      return (
+        <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
+          <Search className="w-3 h-3" />
+          {Math.round(score)}% Plagiat
+        </span>
+      );
+    if (score >= 10)
+      return (
+        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-1 rounded-full">
+          <Search className="w-3 h-3" />
+          {Math.round(score)}% Plagiat
+        </span>
+      );
+    return (
+      <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
+        <Search className="w-3 h-3" />
+        {Math.round(score)}% Plagiat
+      </span>
+    );
+  }
+
+  // AI detection badges (default)
   if (score >= 75)
     return (
       <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
@@ -49,7 +74,7 @@ export default function HistoryPage() {
 
       const { data } = await supabase
         .from('scans')
-        .select('id, text_snippet, ai_score, detected_model, created_at')
+        .select('id, text_snippet, ai_score, detected_model, scan_type, created_at')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false })
         .limit(50);
@@ -105,7 +130,7 @@ export default function HistoryPage() {
                     )}
                   </div>
                 </div>
-                <ScoreBadge score={scan.ai_score} />
+                <ScoreBadge score={scan.ai_score} scanType={scan.scan_type} />
               </div>
             </div>
           ))}

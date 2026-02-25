@@ -3,7 +3,9 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DetectionResult from '@/components/DetectionResult'
-import { FileSearch, Loader2, CheckCircle } from 'lucide-react'
+import PlagiarismResult from '@/components/PlagiarismResult'
+import DetectionModeToggle from '@/components/DetectionModeToggle'
+import { FileSearch, Search, Loader2, CheckCircle } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import { useConfig } from '@/components/ConfigProvider'
 
@@ -14,6 +16,17 @@ interface DetectionResponse {
   headline?: string
   dashboard_link?: string
   sentences?: Array<{ text: string; ai_likelihood: number; label?: string; confidence?: string }>
+  scans_remaining?: number
+}
+
+interface PlagiarismResponse {
+  plagiarism_detected: boolean
+  percent_plagiarized: number
+  plagiarized_content: Array<{
+    source_url: string
+    matched_text: string
+    similarity_score: number
+  }>
   scans_remaining?: number
 }
 
@@ -43,12 +56,22 @@ function ConversionTracker({ onSuccess }: { onSuccess: () => void }) {
 export default function DashboardPage() {
   const config = useConfig()
   const s = config.strings.dashboard
+  const p = config.strings.plagiarism
   const [text, setText] = useState('')
+  const [mode, setMode] = useState<'ai' | 'plagiarism'>('ai')
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<DetectionResponse | null>(null)
+  const [aiResult, setAiResult] = useState<DetectionResponse | null>(null)
+  const [plagResult, setPlagResult] = useState<PlagiarismResponse | null>(null)
   const [error, setError] = useState('')
   const [scansRemaining, setScansRemaining] = useState<number | null>(null)
   const [showSuccessBanner, setShowSuccessBanner] = useState(false)
+
+  const handleModeChange = (newMode: 'ai' | 'plagiarism') => {
+    setMode(newMode)
+    setAiResult(null)
+    setPlagResult(null)
+    setError('')
+  }
 
   const handleAnalyze = async () => {
     if (!text.trim() || text.trim().length < 50) {
@@ -58,7 +81,8 @@ export default function DashboardPage() {
 
     setLoading(true)
     setError('')
-    setResult(null)
+    setAiResult(null)
+    setPlagResult(null)
 
     try {
       const { supabase } = await import('@/lib/supabase')
@@ -70,7 +94,7 @@ export default function DashboardPage() {
           'Content-Type': 'application/json',
           ...(session?.access_token && { Authorization: `Bearer ${session.access_token}` }),
         },
-        body: JSON.stringify({ text: text.trim() }),
+        body: JSON.stringify({ text: text.trim(), mode }),
       })
 
       const data = await response.json()
@@ -79,7 +103,12 @@ export default function DashboardPage() {
         throw new Error(data.error || config.strings.errors.analysisError)
       }
 
-      setResult(data)
+      if (mode === 'plagiarism') {
+        setPlagResult(data)
+      } else {
+        setAiResult(data)
+      }
+
       if (data.scans_remaining !== undefined) {
         setScansRemaining(data.scans_remaining)
       }
@@ -118,6 +147,11 @@ export default function DashboardPage() {
         )}
       </div>
 
+      {/* Mode toggle */}
+      <div className="mb-4">
+        <DetectionModeToggle mode={mode} onModeChange={handleModeChange} disabled={loading} />
+      </div>
+
       <div className="card mb-6">
         <FileUpload onTextExtracted={(extractedText) => { if (extractedText) setText(extractedText) }} />
         <textarea
@@ -138,6 +172,11 @@ export default function DashboardPage() {
                 <Loader2 className="w-4 h-4 animate-spin" />
                 {s.analyzing}
               </>
+            ) : mode === 'plagiarism' ? (
+              <>
+                <Search className="w-4 h-4" />
+                {p.analyzePlagiarism}
+              </>
             ) : (
               <>
                 <FileSearch className="w-4 h-4" />
@@ -152,18 +191,28 @@ export default function DashboardPage() {
         <div className="bg-red-50 text-red-700 text-sm p-4 rounded-lg mb-6">{error}</div>
       )}
 
-      {result && (
+      {aiResult && (
         <div className="card">
           <DetectionResult
-            score={Math.round(result.ai_likelihood * 100)}
-            headline={result.headline}
-            aiAssistedScore={result.ai_assisted_likelihood}
-            humanScore={result.human_likelihood}
-            dashboardLink={result.dashboard_link}
-            sentences={result.sentences?.map(s => ({
-              ...s,
-              ai_likelihood: Math.round(s.ai_likelihood * 100),
+            score={Math.round(aiResult.ai_likelihood * 100)}
+            headline={aiResult.headline}
+            aiAssistedScore={aiResult.ai_assisted_likelihood}
+            humanScore={aiResult.human_likelihood}
+            dashboardLink={aiResult.dashboard_link}
+            sentences={aiResult.sentences?.map(sent => ({
+              ...sent,
+              ai_likelihood: Math.round(sent.ai_likelihood * 100),
             }))}
+          />
+        </div>
+      )}
+
+      {plagResult && (
+        <div className="card">
+          <PlagiarismResult
+            percentPlagiarized={plagResult.percent_plagiarized}
+            plagiarismDetected={plagResult.plagiarism_detected}
+            sources={plagResult.plagiarized_content}
           />
         </div>
       )}

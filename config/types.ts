@@ -51,6 +51,7 @@ export interface ResellerConfig {
     teamManagement: boolean
     demoPage: boolean
     heroDemo: boolean
+    plagiarismDetection: boolean
   }
 
   // ── SEO / Meta ────────────────────────────────────────────────────────────
@@ -306,6 +307,24 @@ export interface ResellerStrings {
     ctaTeaser: string           // teaser line below CTA button
     unlockLabel: string         // blurred preview overlay text
     scansRemaining: string      // "{count} analyses gratuites restantes aujourd'hui"
+  }
+
+  // Plagiarism detection
+  plagiarism: {
+    modeAI: string
+    modePlagiarism: string
+    noPlagiarism: string
+    plagiarismFound: string
+    percentPlagiarized: string    // {score}% placeholder
+    sourcesFound: string          // {count} placeholder
+    sourceLabel: string
+    matchedText: string
+    similarity: string
+    analyzePlagiarism: string
+    originalSample: string
+    copiedSample: string
+    originalButton: string
+    copiedButton: string
   }
 
   // File upload

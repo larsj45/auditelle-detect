@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { text } = await request.json()
+    const { text, mode = 'ai' } = await request.json()
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
@@ -54,6 +54,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: errors.serviceUnavailable }, { status: 503 })
     }
 
+    // Route to plagiarism API
+    if (mode === 'plagiarism') {
+      const plagRes = await fetch('https://plagiarism.api.pangram.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': pangramKey
+        },
+        body: JSON.stringify({ text: text.slice(0, 2000) })
+      })
+
+      if (!plagRes.ok) {
+        console.error('Pangram Plagiarism API error:', (await plagRes.text()).substring(0, 200))
+        return NextResponse.json({ error: errors.analysisError }, { status: 500 })
+      }
+
+      const plagData = await plagRes.json()
+
+      incrementRateLimit(ip)
+
+      const score = Math.round((plagData.percent_plagiarized || 0) * 100)
+      const sources = (plagData.plagiarized_content || []).map((s: { source_url?: string; similarity_score?: number }) => ({
+        url: s.source_url || '',
+        similarity: Math.round((s.similarity_score || 0) * 100),
+      }))
+
+      return NextResponse.json({
+        mode: 'plagiarism',
+        plagiarism_detected: plagData.plagiarism_detected ?? false,
+        score,
+        source_count: sources.length,
+        sources,
+        remaining: DAILY_LIMIT - limitInfo.count - 1
+      })
+    }
+
+    // Default: AI detection
     const pangramRes = await fetch('https://text.api.pangramlabs.com/v3', {
       method: 'POST',
       headers: {
@@ -77,6 +114,7 @@ export async function POST(request: NextRequest) {
     const verdict = pangramData.headline
       || (aiScore >= 80 ? heroStrings.veryLikelyAI : aiScore >= 50 ? heroStrings.possiblyAI : heroStrings.probablyHuman)
     return NextResponse.json({
+      mode: 'ai',
       score: aiScore,
       model: pangramData.prediction_short || null,
       verdict,

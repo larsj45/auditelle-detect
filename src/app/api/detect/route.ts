@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { detectAI } from '@/lib/pangram'
+import { detectAI, detectPlagiarism } from '@/lib/pangram'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS } from '@/lib/config'
 import { sendEmail, limitReachedEmail } from '@/lib/email'
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { text } = body
+    const { text, mode = 'ai' } = body
 
     if (!text || typeof text !== 'string' || text.trim().length < 50) {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
@@ -97,7 +97,42 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: errors.textTooLong }, { status: 413 })
     }
 
-    const result = await detectAI(text.trim())
+    const trimmedText = text.trim()
+
+    // Route to appropriate detection API
+    if (mode === 'plagiarism') {
+      const plagResult = await detectPlagiarism(trimmedText)
+
+      const { error: updateError } = await serviceSupabase
+        .from('profiles')
+        .update({ scans_today: scansToday + 1 })
+        .eq('id', user.id)
+        .eq('scans_today', scansToday)
+
+      if (updateError) {
+        return NextResponse.json({
+          error: errors.rateLimitRetry,
+          scans_remaining: 0,
+        }, { status: 429 })
+      }
+
+      await serviceSupabase.from('scans').insert({
+        user_id: user.id,
+        text_snippet: trimmedText.substring(0, 200),
+        ai_score: Math.round(plagResult.percent_plagiarized * 100),
+        detected_model: null,
+        full_result: plagResult,
+        scan_type: 'plagiarism',
+      })
+
+      return NextResponse.json({
+        ...plagResult,
+        scans_remaining: limit - scansToday - 1,
+      })
+    }
+
+    // Default: AI detection
+    const result = await detectAI(trimmedText)
 
     const { error: updateError } = await serviceSupabase
       .from('profiles')
@@ -114,10 +149,11 @@ export async function POST(request: NextRequest) {
 
     await serviceSupabase.from('scans').insert({
       user_id: user.id,
-      text_snippet: text.trim().substring(0, 200),
+      text_snippet: trimmedText.substring(0, 200),
       ai_score: Math.round(result.ai_likelihood * 100),
       detected_model: result.headline || null,
       full_result: result,
+      scan_type: 'ai',
     })
 
     return NextResponse.json({

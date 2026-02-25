@@ -1,4 +1,5 @@
 const PANGRAM_API_URL = 'https://text.api.pangramlabs.com/v3'
+const PANGRAM_PLAGIARISM_URL = 'https://plagiarism.api.pangram.com'
 
 export interface PangramResult {
   ai_likelihood: number
@@ -14,6 +15,18 @@ export interface PangramResult {
     label?: string
     confidence?: string
   }>
+}
+
+export interface PlagiarismMatch {
+  source_url: string
+  matched_text: string
+  similarity_score: number
+}
+
+export interface PlagiarismResult {
+  plagiarism_detected: boolean
+  percent_plagiarized: number
+  plagiarized_content: PlagiarismMatch[]
 }
 
 interface PangramV3Response {
@@ -76,6 +89,39 @@ export async function detectAI(text: string): Promise<PangramResult> {
       ai_likelihood: w.ai_assistance_score,
       label: w.label,
       confidence: w.confidence,
+    })),
+  }
+}
+
+export async function detectPlagiarism(text: string): Promise<PlagiarismResult> {
+  const apiKey = process.env.PANGRAM_API_KEY
+  if (!apiKey) {
+    throw new Error('PANGRAM_API_KEY is not configured')
+  }
+
+  const response = await fetch(PANGRAM_PLAGIARISM_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+    },
+    body: JSON.stringify({ text }),
+  })
+
+  if (!response.ok) {
+    const err = await response.text()
+    throw new Error(`Pangram Plagiarism API error: ${response.status} - ${err}`)
+  }
+
+  const data = await response.json()
+
+  return {
+    plagiarism_detected: data.plagiarism_detected ?? false,
+    percent_plagiarized: data.percent_plagiarized ?? 0,
+    plagiarized_content: (data.plagiarized_content ?? []).map((item: { source_url?: string; matched_text?: string; similarity_score?: number }) => ({
+      source_url: item.source_url ?? '',
+      matched_text: item.matched_text ?? '',
+      similarity_score: item.similarity_score ?? 0,
     })),
   }
 }

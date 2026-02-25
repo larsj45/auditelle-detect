@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { detectAI } from '@/lib/pangram'
+import { detectAI, detectPlagiarism } from '@/lib/pangram'
 import { getResellerConfig } from '@/lib/config'
 
 // Simple in-memory rate limiting (resets on server restart)
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { text } = body
+    const { text, mode = 'ai' } = body
 
     if (!text || typeof text !== 'string' || text.trim().length < 50) {
       return NextResponse.json({
@@ -61,16 +61,26 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    const result = await detectAI(text.trim())
-
     // Increment usage
     const currentUsage = ipUsage.get(ip)!
     currentUsage.count += 1
     ipUsage.set(ip, currentUsage)
 
+    const testsRemaining = FREE_DEMO_LIMIT - currentUsage.count
+
+    if (mode === 'plagiarism') {
+      const plagResult = await detectPlagiarism(text.trim())
+      return NextResponse.json({
+        ...plagResult,
+        tests_remaining: testsRemaining,
+      })
+    }
+
+    const result = await detectAI(text.trim())
+
     return NextResponse.json({
       ...result,
-      tests_remaining: FREE_DEMO_LIMIT - currentUsage.count,
+      tests_remaining: testsRemaining,
     })
   } catch (error: unknown) {
     console.error('Public detection error:', error)

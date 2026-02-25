@@ -177,6 +177,7 @@ const config: ResellerConfig = {
     teamManagement: true,
     demoPage: true,
     heroDemo: true,
+    plagiarismDetection: true,
   },
 
   // ── SEO ───────────────────────────────────────────────────────────────────
@@ -452,6 +453,24 @@ const config: ResellerConfig = {
       ctaTeaser: 'Desbloquea el análisis por sección, la identificación del modelo y más',
       unlockLabel: 'Crea una cuenta para desbloquear el análisis completo',
       scansRemaining: '{count} análisis gratuitos restantes hoy',
+    },
+
+    // Plagiarism detection
+    plagiarism: {
+      modeAI: 'Detección IA',
+      modePlagiarism: 'Detección de plagio',
+      noPlagiarism: 'No se detectó plagio',
+      plagiarismFound: 'Plagio detectado',
+      percentPlagiarized: '{score}% de plagio detectado',
+      sourcesFound: '{count} fuente(s) encontrada(s)',
+      sourceLabel: 'Fuente',
+      matchedText: 'Texto coincidente',
+      similarity: 'Similitud',
+      analyzePlagiarism: 'Verificar plagio',
+      originalSample: 'La fotosíntesis es un proceso biológico fundamental mediante el cual las plantas convierten la luz solar en energía química, produciendo oxígeno como subproducto esencial para la vida en la Tierra.',
+      copiedSample: 'La fotosíntesis es el proceso bioenergético que permite a los organismos clorofílicos sintetizar materia orgánica utilizando la energía luminosa. Consiste en reducir el dióxido de carbono por el agua en glúcidos y dioxígeno.',
+      originalButton: 'Texto original',
+      copiedButton: 'Texto copiado',
     },
 
     // File upload
