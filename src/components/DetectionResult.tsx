@@ -123,12 +123,22 @@ function BreakdownBar({ ai, aiAssisted, human, labels }: {
   )
 }
 
+// Map Pangram API English headlines to localized strings
+const headlineMap: Record<string, 'probablyHuman' | 'mixed' | 'probablyAI'> = {
+  'Fully Human Written': 'probablyHuman',
+  'Mostly Human Written': 'probablyHuman',
+  'Mixed AI and Human Written': 'mixed',
+  'Mostly AI Generated': 'probablyAI',
+  'AI Generated': 'probablyAI',
+}
+
 export default function DetectionResult({ score, headline, aiAssistedScore, humanScore, dashboardLink, sentences }: DetectionResultProps) {
   const config = useConfig()
   const s = config.strings.results
   const { bg } = getScoreColor(score)
 
   const label = score < 30 ? s.probablyHuman : score < 60 ? s.mixed : s.probablyAI
+  const localizedHeadline = headline ? (s[headlineMap[headline] ?? 'mixed'] || headline) : undefined
 
   return (
     <div className="space-y-6">
@@ -139,9 +149,9 @@ export default function DetectionResult({ score, headline, aiAssistedScore, huma
           <p className="text-gray-600 mt-1">
             {s.aiProbability.replace('{score}', String(score))}
           </p>
-          {headline && (
+          {localizedHeadline && (
             <p className="text-gray-500 mt-2 text-sm">
-              {s.classification} : <span className="font-semibold text-[var(--navy)]">{headline}</span>
+              {s.classification} : <span className="font-semibold text-[var(--navy)]">{localizedHeadline}</span>
             </p>
           )}
 

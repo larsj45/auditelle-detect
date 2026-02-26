@@ -114,8 +114,7 @@ export async function POST(request: NextRequest) {
 
     const aiScore = Math.round((pangramData.fraction_ai || 0) * 100)
     const heroStrings = config.strings.heroDemo
-    const verdict = pangramData.headline
-      || (aiScore >= 80 ? heroStrings.veryLikelyAI : aiScore >= 50 ? heroStrings.possiblyAI : heroStrings.probablyHuman)
+    const verdict = aiScore >= 80 ? heroStrings.veryLikelyAI : aiScore >= 50 ? heroStrings.possiblyAI : heroStrings.probablyHuman
     return NextResponse.json({
       mode: 'ai',
       score: aiScore,
