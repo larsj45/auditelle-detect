@@ -11,6 +11,9 @@ export async function getResellerConfig(): Promise<ResellerConfig> {
   // Add new cases here when onboarding a reseller.
   let mod
   switch (RESELLER_ID) {
+    case 'novalearn-uk':
+      mod = await import('./novalearn-uk')
+      break
     case 'veritexto-es':
       mod = await import('./veritexto-es')
       break
