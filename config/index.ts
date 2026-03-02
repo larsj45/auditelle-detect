@@ -20,6 +20,9 @@ export async function getResellerConfig(): Promise<ResellerConfig> {
     case 'veritexto-pt':
       mod = await import('./veritexto-pt')
       break
+    case 'klartext-se':
+      mod = await import('./klartext-se')
+      break
     case 'auditelle-fr':
     default:
       mod = await import('./auditelle-fr')
