@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Loader2, Sparkles, AlertCircle, Lock, Search } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 import DetectionModeToggle from '@/components/DetectionModeToggle'
+import FileUpload from '@/components/FileUpload'
 
 interface DemoAIResult {
   mode: 'ai'
@@ -139,6 +140,7 @@ export default function HeroDemo() {
         <DetectionModeToggle mode={mode} onModeChange={handleModeChange} disabled={loading} />
       </div>
 
+      <FileUpload onTextExtracted={(extracted) => { if (extracted) setText(extracted) }} />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
