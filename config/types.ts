@@ -228,6 +228,8 @@ export interface ResellerStrings {
     accountCreatedRedirect: string
     checkEmail: string
     resetEmailSent: string
+    googleSignIn: string        // "Continue with Google"
+    orDivider: string           // "or"
   }
 
   // Dashboard

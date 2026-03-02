@@ -375,6 +375,8 @@ const config: ResellerConfig = {
       accountCreatedRedirect: 'Compte cr\u00e9\u00e9 ! Redirection vers le paiement...',
       checkEmail: 'V\u00e9rifiez votre email pour confirmer votre inscription.',
       resetEmailSent: 'Un lien de r\u00e9initialisation a \u00e9t\u00e9 envoy\u00e9 \u00e0 votre adresse email.',
+      googleSignIn: 'Continuer avec Google',
+      orDivider: 'ou',
     },
 
     // Dashboard
