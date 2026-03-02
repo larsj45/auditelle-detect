@@ -5,7 +5,7 @@ const config: ResellerConfig = {
 
   // ── Branding ──────────────────────────────────────────────────────────────
   name: 'KlarText',
-  domain: 'klartext.se',
+  domain: 'klartextai.se',
   logoColor: '/brands/klartext-se/logo-color.svg',
   logoWhite: '/brands/klartext-se/logo-white.svg',
   logoHeight: '3.5rem',
@@ -36,8 +36,8 @@ const config: ResellerConfig = {
   dataProtectionLabel: 'GDPR',
 
   // ── Contact ───────────────────────────────────────────────────────────────
-  supportEmail: 'hej@klartext.se',
-  noReplyEmail: 'noreply@klartext.se',
+  supportEmail: 'hej@klartextai.se',
+  noReplyEmail: 'noreply@klartextai.se',
 
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
