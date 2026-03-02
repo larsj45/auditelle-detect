@@ -6,8 +6,8 @@ const config: ResellerConfig = {
   // ── Branding ──────────────────────────────────────────────────────────────
   name: 'NovaLearn',
   domain: 'novalearn.co.uk',
-  logoColor: '',   // no logo — renders brand name as text
-  logoWhite: '',   // no logo — renders brand name as text
+  logoColor: '/brands/novalearn-uk/logo-color.svg',
+  logoWhite: '/brands/novalearn-uk/logo-white.svg',
 
   // ── Theme ───────────────────────────────────────────────────────────────
   theme: {
