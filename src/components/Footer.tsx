@@ -13,7 +13,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
-              <img src={config.logoWhite} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
+              {config.logoWhite ? (
+                <img src={config.logoWhite} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
+              ) : (
+                <span className="text-xl font-bold text-white">{config.name}</span>
+              )}
             </div>
             <p className="text-gray-400 text-sm max-w-md">
               {s.footer.description}
