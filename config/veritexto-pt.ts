@@ -464,6 +464,8 @@ const config: ResellerConfig = {
       ctaTeaser: 'Desbloqueie a análise por seção, a identificação do modelo e mais',
       unlockLabel: 'Crie uma conta para desbloquear a análise completa',
       scansRemaining: '{count} análises gratuitas restantes hoje',
+      pendingBanner: 'Seu texto foi salvo e será analisado imediatamente após a criação da sua conta.',
+      signupToAnalyze: 'Crie uma conta gratuita para analisar seu texto',
     },
 
     // Plagiarism detection

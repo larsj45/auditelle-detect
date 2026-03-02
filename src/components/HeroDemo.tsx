@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { Loader2, Sparkles, AlertCircle, Lock, Search } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 import DetectionModeToggle from '@/components/DetectionModeToggle'
@@ -31,6 +32,7 @@ export default function HeroDemo() {
   const s = config.strings.heroDemo
   const r = config.strings.results
   const p = config.strings.plagiarism
+  const router = useRouter()
   const [text, setText] = useState('')
   const [mode, setMode] = useState<'ai' | 'plagiarism'>('ai')
   const [loading, setLoading] = useState(false)
@@ -38,8 +40,8 @@ export default function HeroDemo() {
   const [error, setError] = useState<string | null>(null)
   const [remaining, setRemaining] = useState<number | null>(null)
 
-  const analyze = async () => {
-    if (text.trim().length < 50) {
+  const runAnalysis = useCallback(async (analysisText: string, analysisMode: 'ai' | 'plagiarism') => {
+    if (analysisText.trim().length < 50) {
       setError(config.strings.errors.textTooShort)
       return
     }
@@ -53,7 +55,7 @@ export default function HeroDemo() {
         fetch('/api/demo-detect', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: text.slice(0, 2000), mode })
+          body: JSON.stringify({ text: analysisText.slice(0, 2000), mode: analysisMode })
         }),
         new Promise(resolve => setTimeout(resolve, 800))
       ])
@@ -74,7 +76,42 @@ export default function HeroDemo() {
     } finally {
       setLoading(false)
     }
+  }, [config.strings.errors.textTooShort, config.strings.errors.analysisError, s.connectionError])
+
+  const analyze = async () => {
+    // Check auth — gate signup for homepage demo
+    const { supabase } = await import('@/lib/supabase')
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+      sessionStorage.setItem('pendingAnalysisText', text)
+      sessionStorage.setItem('pendingAnalysisMode', mode)
+      router.push('/signup?pending=1')
+      return
+    }
+
+    runAnalysis(text, mode)
   }
+
+  // Auto-analyze on return from signup
+  useEffect(() => {
+    const pendingText = sessionStorage.getItem('pendingAnalysisText')
+    const pendingMode = sessionStorage.getItem('pendingAnalysisMode') as 'ai' | 'plagiarism' | null
+
+    if (pendingText) {
+      import('@/lib/supabase').then(({ supabase }) => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            sessionStorage.removeItem('pendingAnalysisText')
+            sessionStorage.removeItem('pendingAnalysisMode')
+            setText(pendingText)
+            if (pendingMode) setMode(pendingMode)
+            runAnalysis(pendingText, pendingMode || 'ai')
+          }
+        })
+      })
+    }
+  }, [runAnalysis])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-red-500'

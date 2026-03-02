@@ -468,6 +468,8 @@ const config: ResellerConfig = {
       ctaTeaser: "D\u00e9bloquez l'analyse par section, l'identification du mod\u00e8le et plus",
       unlockLabel: "Cr\u00e9ez un compte pour d\u00e9bloquer l'analyse compl\u00e8te",
       scansRemaining: '{count} analyses gratuites restantes aujourd\u2019hui',
+      pendingBanner: 'Votre texte a été sauvegardé et sera analysé immédiatement après la création de votre compte.',
+      signupToAnalyze: 'Créez un compte gratuit pour analyser votre texte',
     },
 
     // Plagiarism detection

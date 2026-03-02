@@ -318,6 +318,8 @@ export interface ResellerStrings {
     ctaTeaser: string           // teaser line below CTA button
     unlockLabel: string         // blurred preview overlay text
     scansRemaining: string      // "{count} analyses gratuites restantes aujourd'hui"
+    pendingBanner: string       // "Your text has been saved and will be analyzed after signup"
+    signupToAnalyze: string     // "Create a free account to analyze your text"
   }
 
   // Plagiarism detection

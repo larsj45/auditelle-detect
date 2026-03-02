@@ -85,7 +85,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
             const redirected = await redirectToCheckout(data.session.access_token, planParam)
             if (redirected) return
           }
-          window.location.href = '/dashboard'
+          // Redirect to homepage if there's a pending analysis from HeroDemo
+          const hasPending = typeof window !== 'undefined' && sessionStorage.getItem('pendingAnalysisText')
+          window.location.href = hasPending ? '/' : '/dashboard'
         } else {
           setSuccess(s.checkEmail)
         }
