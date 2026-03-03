@@ -4,8 +4,8 @@ const config: ResellerConfig = {
   id: 'klartext-se',
 
   // ── Branding ──────────────────────────────────────────────────────────────
-  name: 'KlarText',
-  domain: 'klartext.io',
+  name: 'TextVakt',
+  domain: 'textvakt.com',
   logoColor: '/brands/klartext-se/logo-color.svg',
   logoWhite: '/brands/klartext-se/logo-white.svg',
   logoHeight: '3.5rem',
@@ -28,7 +28,7 @@ const config: ResellerConfig = {
   timezone: 'Europe/Stockholm',
 
   // ── Legal ─────────────────────────────────────────────────────────────────
-  legalEntity: 'KlarText AB',
+  legalEntity: 'TextVakt AB',
   registrationNumber: '',
   registrationLabel: 'Org.nr',
   country: 'Sverige',
@@ -36,8 +36,8 @@ const config: ResellerConfig = {
   dataProtectionLabel: 'GDPR',
 
   // ── Contact ───────────────────────────────────────────────────────────────
-  supportEmail: 'hej@klartext.io',
-  noReplyEmail: 'noreply@klartext.io',
+  supportEmail: 'hej@textvakt.com',
+  noReplyEmail: 'noreply@textvakt.com',
 
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
@@ -179,10 +179,10 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'KlarText — Upptäck AI-genererat innehåll med 99,9 % precision',
+    title: 'TextVakt — Upptäck AI-genererat innehåll med 99,9 % precision',
     description: 'Upptäck AI-genererat innehåll med 99,9 % precision. ChatGPT, Claude, Gemini och fler. Tredjepartsverifierad, nästan inga falska positiva resultat.',
-    keywords: ['AI-detektion', 'ChatGPT-detektor', 'AI-plagiatkontroll', 'akademisk integritet', 'KlarText', 'AI-detektor Sverige'],
-    ogTitle: 'KlarText — Upptäck AI-genererat innehåll med 99,9 % precision',
+    keywords: ['AI-detektion', 'ChatGPT-detektor', 'AI-plagiatkontroll', 'akademisk integritet', 'TextVakt', 'AI-detektor Sverige'],
+    ogTitle: 'TextVakt — Upptäck AI-genererat innehåll med 99,9 % precision',
     ogDescription: 'Upptäck AI-innehåll med 99,9 % precision. Tredjepartsverifierade resultat.',
   },
 
@@ -296,9 +296,9 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Varför välja KlarText?',
+      title: 'Varför välja TextVakt?',
       subtitle: 'Jämför de ledande AI-detektionslösningarna',
-      competitors: ['KlarText', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      competitors: ['TextVakt', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
       rows: [
         { label: 'Precision', values: ['99,9 %', '~85 %', '~80 %', '~94 %'] },
         { label: 'Falska positiva', values: ['Nästan noll', 'Hög', 'Måttlig', 'Måttlig'] },
@@ -319,7 +319,7 @@ const config: ResellerConfig = {
     // CTA section
     cta: {
       title: 'Redo att upptäcka AI-innehåll?',
-      subtitle: 'Gå med tusentals yrkesverksamma som litar på KlarText för att skydda integriteten i sitt innehåll.',
+      subtitle: 'Gå med tusentals yrkesverksamma som litar på TextVakt för att skydda integriteten i sitt innehåll.',
       button: 'Skapa gratis konto →',
     },
 
@@ -497,9 +497,9 @@ const config: ResellerConfig = {
       title: 'Kontakta oss',
       subtitle: 'En fråga? Ett integrationsprojekt? Vårt team svarar inom 24 timmar.',
       emailLabel: 'E-post',
-      companyName: 'KlarText AB',
+      companyName: 'TextVakt AB',
       institutionCta: 'Universitet och institutioner',
-      institutionDescription: 'Vill du integrera KlarText i din institution? Kontakta oss för en skräddarsydd offert och demonstration.',
+      institutionDescription: 'Vill du integrera TextVakt i din institution? Kontakta oss för en skräddarsydd offert och demonstration.',
       formFullName: 'Fullständigt namn *',
       formEmail: 'E-post *',
       formOrganization: 'Organisation',
@@ -526,7 +526,7 @@ const config: ResellerConfig = {
 
     // Demo video page
     demoVideo: {
-      title: 'Lär känna KlarText på 5 minuter',
+      title: 'Lär känna TextVakt på 5 minuter',
       subtitle: 'Upptäck hur du identifierar AI-genererat innehåll med 99,9 % precision',
       videoPlaceholder: 'Demovideo',
       videoSoon: 'Kommer snart',
@@ -542,13 +542,13 @@ const config: ResellerConfig = {
 
     // Email templates
     emails: {
-      headerName: 'KLARTEXT',
+      headerName: 'TEXTVAKT',
       legalFooter: '',
 
       welcome: {
-        subject: 'Välkommen till KlarText, {name}! 🎉',
+        subject: 'Välkommen till TextVakt, {name}! 🎉',
         greeting: 'Välkommen, {name}! 👋',
-        intro: 'Tack för att du skapade ditt konto på KlarText. Nu har du tillgång till marknadens mest precisa AI-detektor, verifierad av University of Maryland.',
+        intro: 'Tack för att du skapade ditt konto på TextVakt. Nu har du tillgång till marknadens mest precisa AI-detektor, verifierad av University of Maryland.',
         trialTitle: '🎁 Din gratis provperiod inkluderar:',
         trialFeatures: [
           '10 analyser per månad',
@@ -572,7 +572,7 @@ const config: ResellerConfig = {
 
       upgradeReminder: {
         subject: '{name}, du har använt {percent} % av dina analyser 📊',
-        title: 'Du använder KlarText flitigt! 🎯',
+        title: 'Du använder TextVakt flitigt! 🎯',
         body: '{name}, du har redan använt {percent} % av dina gratis analyser den här månaden.',
         upgradeTitle: '🚀 Uppgradera till Pro för att:',
         upgradeFeatures: [
@@ -595,8 +595,8 @@ const config: ResellerConfig = {
           lastDay: 'Sista chansen!',
           remaining: '{days} dagar kvar',
         },
-        body: '{name}, din gratis provperiod på KlarText upphör om {days} dagar. Missa inte tillgången till marknadens mest precisa AI-detektor.',
-        bodyLastDay: '{name}, din gratis provperiod på KlarText upphör idag. Missa inte tillgången till marknadens mest precisa AI-detektor.',
+        body: '{name}, din gratis provperiod på TextVakt upphör om {days} dagar. Missa inte tillgången till marknadens mest precisa AI-detektor.',
+        bodyLastDay: '{name}, din gratis provperiod på TextVakt upphör idag. Missa inte tillgången till marknadens mest precisa AI-detektor.',
         countdown: {
           today: 'IDAG',
           days: '{days} DAGAR',
@@ -617,7 +617,7 @@ const config: ResellerConfig = {
       trialEnded: {
         subject: '{name}, din provperiod har avslutats — men det är inte för sent! 🔓',
         title: 'Vi saknar dig, {name}! 👋',
-        body: 'Din gratis provperiod på KlarText har avslutats. Men oroa dig inte — ditt konto och din historik finns kvar och väntar på dig.',
+        body: 'Din gratis provperiod på TextVakt har avslutats. Men oroa dig inte — ditt konto och din historik finns kvar och väntar på dig.',
         offerTitle: '🎁 Specialerbjudande:',
         offerBody: 'Uppgradera till Pro inom 48 timmar och få 50 % rabatt på din första månad.',
         ctaButton: 'Utnyttja -50 % →',
