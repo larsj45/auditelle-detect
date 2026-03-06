@@ -502,7 +502,11 @@ export const DAILY_LIMITS: Record<string, number> = {
   pro: 50,
   university: 500,
   enterprise: 10000,
+  'limiar-vip': 20, // quota mensal — reset por mês, não por dia
 }
+
+// Planos com quota mensal (em vez de diária)
+export const MONTHLY_PLANS = new Set(['limiar-vip'])
 
 // ── Valid plan IDs for checkout validation ──────────────────────────────────
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { detectAI, detectPlagiarism } from '@/lib/pangram'
 import { createClient } from '@supabase/supabase-js'
-import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS } from '@/lib/config'
+import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS } from '@/lib/config'
 import { sendEmail, limitReachedEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
@@ -50,9 +50,23 @@ export async function POST(request: NextRequest) {
     const resetAt = profile?.scans_reset_at ? new Date(profile.scans_reset_at) : null
     let scansToday = profile?.scans_today || 0
 
-    const todayUTC = now.toISOString().split('T')[0]
-    const resetDay = resetAt ? resetAt.toISOString().split('T')[0] : null
-    if (!resetAt || todayUTC !== resetDay) {
+    // limiar-vip tem quota mensal — outros planos têm quota diária
+    const isMonthlyPlan = MONTHLY_PLANS.has(plan)
+    let shouldReset = false
+
+    if (isMonthlyPlan) {
+      const nowYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+      const resetYM = resetAt
+        ? `${resetAt.getFullYear()}-${String(resetAt.getMonth() + 1).padStart(2, '0')}`
+        : null
+      shouldReset = !resetAt || nowYM !== resetYM
+    } else {
+      const todayUTC = now.toISOString().split('T')[0]
+      const resetDay = resetAt ? resetAt.toISOString().split('T')[0] : null
+      shouldReset = !resetAt || todayUTC !== resetDay
+    }
+
+    if (shouldReset) {
       scansToday = 0
       await serviceSupabase
         .from('profiles')
