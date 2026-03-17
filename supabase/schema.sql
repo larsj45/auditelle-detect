@@ -57,11 +57,12 @@ CREATE POLICY "Users can insert own scans" ON public.scans
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, full_name)
+  INSERT INTO public.profiles (id, email, full_name, monthly_limit)
   VALUES (
     NEW.id,
     NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', '')
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    10
   );
   RETURN NEW;
 END;

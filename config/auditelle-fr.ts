@@ -48,8 +48,8 @@ const config: ResellerConfig = {
         features: [
           '10 analyses par mois',
           '1 utilisateur',
-          'Score IA 99.9% pr\u00e9cis',
-          'Identification du mod\u00e8le',
+          'Score IA 99,9% précis',
+          'Identification du modèle',
           'Historique 7 jours',
         ],
         cta: 'Commencer',
