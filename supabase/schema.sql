@@ -73,3 +73,16 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- API health monitoring log (written by cron, no RLS needed)
+CREATE TABLE IF NOT EXISTS public.api_health_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  endpoint TEXT NOT NULL,
+  status TEXT NOT NULL,
+  status_code INTEGER,
+  message TEXT,
+  latency_ms INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_api_health_log_created_at ON public.api_health_log(created_at DESC);
