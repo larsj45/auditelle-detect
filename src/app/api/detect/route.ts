@@ -120,9 +120,16 @@ export async function POST(request: NextRequest) {
     if (mode === 'plagiarism') {
       const plagResult = await detectPlagiarism(trimmedText)
 
+      const { data: freshProfilePlag } = await serviceSupabase
+        .from('profiles')
+        .select('monthly_usage')
+        .eq('id', user.id)
+        .single()
+      const currentMonthlyUsagePlag = freshProfilePlag?.monthly_usage || 0
+
       const { error: updateError } = await serviceSupabase
         .from('profiles')
-        .update({ scans_today: scansToday + 1 })
+        .update({ scans_today: scansToday + 1, monthly_usage: currentMonthlyUsagePlag + 1 })
         .eq('id', user.id)
         .eq('scans_today', scansToday)
 
@@ -151,9 +158,16 @@ export async function POST(request: NextRequest) {
     // Default: AI detection
     const result = await detectAI(trimmedText)
 
+    const { data: freshProfileAI } = await serviceSupabase
+      .from('profiles')
+      .select('monthly_usage')
+      .eq('id', user.id)
+      .single()
+    const currentMonthlyUsageAI = freshProfileAI?.monthly_usage || 0
+
     const { error: updateError } = await serviceSupabase
       .from('profiles')
-      .update({ scans_today: scansToday + 1 })
+      .update({ scans_today: scansToday + 1, monthly_usage: currentMonthlyUsageAI + 1 })
       .eq('id', user.id)
       .eq('scans_today', scansToday)
 
