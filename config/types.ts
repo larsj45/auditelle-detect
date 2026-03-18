@@ -496,7 +496,7 @@ export interface ResellerStrings {
 // ── Daily scan limits (shared across all resellers for now) ─────────────────
 
 export const DAILY_LIMITS: Record<string, number> = {
-  free: 5,
+  free: 10, // quota mensal — alinhado com homepage "10 analyses par mois"
   student: 10,
   starter: 50,
   pro: 50,
@@ -506,7 +506,7 @@ export const DAILY_LIMITS: Record<string, number> = {
 }
 
 // Planos com quota mensal (em vez de diária)
-export const MONTHLY_PLANS = new Set(['limiar-vip'])
+export const MONTHLY_PLANS = new Set(['free', 'limiar-vip'])
 
 // ── Valid plan IDs for checkout validation ──────────────────────────────────
 

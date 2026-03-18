@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
 
     // limiar-vip tem quota mensal — outros planos têm quota diária
     const isMonthlyPlan = MONTHLY_PLANS.has(plan)
+    const todayUTC = now.toISOString().split('T')[0]
     let shouldReset = false
 
     if (isMonthlyPlan) {
@@ -61,7 +62,6 @@ export async function POST(request: NextRequest) {
         : null
       shouldReset = !resetAt || nowYM !== resetYM
     } else {
-      const todayUTC = now.toISOString().split('T')[0]
       const resetDay = resetAt ? resetAt.toISOString().split('T')[0] : null
       shouldReset = !resetAt || todayUTC !== resetDay
     }

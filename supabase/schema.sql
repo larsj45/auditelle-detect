@@ -6,11 +6,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT,
   full_name TEXT,
-  plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'enterprise')),
+  plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'student', 'starter', 'pro', 'equipe', 'departement', 'university', 'enterprise', 'limiar-vip')),
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
   scans_today INTEGER DEFAULT 0,
   scans_reset_at TIMESTAMPTZ DEFAULT NOW(),
+  monthly_usage INTEGER DEFAULT 0,
+  monthly_limit INTEGER DEFAULT 10,
+  limit_email_sent_at TIMESTAMPTZ,
   welcome_email_sent BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -23,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.scans (
   ai_score FLOAT,
   detected_model TEXT,
   full_result JSONB,
+  scan_type TEXT DEFAULT 'ai' CHECK (scan_type IN ('ai', 'plagiarism')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
