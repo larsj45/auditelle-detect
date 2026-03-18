@@ -83,11 +83,14 @@ export async function POST(request: NextRequest) {
           .eq('id', user.id)
           .single()
 
-        // Only send if we haven't sent one today
-        const lastSent = profileForEmail?.limit_email_sent_at
-          ? new Date(profileForEmail.limit_email_sent_at).toISOString().split('T')[0]
+        // Only send once per reset period (daily or monthly)
+        const lastSentDate = profileForEmail?.limit_email_sent_at
+          ? new Date(profileForEmail.limit_email_sent_at)
           : null
-        if (lastSent !== todayUTC) {
+        const alreadySent = isMonthlyPlan
+          ? lastSentDate && `${lastSentDate.getFullYear()}-${String(lastSentDate.getMonth() + 1).padStart(2, '0')}` === `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+          : lastSentDate && lastSentDate.toISOString().split('T')[0] === todayUTC
+        if (!alreadySent) {
           const name = profileForEmail?.full_name?.split(' ')[0] || user.email.split('@')[0].split('+')[0]
           const emailContent = limitReachedEmail(config, name)
           sendEmail({ to: user.email, subject: emailContent.subject, html: emailContent.html, text: emailContent.text })

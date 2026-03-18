@@ -14,6 +14,11 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   monthly_usage INTEGER DEFAULT 0,
   monthly_limit INTEGER DEFAULT 10,
   limit_email_sent_at TIMESTAMPTZ,
+  subscription_status TEXT,
+  upgrade_reminder_sent BOOLEAN DEFAULT FALSE,
+  trial_ends_at TIMESTAMPTZ,
+  trial_reminder_days_sent INTEGER[] DEFAULT '{}',
+  trial_ended_email_sent BOOLEAN DEFAULT FALSE,
   welcome_email_sent BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
