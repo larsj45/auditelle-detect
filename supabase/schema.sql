@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT,
   full_name TEXT,
-  plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'student', 'starter', 'pro', 'equipe', 'departement', 'university', 'enterprise', 'limiar-vip')),
+  plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'university', 'enterprise', 'limiar-vip')),
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
   scans_today INTEGER DEFAULT 0,

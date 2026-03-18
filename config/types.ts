@@ -497,10 +497,8 @@ export interface ResellerStrings {
 
 export const DAILY_LIMITS: Record<string, number> = {
   free: 10, // quota mensal — alinhado com homepage "10 analyses par mois"
-  student: 10,
-  starter: 50,
-  pro: 50,
-  university: 500,
+  pro: 50, // 1000/mês ≈ 50/dia
+  university: 500, // 10000/mês ≈ 500/dia
   enterprise: 10000,
   'limiar-vip': 20, // quota mensal — reset por mês, não por dia
 }
@@ -511,8 +509,7 @@ export const MONTHLY_PLANS = new Set(['free', 'limiar-vip'])
 // ── Valid plan IDs for checkout validation ──────────────────────────────────
 
 export const VALID_PLAN_IDS = [
-  'student', 'starter', 'pro', 'equipe',
-  'departement', 'university', 'enterprise',
+  'pro', 'university', 'enterprise',
 ] as const
 
 export type PlanId = typeof VALID_PLAN_IDS[number]

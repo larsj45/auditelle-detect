@@ -20,17 +20,17 @@ export async function POST(request: NextRequest) {
     if (!match) return NextResponse.json({ error: errors.unauthorized, step: 'auth_header' }, { status: 401 })
     const token = match[1]
 
-    let plan = 'starter'
+    let plan = 'pro'
     try {
       const body = await request.json()
-      plan = body.plan || 'starter'
+      plan = body.plan || 'pro'
     } catch {
-      // Default to starter if no body
+      // Default to pro if no body
     }
 
     // Security fix: validate plan against whitelist
     if (!VALID_PLAN_IDS.includes(plan as typeof VALID_PLAN_IDS[number])) {
-      plan = 'starter'
+      plan = 'pro'
     }
 
     const supabase = createClient(
@@ -79,11 +79,7 @@ export async function POST(request: NextRequest) {
     }
 
     const priceIds: Record<string, string | undefined> = {
-      student: process.env.STRIPE_STUDENT_PRICE_ID,
-      starter: process.env.STRIPE_STARTER_PRICE_ID,
       pro: process.env.STRIPE_PRO_PRICE_ID,
-      equipe: process.env.STRIPE_EQUIPE_PRICE_ID,
-      departement: process.env.STRIPE_DEPARTEMENT_PRICE_ID,
       university: process.env.STRIPE_UNIVERSITY_PRICE_ID,
       enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID,
     }

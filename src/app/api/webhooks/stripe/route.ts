@@ -11,18 +11,11 @@ export const dynamic = 'force-dynamic'
 // Map price IDs to plan names
 const getPlanFromPriceId = (priceId: string): string => {
   const priceMap: Record<string, string> = {
-    // New plans
-    [process.env.STRIPE_STUDENT_PRICE_ID || '']: 'student',
-    [process.env.STRIPE_STARTER_PRICE_ID || '']: 'starter',
     [process.env.STRIPE_PRO_PRICE_ID || '']: 'pro',
-    // Team & department plans
-    [process.env.STRIPE_EQUIPE_PRICE_ID || '']: 'equipe',
-    [process.env.STRIPE_DEPARTEMENT_PRICE_ID || '']: 'departement',
-    // Legacy
     [process.env.STRIPE_UNIVERSITY_PRICE_ID || '']: 'university',
     [process.env.STRIPE_ENTERPRISE_PRICE_ID || '']: 'enterprise',
   }
-  return priceMap[priceId] || 'starter'
+  return priceMap[priceId] || 'pro'
 }
 
 export async function POST(request: NextRequest) {
@@ -48,9 +41,7 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.metadata?.supabase_user_id
-      // Normalize plan name: 'pro' -> 'starter' for backwards compatibility
-      let plan = session.metadata?.plan || 'starter'
-      if (plan === 'pro') plan = 'starter'
+      const plan = session.metadata?.plan || 'pro'
 
       if (userId) {
         // Update profile with subscription info
