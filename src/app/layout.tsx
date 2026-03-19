@@ -44,6 +44,13 @@ export default function RootLayout({
           {children}
           {config.googleAdsId && <CookieConsent />}
         </ConfigProvider>
+        {/* Plausible Analytics — lightweight, GDPR-friendly, no cookies */}
+        <Script
+          defer
+          data-domain={config.domain}
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
         {config.googleAdsId && (
           <>
             {/* Consent Mode v2 — must load BEFORE gtag.js */}
