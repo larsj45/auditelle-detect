@@ -496,7 +496,7 @@ export interface ResellerStrings {
 // ── Daily scan limits (shared across all resellers for now) ─────────────────
 
 export const DAILY_LIMITS: Record<string, number> = {
-  free: 10, // quota mensal — alinhado com homepage "10 analyses par mois"
+  free: 3, // quota mensal — limite baixo para forçar conversão
   pro: 50, // 1000/mês ≈ 50/dia
   university: 500, // 10000/mês ≈ 500/dia
   enterprise: 10000,

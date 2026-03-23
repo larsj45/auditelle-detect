@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   scans_today INTEGER DEFAULT 0,
   scans_reset_at TIMESTAMPTZ DEFAULT NOW(),
   monthly_usage INTEGER DEFAULT 0,
-  monthly_limit INTEGER DEFAULT 10,
+  monthly_limit INTEGER DEFAULT 3,
   limit_email_sent_at TIMESTAMPTZ,
   subscription_status TEXT,
   upgrade_reminder_sent BOOLEAN DEFAULT FALSE,
@@ -71,7 +71,7 @@ BEGIN
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
-    10,
+    3,
     NOW() + INTERVAL '30 days'
   );
   RETURN NEW;

@@ -46,7 +46,7 @@ const config: ResellerConfig = {
         price: '0€',
         description: 'Découvrez la précision',
         features: [
-          '10 analyses par mois',
+          '3 analyses par mois',
           '1 utilisateur',
           'Score IA 99,9% précis',
           'Identification du modèle',
@@ -540,7 +540,7 @@ const config: ResellerConfig = {
         intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Auditelle. Vous avez maintenant acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9, v\u00e9rifi\u00e9 par l'Universit\u00e9 du Maryland.",
         trialTitle: '\ud83c\udf81 Votre essai gratuit inclut :',
         trialFeatures: [
-          '10 analyses par mois',
+          '3 analyses par mois',
           'Pr\u00e9cision de 99,9%',
           'Identification du mod\u00e8le IA',
           'Historique de 7 jours',
