@@ -159,8 +159,20 @@ export default function DashboardPage() {
           <p className="text-gray-500 mt-1">{s.analyzerSubtitle}</p>
         </div>
         {scansRemaining !== null && (
-          <div className="text-sm text-gray-500 bg-white px-4 py-2 rounded-lg border border-gray-200">
-            <span className="font-semibold text-[var(--navy)]">{scansRemaining}</span> {s.scansRemaining}
+          <div className={`text-sm px-4 py-2 rounded-lg border ${
+            scansRemaining <= 0
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : scansRemaining <= 1
+              ? 'bg-amber-50 border-amber-200 text-amber-700'
+              : 'bg-white border-gray-200 text-gray-500'
+          }`}>
+            <span className="font-semibold">{scansRemaining}</span> {s.scansRemaining}
+            {scansRemaining <= 1 && scansRemaining > 0 && (
+              <a href="/dashboard/upgrade" className="ml-2 text-[var(--accent)] font-semibold hover:underline">Upgrade →</a>
+            )}
+            {scansRemaining <= 0 && (
+              <a href="/dashboard/upgrade" className="ml-2 font-semibold hover:underline">Upgrade →</a>
+            )}
           </div>
         )}
       </div>
@@ -223,7 +235,20 @@ export default function DashboardPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-700 text-sm p-4 rounded-lg mb-6">{error}</div>
+        <div className="bg-red-50 text-red-700 text-sm p-4 rounded-lg mb-6">
+          {error}
+          {scansRemaining !== null && scansRemaining <= 0 && (
+            <div className="mt-3 pt-3 border-t border-red-200">
+              <a
+                href="/dashboard/upgrade"
+                className="inline-flex items-center gap-2 bg-[var(--accent)] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[var(--accent-hover)] transition"
+              >
+                Passer au Pro — 12,50€ le premier mois →
+              </a>
+              <p className="text-xs text-red-400 mt-1">Code promo <strong>BIENVENUE50</strong> — 50% sur le 1er mois</p>
+            </div>
+          )}
+        </div>
       )}
 
       {aiResult && (
