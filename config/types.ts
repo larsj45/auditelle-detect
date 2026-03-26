@@ -249,6 +249,16 @@ export interface ResellerStrings {
     subscriptionActivatedDetail: string
     minCharsError: string
 
+    // Onboarding
+    onboardingTitle: string
+    onboardingBody: string
+    onboardingCta: string
+    onboardingDismiss: string
+
+    // Limit reached upgrade CTA
+    limitUpgradeCta: string           // "Upgrade to Pro — £10.50 for first month →"
+    limitUpgradePromo: string         // "Use code WELCOME50 — 50% off first month"
+
     // History page
     historyTitle: string
     historyEmpty: string

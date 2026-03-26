@@ -378,6 +378,16 @@ const config: ResellerConfig = {
       subscriptionActivatedDetail: 'Dina extra analyser är nu tillgängliga.',
       minCharsError: 'Ange minst 50 tecken för en tillförlitlig analys.',
 
+      // Onboarding
+      onboardingTitle: 'Välkommen till TextVakt! 👋',
+      onboardingBody: 'Klistra in valfri text nedan för att kontrollera om den är AI-genererad — eller testa med ett exempel.',
+      onboardingCta: 'Testa med ett exempel →',
+      onboardingDismiss: 'Stäng',
+
+      // Limit reached upgrade CTA
+      limitUpgradeCta: 'Uppgradera till Pro — 99 kr första månaden →',
+      limitUpgradePromo: 'Använd kod VÄLKOMMEN50 — 50 % rabatt första månaden',
+
       // History
       historyTitle: 'Analyshistorik',
       historyEmpty: 'Inga analyser ännu.',

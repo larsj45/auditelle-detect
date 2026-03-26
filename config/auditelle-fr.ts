@@ -367,6 +367,16 @@ const config: ResellerConfig = {
       subscriptionActivatedDetail: 'Vos analyses suppl\u00e9mentaires sont maintenant disponibles.',
       minCharsError: 'Veuillez entrer au moins 50 caract\u00e8res pour une analyse fiable.',
 
+      // Onboarding
+      onboardingTitle: 'Bienvenue sur Auditelle ! 👋',
+      onboardingBody: 'Collez un texte ci-dessous pour vérifier s\'il a été généré par IA — ou essayez avec un exemple.',
+      onboardingCta: 'Essayer avec un exemple →',
+      onboardingDismiss: 'Fermer',
+
+      // Limit reached upgrade CTA
+      limitUpgradeCta: 'Passer au Pro — 12,50€ le premier mois →',
+      limitUpgradePromo: 'Code promo BIENVENUE50 — 50% sur le 1er mois',
+
       // History
       historyTitle: 'Historique des analyses',
       historyEmpty: 'Aucune analyse pour le moment.',

@@ -46,7 +46,7 @@ const config: ResellerConfig = {
         price: '\u00a30',
         description: 'Discover the precision',
         features: [
-          '50 analyses per month',
+          '3 analyses per month',
           '1 user',
           '99.9% accurate AI score',
           'Model identification',
@@ -383,6 +383,16 @@ const config: ResellerConfig = {
       subscriptionActivatedDetail: 'Your additional analyses are now available.',
       minCharsError: 'Please enter at least 50 characters for a reliable analysis.',
 
+      // Onboarding
+      onboardingTitle: 'Welcome to NovaLearn! 👋',
+      onboardingBody: 'Paste any text below to check if it was AI-generated — or try with a sample.',
+      onboardingCta: 'Try with a sample →',
+      onboardingDismiss: 'Close',
+
+      // Limit reached upgrade CTA
+      limitUpgradeCta: 'Upgrade to Pro — £10.50 for first month →',
+      limitUpgradePromo: 'Use code WELCOME50 — 50% off first month',
+
       // History
       historyTitle: 'Analysis history',
       historyEmpty: 'No analyses yet.',
@@ -556,7 +566,7 @@ const config: ResellerConfig = {
         intro: "Thank you for creating your NovaLearn account. You now have access to the most accurate AI detector on the market, verified by the University of Maryland.",
         trialTitle: '\ud83c\udf81 Your free trial includes:',
         trialFeatures: [
-          '50 analyses per month',
+          '3 analyses per month',
           '99.9% accuracy',
           'AI model identification',
           '7-day history',

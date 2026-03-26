@@ -392,6 +392,14 @@ const config: ResellerConfig = {
       subscriptionActivatedDetail: 'Tus análisis adicionales ya están disponibles.',
       minCharsError: 'Por favor, introduce al menos 50 caracteres para un análisis fiable.',
 
+      // Onboarding
+      onboardingTitle: '¡Bienvenido a VeriTexto! 👋',
+      onboardingBody: 'Pega un texto abajo para verificar si fue generado por IA — o prueba con un ejemplo.',
+      onboardingCta: 'Probar con un ejemplo →',
+      onboardingDismiss: 'Cerrar',
+      limitUpgradeCta: 'Pasar a Pro — 12,50€ el primer mes →',
+      limitUpgradePromo: 'Código BIENVENIDO50 — 50% en el 1er mes',
+
       // History
       historyTitle: 'Historial de análisis',
       historyEmpty: 'Ningún análisis por el momento.',
