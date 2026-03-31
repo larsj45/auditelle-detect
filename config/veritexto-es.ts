@@ -636,6 +636,23 @@ const config: ResellerConfig = {
         question: '¿Tienes dudas? Responde simplemente a este email.',
       },
 
+      limitReached: {
+        subject: '{name}, has alcanzado tu límite 🔒',
+        greeting: 'Hola {name},',
+        body: 'Has utilizado todos tus análisis gratuitos en VeriTexto este mes. Tu límite se restablece el próximo mes, pero si necesitas analizar más textos ahora, tenemos algo para ti.',
+        offerTitle: '🎁 Oferta exclusiva — 30% de descuento',
+        offerBody: 'Pasa al plan Starter (1.000 análisis/mes) o Student (200 análisis/mes) con un 30% de descuento en tu primer mes.',
+        offerFeatures: [
+          '1.000 análisis/mes — para profesores y consultores',
+          'Exportación PDF/CSV incluida',
+          'Historial completo de 30 días',
+          'Soporte por email',
+        ],
+        couponCode: 'LIMITE30',
+        ctaButton: 'Obtener -30% ahora →',
+        footer: 'Oferta válida solo para el primer mes. Cancela en cualquier momento.',
+      },
+
       trialEnded: {
         subject: '{name}, tu prueba ha terminado — ¡pero aún estás a tiempo! 🔓',
         title: '¡Te echamos de menos, {name}! 👋',

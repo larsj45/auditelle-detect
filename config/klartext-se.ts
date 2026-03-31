@@ -624,6 +624,23 @@ const config: ResellerConfig = {
         question: 'Har du frågor? Svara bara på detta mejl.',
       },
 
+      limitReached: {
+        subject: '{name}, du har nått din gräns 🔒',
+        greeting: 'Hej {name},',
+        body: 'Du har använt alla dina gratisanalyser på Klartext denna månad. Din gräns återställs nästa månad — men om du behöver analysera mer text nu har vi något för dig.',
+        offerTitle: '🎁 Exklusivt erbjudande — 30% rabatt',
+        offerBody: 'Uppgradera till Starter (1 000 analyser/månad) eller Student (200 analyser/månad) med 30% rabatt på din första månad.',
+        offerFeatures: [
+          '1 000 analyser/månad — för lärare och konsulter',
+          'PDF/CSV-export ingår',
+          'Komplett historik i 30 dagar',
+          'E-postsupport',
+        ],
+        couponCode: 'LIMIT30',
+        ctaButton: 'Hämta 30% rabatt nu →',
+        footer: 'Erbjudandet gäller endast första månaden. Avsluta när som helst.',
+      },
+
       trialEnded: {
         subject: '{name}, din provperiod har avslutats — men det är inte för sent! 🔓',
         title: 'Vi saknar dig, {name}! 👋',

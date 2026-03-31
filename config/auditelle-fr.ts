@@ -613,6 +613,23 @@ const config: ResellerConfig = {
         question: 'Des questions ? R\u00e9pondez simplement \u00e0 cet email.',
       },
 
+      limitReached: {
+        subject: '{name}, vous avez atteint votre limite 🔒',
+        greeting: 'Bonjour {name},',
+        body: "Vous avez utilisé toutes vos analyses gratuites sur Auditelle ce mois-ci. Votre compteur se remet à zéro le mois prochain — mais si vous avez besoin d'analyser plus de textes maintenant, nous avons quelque chose pour vous.",
+        offerTitle: '🎁 Offre exclusive — 30% de réduction',
+        offerBody: "Passez au plan Starter (1 000 analyses/mois) ou Student (100 analyses/mois) avec 30% de réduction sur votre premier mois.",
+        offerFeatures: [
+          '1 000 analyses/mois — pour enseignants et consultants',
+          'Export PDF/CSV inclus',
+          'Historique complet 30 jours',
+          'Support par email',
+        ],
+        couponCode: 'LIMITE30',
+        ctaButton: 'Profiter de -30% maintenant →',
+        footer: 'Offre valable uniquement pour le premier mois. Annulation à tout moment.',
+      },
+
       trialEnded: {
         subject: "{name}, votre essai est termin\u00e9 \u2014 mais il n'est pas trop tard ! \ud83d\udd13",
         title: 'Vous nous manquez, {name} ! \ud83d\udc4b',

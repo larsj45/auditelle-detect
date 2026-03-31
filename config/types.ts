@@ -471,6 +471,17 @@ export interface ResellerStrings {
       ctaButton: string
       question: string
     }
+    limitReached: {
+      subject: string             // with {name} placeholder
+      greeting: string            // with {name} placeholder
+      body: string
+      offerTitle: string
+      offerBody: string
+      offerFeatures: string[]
+      couponCode: string
+      ctaButton: string
+      footer: string
+    }
     // Shared across all templates
     headerName: string            // "AUDITELLE", "NOVALEARN", etc.
     legalFooter: string           // built from config at runtime
@@ -507,6 +518,8 @@ export interface ResellerStrings {
 
 export const DAILY_LIMITS: Record<string, number> = {
   free: 3, // quota mensal — limite baixo para forçar conversão
+  student: 10, // 200/mês ≈ 10/dia
+  starter: 50, // 1000/mês ≈ 50/dia
   pro: 50, // 1000/mês ≈ 50/dia
   university: 500, // 10000/mês ≈ 500/dia
   enterprise: 10000,
@@ -519,7 +532,7 @@ export const MONTHLY_PLANS = new Set(['free', 'limiar-vip'])
 // ── Valid plan IDs for checkout validation ──────────────────────────────────
 
 export const VALID_PLAN_IDS = [
-  'pro', 'university', 'enterprise',
+  'student', 'starter', 'pro', 'university', 'enterprise',
 ] as const
 
 export type PlanId = typeof VALID_PLAN_IDS[number]

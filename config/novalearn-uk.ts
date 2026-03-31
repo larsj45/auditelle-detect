@@ -546,7 +546,7 @@ const config: ResellerConfig = {
       videoPlaceholder: 'Demo video',
       videoSoon: 'Coming soon',
       readyCta: 'Ready to try?',
-      readySubtitle: 'Create your free account and analyse up to 50 texts per month',
+      readySubtitle: 'Create your free account and start analysing texts today',
       readyButton: 'Start your free trial \u2192',
       featureCards: [
         { emoji: '\ud83c\udfaf', title: '99.9% accuracy', description: 'Validated by the University of Maryland' },
@@ -627,6 +627,23 @@ const config: ResellerConfig = {
         ],
         ctaButton: 'Upgrade to Pro \u2014 \u00a321/month \u2192',
         question: 'Any questions? Just reply to this email.',
+      },
+
+      limitReached: {
+        subject: '{name}, you\'ve reached your free limit \ud83d\udd12',
+        greeting: 'Hi {name},',
+        body: 'You\'ve used all your free analyses on NovaLearn this month. Your limit resets next month \u2014 but if you need to analyse more texts now, we have something for you.',
+        offerTitle: '\ud83c\udf81 Exclusive offer \u2014 30% off',
+        offerBody: 'Upgrade to the Starter plan (1,000 analyses/month) or Student plan (200 analyses/month) with 30% off your first month.',
+        offerFeatures: [
+          '1,000 analyses/month \u2014 for teachers and consultants',
+          'PDF/CSV export included',
+          '30-day full history',
+          'Email support',
+        ],
+        couponCode: 'LIMIT30',
+        ctaButton: 'Claim 30% off now \u2192',
+        footer: 'Offer valid for first month only. Cancel anytime.',
       },
 
       trialEnded: {

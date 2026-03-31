@@ -258,57 +258,58 @@ ${textFooter(config)}`
 
 export function limitReachedEmail(config: ResellerConfig, name: string) {
   const safeName = escapeHtml(name.split(' ')[0] || 'there')
-  const upgradeUrl = `${ctaUrl(config, '/dashboard/upgrade')}?coupon=LIMITE30`
+  const s = config.strings.emails.limitReached
+  const coupon = s.couponCode
+  const upgradeUrl = `${ctaUrl(config, '/dashboard/upgrade')}?coupon=${coupon}`
 
-  const subject = `${safeName}, vous avez atteint votre limite quotidienne 🔒`
+  const subject = t(s.subject, { name: safeName })
 
   const content = `
       <h2 style="color: #1a1a2e; margin: 0 0 16px 0; font-size: 22px;">
-        Vous avez utilisé toutes vos analyses du jour
+        ${t(s.subject, { name: safeName })}
       </h2>
 
       <p style="color: #4b5563; line-height: 1.6; margin: 0 0 16px 0;">
-        Bonjour ${safeName},
+        ${t(s.greeting, { name: safeName })}
       </p>
 
       <p style="color: #4b5563; line-height: 1.6; margin: 0 0 24px 0;">
-        Vous avez atteint votre limite quotidienne d'analyses gratuites sur ${config.name}. Votre compteur se remet à zéro demain — mais si vous avez besoin d'analyser plus de textes maintenant, nous avons quelque chose pour vous.
+        ${s.body}
       </p>
 
       <!-- Offer box -->
       <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; padding: 24px; margin: 24px 0; border: 2px solid #f59e0b;">
-        <div style="font-size: 32px; margin-bottom: 8px;">🎁</div>
-        <h3 style="color: #92400e; margin: 0 0 8px 0; font-size: 18px;">Offre exclusive — 30% de réduction</h3>
+        <div style="font-size: 32px; margin-bottom: 8px;">\ud83c\udf81</div>
+        <h3 style="color: #92400e; margin: 0 0 8px 0; font-size: 18px;">${escapeHtml(s.offerTitle)}</h3>
         <p style="color: #78350f; margin: 0 0 16px 0; line-height: 1.5;">
-          Passez au plan <strong>Starter (1 000 analyses/mois)</strong> ou <strong>Student (100 analyses/mois)</strong> avec <strong>30% de réduction sur votre premier mois</strong>. Utilisez le code <strong style="font-size: 18px; color: #92400e;">LIMITE30</strong> au moment du paiement.
+          ${escapeHtml(s.offerBody)}
         </p>
         <ul style="color: #78350f; margin: 0 0 16px 0; padding-left: 20px; line-height: 1.8;">
-          <li><strong>1 000 analyses/mois</strong> — pour enseignants et consultants</li>
-          <li>Export PDF/CSV inclus</li>
-          <li>Historique complet 30 jours</li>
-          <li>Support par email</li>
+          ${s.offerFeatures.map(f => `<li><strong>${escapeHtml(f)}</strong></li>`).join('\n          ')}
         </ul>
         <div style="background: white; border-radius: 8px; padding: 8px 16px; display: inline-block; font-size: 20px; font-weight: 700; color: #92400e; letter-spacing: 2px;">
-          LIMITE30
+          ${escapeHtml(coupon)}
         </div>
       </div>
 
       <a href="${upgradeUrl}" style="display: block; text-align: center; background: #e85d04; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; margin: 24px 0; font-size: 16px;">
-        Profiter de -30% maintenant →
+        ${escapeHtml(s.ctaButton)}
       </a>
 
       <p style="color: #9ca3af; font-size: 13px; text-align: center; margin: 0;">
-        Offre valable uniquement pour le premier mois. Annulation à tout moment.
+        ${escapeHtml(s.footer)}
       </p>`
 
-  const text = `Bonjour ${safeName},
+  const text = `${t(s.greeting, { name: safeName })}
 
-Vous avez atteint votre limite quotidienne d'analyses gratuites sur ${config.name}.
+${s.body}
 
-OFFRE EXCLUSIVE — 30% de réduction sur votre premier mois !
-Utilisez le code LIMITE30 lors du paiement.
+${s.offerTitle}
+${s.offerBody}
 
-Passer au plan Starter: ${upgradeUrl}
+${s.offerFeatures.map(f => `- ${f}`).join('\n')}
+
+${s.ctaButton}: ${upgradeUrl}
 
 ${textFooter(config)}`
 
