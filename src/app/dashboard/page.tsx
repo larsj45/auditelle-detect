@@ -190,7 +190,7 @@ export default function DashboardPage() {
             <strong>{showCreditsBanner} analyse{showCreditsBanner > 1 ? 's' : ''} ajoutée{showCreditsBanner > 1 ? 's' : ''} !</strong> Vos crédits sont prêts à utiliser.
           </span>
         </div>
-      )}}
+      )}
 
       <div className="flex items-center justify-between mb-6">
         <div>
