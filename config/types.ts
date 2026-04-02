@@ -517,7 +517,7 @@ export interface ResellerStrings {
 // ── Daily scan limits (shared across all resellers for now) ─────────────────
 
 export const DAILY_LIMITS: Record<string, number> = {
-  free: 3, // quota mensal — limite baixo para forçar conversão
+  free: 0, // pay-per-scan — sem scans grátis
   student: 10, // 200/mês ≈ 10/dia
   starter: 50, // 1000/mês ≈ 50/dia
   pro: 50, // 1000/mês ≈ 50/dia
@@ -528,6 +528,19 @@ export const DAILY_LIMITS: Record<string, number> = {
 
 // Planos com quota mensal (em vez de diária)
 export const MONTHLY_PLANS = new Set(['free', 'limiar-vip'])
+
+// Planos que usam créditos (pay-per-scan) em vez de quota
+export const CREDIT_PLANS = new Set(['free'])
+
+// ── Credit packs (pay-per-scan) ─────────────────────────────────────────────
+
+export const CREDIT_PACKS = [
+  { id: '1', quantity: 1, price: 50, label: '1 analyse', display: '0,50 €' },
+  { id: '10', quantity: 10, price: 500, label: '10 analyses', display: '5 €' },
+  { id: '50', quantity: 50, price: 2500, label: '50 analyses', display: '25 €' },
+] as const
+
+export const PRICE_PER_SCAN_CENTS = 50 // €0.50
 
 // ── Valid plan IDs for checkout validation ──────────────────────────────────
 

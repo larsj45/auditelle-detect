@@ -85,7 +85,7 @@ contact@auditelle.fr | auditelle.fr/partenaires
 
 ## Checklist d'envoi
 
-- [ ] **France Universités** — envoyer via formulaire franceuniversites.fr/contact/
-- [ ] **CGE** — envoyer via formulaire cge.asso.fr/contact/ + message LinkedIn à la direction
-- [ ] Ajouter rappel J+7 pour relance si pas de réponse
+- [x] **France Universités** — envoyé le 22/03/2026
+- [x] **CGE** — envoyé le 22/03/2026
+- [ ] **Relance J+7** — envoyer le 29/03/2026 si pas de réponse
 - [ ] Tracker les réponses dans le vault Obsidian

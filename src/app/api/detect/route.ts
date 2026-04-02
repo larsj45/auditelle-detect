@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { detectAI, detectPlagiarism } from '@/lib/pangram'
 import { createClient } from '@supabase/supabase-js'
-import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS } from '@/lib/config'
+import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS, CREDIT_PLANS } from '@/lib/config'
 import { sendEmail, limitReachedEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
@@ -39,70 +39,83 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await serviceSupabase
       .from('profiles')
-      .select('plan, scans_today, scans_reset_at')
+      .select('plan, scans_today, scans_reset_at, scan_credits')
       .eq('id', user.id)
       .single()
 
     const plan = profile?.plan || 'free'
-    const limit = DAILY_LIMITS[plan] || 5
+    const isCreditPlan = CREDIT_PLANS.has(plan)
+    const limit = DAILY_LIMITS[plan] || 0
 
     const now = new Date()
-    const resetAt = profile?.scans_reset_at ? new Date(profile.scans_reset_at) : null
+    const todayUTC = now.toISOString().split('T')[0]
     let scansToday = profile?.scans_today || 0
 
-    // limiar-vip tem quota mensal — outros planos têm quota diária
-    const isMonthlyPlan = MONTHLY_PLANS.has(plan)
-    const todayUTC = now.toISOString().split('T')[0]
-    let shouldReset = false
-
-    if (isMonthlyPlan) {
-      const nowYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-      const resetYM = resetAt
-        ? `${resetAt.getFullYear()}-${String(resetAt.getMonth() + 1).padStart(2, '0')}`
-        : null
-      shouldReset = !resetAt || nowYM !== resetYM
-    } else {
-      const resetDay = resetAt ? resetAt.toISOString().split('T')[0] : null
-      shouldReset = !resetAt || todayUTC !== resetDay
+    // ── Credit-based plans (pay-per-scan) ──────────────────────────────────
+    if (isCreditPlan) {
+      const credits = profile?.scan_credits || 0
+      if (credits <= 0) {
+        return NextResponse.json({
+          error: 'Vous n\'avez plus de crédits. Achetez des analyses pour continuer.',
+          scans_remaining: 0,
+          needs_credits: true,
+        }, { status: 402 })
+      }
     }
 
-    if (shouldReset) {
-      scansToday = 0
-      await serviceSupabase
-        .from('profiles')
-        .update({ scans_today: 0, scans_reset_at: now.toISOString() })
-        .eq('id', user.id)
-    }
+    // ── Subscription-based plans (daily/monthly quota) ─────────────────────
+    if (!isCreditPlan) {
+      const resetAt = profile?.scans_reset_at ? new Date(profile.scans_reset_at) : null
+      const isMonthlyPlan = MONTHLY_PLANS.has(plan)
+      let shouldReset = false
 
-    if (scansToday >= limit) {
-      // Fire limit-reached email on first hit only (when scansToday == limit, not > limit)
-      if (scansToday === limit && user.email) {
-        const { data: profileForEmail } = await serviceSupabase
-          .from('profiles')
-          .select('full_name, limit_email_sent_at, scans_reset_at')
-          .eq('id', user.id)
-          .single()
-
-        // Only send once per reset period (daily or monthly)
-        const lastSentDate = profileForEmail?.limit_email_sent_at
-          ? new Date(profileForEmail.limit_email_sent_at)
+      if (isMonthlyPlan) {
+        const nowYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+        const resetYM = resetAt
+          ? `${resetAt.getFullYear()}-${String(resetAt.getMonth() + 1).padStart(2, '0')}`
           : null
-        const alreadySent = isMonthlyPlan
-          ? lastSentDate && `${lastSentDate.getFullYear()}-${String(lastSentDate.getMonth() + 1).padStart(2, '0')}` === `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-          : lastSentDate && lastSentDate.toISOString().split('T')[0] === todayUTC
-        if (!alreadySent) {
-          const name = profileForEmail?.full_name?.split(' ')[0] || user.email.split('@')[0].split('+')[0]
-          const emailContent = limitReachedEmail(config, name)
-          sendEmail({ to: user.email, subject: emailContent.subject, html: emailContent.html, text: emailContent.text })
-            .then(() => serviceSupabase.from('profiles').update({ limit_email_sent_at: new Date().toISOString() }).eq('id', user.id))
-            .catch(console.error)
-        }
+        shouldReset = !resetAt || nowYM !== resetYM
+      } else {
+        const resetDay = resetAt ? resetAt.toISOString().split('T')[0] : null
+        shouldReset = !resetAt || todayUTC !== resetDay
       }
 
-      return NextResponse.json({
-        error: errors.dailyLimitReached,
-        scans_remaining: 0,
-      }, { status: 429 })
+      if (shouldReset) {
+        scansToday = 0
+        await serviceSupabase
+          .from('profiles')
+          .update({ scans_today: 0, scans_reset_at: now.toISOString() })
+          .eq('id', user.id)
+      }
+
+      if (scansToday >= limit) {
+        if (scansToday === limit && user.email) {
+          const { data: profileForEmail } = await serviceSupabase
+            .from('profiles')
+            .select('full_name, limit_email_sent_at, scans_reset_at')
+            .eq('id', user.id)
+            .single()
+
+          const lastSentDate = profileForEmail?.limit_email_sent_at
+            ? new Date(profileForEmail.limit_email_sent_at)
+            : null
+          const alreadySent = isMonthlyPlan
+            ? lastSentDate && `${lastSentDate.getFullYear()}-${String(lastSentDate.getMonth() + 1).padStart(2, '0')}` === `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+            : lastSentDate && lastSentDate.toISOString().split('T')[0] === todayUTC
+          if (!alreadySent) {
+            const name = profileForEmail?.full_name?.split(' ')[0] || user.email.split('@')[0].split('+')[0]
+            const emailContent = limitReachedEmail(config, name)
+            sendEmail({ to: user.email, subject: emailContent.subject, html: emailContent.html, text: emailContent.text })
+              .then(() => serviceSupabase.from('profiles').update({ limit_email_sent_at: new Date().toISOString() }).eq('id', user.id))
+              .catch(console.error)
+          }
+        }
+
+        return NextResponse.json({
+          error: errors.dailyLimitReached,
+          scans_remaining: 0,
+        }, { status: 429 })
+      }
     }
 
     const body = await request.json()
@@ -119,28 +132,45 @@ export async function POST(request: NextRequest) {
 
     const trimmedText = text.trim()
 
+    // ── Helper: update usage after scan ──────────────────────────────────
+    async function recordUsage() {
+      const { data: freshProfile } = await serviceSupabase
+        .from('profiles')
+        .select('monthly_usage, scan_credits')
+        .eq('id', user!.id)
+        .single()
+      const currentMonthlyUsage = freshProfile?.monthly_usage || 0
+
+      if (isCreditPlan) {
+        // Deduct 1 credit
+        const currentCredits = freshProfile?.scan_credits || 0
+        await serviceSupabase
+          .from('profiles')
+          .update({
+            scan_credits: currentCredits - 1,
+            monthly_usage: currentMonthlyUsage + 1,
+            scans_today: scansToday + 1,
+          })
+          .eq('id', user!.id)
+        return currentCredits - 1
+      } else {
+        // Increment daily counter
+        const { error: updateError } = await serviceSupabase
+          .from('profiles')
+          .update({ scans_today: scansToday + 1, monthly_usage: currentMonthlyUsage + 1 })
+          .eq('id', user!.id)
+          .eq('scans_today', scansToday)
+        if (updateError) return null // concurrency conflict
+        return limit - scansToday - 1
+      }
+    }
+
     // Route to appropriate detection API
     if (mode === 'plagiarism') {
       const plagResult = await detectPlagiarism(trimmedText)
-
-      const { data: freshProfilePlag } = await serviceSupabase
-        .from('profiles')
-        .select('monthly_usage')
-        .eq('id', user.id)
-        .single()
-      const currentMonthlyUsagePlag = freshProfilePlag?.monthly_usage || 0
-
-      const { error: updateError } = await serviceSupabase
-        .from('profiles')
-        .update({ scans_today: scansToday + 1, monthly_usage: currentMonthlyUsagePlag + 1 })
-        .eq('id', user.id)
-        .eq('scans_today', scansToday)
-
-      if (updateError) {
-        return NextResponse.json({
-          error: errors.rateLimitRetry,
-          scans_remaining: 0,
-        }, { status: 429 })
+      const remaining = await recordUsage()
+      if (remaining === null) {
+        return NextResponse.json({ error: errors.rateLimitRetry, scans_remaining: 0 }, { status: 429 })
       }
 
       await serviceSupabase.from('scans').insert({
@@ -154,31 +184,15 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         ...plagResult,
-        scans_remaining: limit - scansToday - 1,
+        scans_remaining: remaining,
       })
     }
 
     // Default: AI detection
     const result = await detectAI(trimmedText)
-
-    const { data: freshProfileAI } = await serviceSupabase
-      .from('profiles')
-      .select('monthly_usage')
-      .eq('id', user.id)
-      .single()
-    const currentMonthlyUsageAI = freshProfileAI?.monthly_usage || 0
-
-    const { error: updateError } = await serviceSupabase
-      .from('profiles')
-      .update({ scans_today: scansToday + 1, monthly_usage: currentMonthlyUsageAI + 1 })
-      .eq('id', user.id)
-      .eq('scans_today', scansToday)
-
-    if (updateError) {
-      return NextResponse.json({
-        error: errors.rateLimitRetry,
-        scans_remaining: 0,
-      }, { status: 429 })
+    const remaining = await recordUsage()
+    if (remaining === null) {
+      return NextResponse.json({ error: errors.rateLimitRetry, scans_remaining: 0 }, { status: 429 })
     }
 
     await serviceSupabase.from('scans').insert({
@@ -192,7 +206,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       ...result,
-      scans_remaining: limit - scansToday - 1,
+      scans_remaining: remaining,
     })
   } catch (error: unknown) {
     console.error('Detection error:', error)

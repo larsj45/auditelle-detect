@@ -9,10 +9,11 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'university', 'enterprise', 'limiar-vip')),
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
+  scan_credits INTEGER DEFAULT 0,
   scans_today INTEGER DEFAULT 0,
   scans_reset_at TIMESTAMPTZ DEFAULT NOW(),
   monthly_usage INTEGER DEFAULT 0,
-  monthly_limit INTEGER DEFAULT 3,
+  monthly_limit INTEGER DEFAULT 0,
   limit_email_sent_at TIMESTAMPTZ,
   subscription_status TEXT,
   upgrade_reminder_sent BOOLEAN DEFAULT FALSE,
@@ -66,12 +67,13 @@ CREATE POLICY "Users can insert own scans" ON public.scans
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, full_name, monthly_limit, trial_ends_at)
+  INSERT INTO public.profiles (id, email, full_name, scan_credits, monthly_limit, trial_ends_at)
   VALUES (
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
-    3,
+    0,
+    0,
     NOW() + INTERVAL '30 days'
   );
   RETURN NEW;

@@ -10,7 +10,7 @@ import { useConfig } from '@/components/ConfigProvider'
 export default function AccountPage() {
   const config = useConfig()
   const s = config.strings.dashboard
-  const [user, setUser] = useState<{ email: string; full_name: string; plan: string } | null>(null)
+  const [user, setUser] = useState<{ email: string; full_name: string; plan: string; scan_credits: number } | null>(null)
   const [loading, setLoading] = useState(true)
   const [portalLoading, setPortalLoading] = useState(false)
 
@@ -26,7 +26,7 @@ export default function AccountPage() {
 
       const { data: profile } = await supabase
         .from('profiles')
-        .select('full_name, plan')
+        .select('full_name, plan, scan_credits')
         .eq('id', authUser.id)
         .single()
 
@@ -34,6 +34,7 @@ export default function AccountPage() {
         email: authUser.email || '',
         full_name: profile?.full_name || '',
         plan: profile?.plan || 'free',
+        scan_credits: profile?.scan_credits ?? 0,
       })
     } catch {
       console.error('Failed to load user')
@@ -108,15 +109,26 @@ export default function AccountPage() {
         </div>
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium text-[var(--navy)]">
-              {s.plan} {planLabels[userPlan] || userPlan}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">{scansLabel}</p>
+            {userPlan === 'free' ? (
+              <>
+                <p className="font-medium text-[var(--navy)]">Pay-per-scan</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {user?.scan_credits ?? 0} crédit{(user?.scan_credits ?? 0) !== 1 ? 's' : ''} restant{(user?.scan_credits ?? 0) !== 1 ? 's' : ''} · 0,50 € par analyse
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-medium text-[var(--navy)]">
+                  {s.plan} {planLabels[userPlan] || userPlan}
+                </p>
+                <p className="text-sm text-gray-500 mt-1">{scansLabel}</p>
+              </>
+            )}
           </div>
           <div className="flex gap-3">
             {userPlan === 'free' ? (
               <Link href="/dashboard/upgrade" className="btn-primary text-sm">
-                {s.upgradeToPro}
+                Acheter des crédits
               </Link>
             ) : (
               <button

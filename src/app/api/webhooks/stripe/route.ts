@@ -41,6 +41,30 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.metadata?.supabase_user_id
+
+      // ── Credit purchase (pay-per-scan) ─────────────────────────────────
+      if (session.metadata?.type === 'credits' && userId) {
+        const quantity = parseInt(session.metadata.quantity || '0', 10)
+        if (quantity > 0) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('scan_credits')
+            .eq('id', userId)
+            .single()
+          const currentCredits = profile?.scan_credits || 0
+          await supabase
+            .from('profiles')
+            .update({
+              scan_credits: currentCredits + quantity,
+              stripe_customer_id: session.customer as string,
+            })
+            .eq('id', userId)
+          console.log(`[Stripe Webhook] Added ${quantity} credits to user ${userId}`)
+        }
+        break
+      }
+
+      // ── Subscription purchase ──────────────────────────────────────────
       const plan = session.metadata?.plan || 'pro'
 
       if (userId) {

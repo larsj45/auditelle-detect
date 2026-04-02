@@ -42,5 +42,5 @@ export function getCachedConfig(): ResellerConfig {
 
 // Re-export types for convenience
 export type { ResellerConfig } from './types'
-export { DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS } from './types'
+export { DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS, CREDIT_PLANS, CREDIT_PACKS, PRICE_PER_SCAN_CENTS } from './types'
 export type { PlanId } from './types'

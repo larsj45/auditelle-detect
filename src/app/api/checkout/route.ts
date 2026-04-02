@@ -79,6 +79,8 @@ export async function POST(request: NextRequest) {
     }
 
     const priceIds: Record<string, string | undefined> = {
+      student: process.env.STRIPE_STUDENT_PRICE_ID,
+      starter: process.env.STRIPE_STARTER_PRICE_ID,
       pro: process.env.STRIPE_PRO_PRICE_ID,
       university: process.env.STRIPE_UNIVERSITY_PRICE_ID,
       enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID,

@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import DetectionResult from '@/components/DetectionResult'
 import PlagiarismResult from '@/components/PlagiarismResult'
 import DetectionModeToggle from '@/components/DetectionModeToggle'
-import { FileSearch, Search, Loader2, CheckCircle } from 'lucide-react'
+import { FileSearch, Search, Loader2, CheckCircle, Coins } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import { useConfig } from '@/components/ConfigProvider'
 
@@ -32,7 +32,7 @@ interface PlagiarismResponse {
 
 declare function gtag(...args: unknown[]): void
 
-function ConversionTracker({ onSuccess }: { onSuccess: () => void }) {
+function ConversionTracker({ onSuccess, onCreditsAdded }: { onSuccess: () => void; onCreditsAdded: (n: number) => void }) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const config = useConfig()
@@ -48,7 +48,12 @@ function ConversionTracker({ onSuccess }: { onSuccess: () => void }) {
       onSuccess()
       router.replace('/dashboard', { scroll: false })
     }
-  }, [searchParams, onSuccess, router, config.googleAdsConversionLabel])
+    const creditsAdded = searchParams.get('credits_added')
+    if (creditsAdded) {
+      onCreditsAdded(parseInt(creditsAdded, 10))
+      router.replace('/dashboard', { scroll: false })
+    }
+  }, [searchParams, onSuccess, onCreditsAdded, router, config.googleAdsConversionLabel])
 
   return null
 }
@@ -65,13 +70,32 @@ export default function DashboardPage() {
   const [error, setError] = useState('')
   const [scansRemaining, setScansRemaining] = useState<number | null>(null)
   const [showSuccessBanner, setShowSuccessBanner] = useState(false)
+  const [showCreditsBanner, setShowCreditsBanner] = useState<number | null>(null)
+  const [credits, setCredits] = useState<number | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
 
   useEffect(() => {
     if (!localStorage.getItem('auditelle_onboarded')) {
       setShowOnboarding(true)
     }
+    loadCredits()
   }, [])
+
+  async function loadCredits() {
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('scan_credits, plan')
+        .eq('id', user.id)
+        .single()
+      if (profile?.plan === 'free') {
+        setCredits(profile?.scan_credits ?? 0)
+      }
+    } catch { /* ignore */ }
+  }
 
   const handleTrySample = () => {
     setText(config.strings.heroDemo.chatgptSample)
@@ -129,6 +153,9 @@ export default function DashboardPage() {
 
       if (data.scans_remaining !== undefined) {
         setScansRemaining(data.scans_remaining)
+        if (credits !== null) {
+          setCredits(data.scans_remaining)
+        }
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : config.strings.errors.internalError
@@ -141,7 +168,10 @@ export default function DashboardPage() {
   return (
     <div className="max-w-4xl">
       <Suspense fallback={null}>
-        <ConversionTracker onSuccess={() => setShowSuccessBanner(true)} />
+        <ConversionTracker
+          onSuccess={() => setShowSuccessBanner(true)}
+          onCreditsAdded={(n) => { setShowCreditsBanner(n); loadCredits() }}
+        />
       </Suspense>
 
       {showSuccessBanner && (
@@ -153,12 +183,33 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {showCreditsBanner !== null && (
+        <div className="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 rounded-xl mb-6">
+          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+          <span>
+            <strong>{showCreditsBanner} analyse{showCreditsBanner > 1 ? 's' : ''} ajoutée{showCreditsBanner > 1 ? 's' : ''} !</strong> Vos crédits sont prêts à utiliser.
+          </span>
+        </div>
+      )}}
+
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-[var(--navy)]">{s.analyzerTitle}</h1>
           <p className="text-gray-500 mt-1">{s.analyzerSubtitle}</p>
         </div>
-        {scansRemaining !== null && (
+        {credits !== null ? (
+          <a href="/dashboard/upgrade" className={`text-sm px-4 py-2 rounded-lg border flex items-center gap-2 hover:border-[var(--accent)] transition ${
+            credits <= 0
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : credits <= 2
+              ? 'bg-amber-50 border-amber-200 text-amber-700'
+              : 'bg-white border-gray-200 text-gray-500'
+          }`}>
+            <Coins className="w-4 h-4" />
+            <span className="font-semibold">{credits}</span> crédit{credits !== 1 ? 's' : ''}
+            {credits <= 0 && <span className="ml-1 font-semibold">— Acheter →</span>}
+          </a>
+        ) : scansRemaining !== null && (
           <div className={`text-sm px-4 py-2 rounded-lg border ${
             scansRemaining <= 0
               ? 'bg-red-50 border-red-200 text-red-700'
@@ -237,15 +288,15 @@ export default function DashboardPage() {
       {error && (
         <div className="bg-red-50 text-red-700 text-sm p-4 rounded-lg mb-6">
           {error}
-          {scansRemaining !== null && scansRemaining <= 0 && (
+          {((scansRemaining !== null && scansRemaining <= 0) || (credits !== null && credits <= 0)) && (
             <div className="mt-3 pt-3 border-t border-red-200">
               <a
                 href="/dashboard/upgrade"
                 className="inline-flex items-center gap-2 bg-[var(--accent)] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[var(--accent-hover)] transition"
               >
-                {s.limitUpgradeCta}
+                {credits !== null ? 'Acheter des crédits →' : s.limitUpgradeCta}
               </a>
-              <p className="text-xs text-red-400 mt-1">{s.limitUpgradePromo}</p>
+              {credits === null && <p className="text-xs text-red-400 mt-1">{s.limitUpgradePromo}</p>}
             </div>
           )}
         </div>

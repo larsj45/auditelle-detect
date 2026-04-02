@@ -42,15 +42,15 @@ const config: ResellerConfig = {
   plans: {
     homepage: [
       {
-        name: 'Gratuit',
-        price: '0€',
-        description: 'Découvrez la précision',
+        name: 'À l\'analyse',
+        price: '0,50€',
+        description: 'Payez uniquement ce que vous utilisez',
         features: [
-          '3 analyses par mois',
-          '1 utilisateur',
+          '0,50 € par analyse',
+          'Aucun engagement',
           'Score IA 99,9% précis',
           'Identification du modèle',
-          'Historique 7 jours',
+          'Les crédits n\'expirent jamais',
         ],
         cta: 'Commencer',
         href: '/signup',
@@ -116,7 +116,6 @@ const config: ResellerConfig = {
           'Support email',
           'Historique 30 jours',
         ],
-        popular: true,
       },
       {
         id: 'university',
