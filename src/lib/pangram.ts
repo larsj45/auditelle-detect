@@ -29,6 +29,23 @@ export interface PlagiarismResult {
   plagiarized_content: PlagiarismMatch[]
 }
 
+function asFiniteNumber(value: unknown): number | null {
+  const numberValue = typeof value === 'number' ? value : Number(value)
+  return Number.isFinite(numberValue) ? numberValue : null
+}
+
+function normalizePercent(value: unknown): number {
+  const numberValue = asFiniteNumber(value)
+  if (numberValue === null) return 0
+  return numberValue <= 1 ? numberValue * 100 : numberValue
+}
+
+function normalizeRatio(value: unknown): number {
+  const numberValue = asFiniteNumber(value)
+  if (numberValue === null) return Number.NaN
+  return numberValue > 1 ? numberValue / 100 : numberValue
+}
+
 interface PangramV3Response {
   text: string
   version: string
@@ -116,12 +133,12 @@ export async function detectPlagiarism(text: string): Promise<PlagiarismResult> 
   const data = await response.json()
 
   return {
-    plagiarism_detected: data.plagiarism_detected ?? false,
-    percent_plagiarized: data.percent_plagiarized ?? 0,
-    plagiarized_content: (data.plagiarized_content ?? []).map((item: { source_url?: string; matched_text?: string; similarity_score?: number }) => ({
-      source_url: item.source_url ?? '',
-      matched_text: item.matched_text ?? '',
-      similarity_score: item.similarity_score ?? 0,
+    plagiarism_detected: data.plagiarism_detected ?? data.is_plagiarized ?? false,
+    percent_plagiarized: normalizePercent(data.percent_plagiarized ?? data.plagiarism_percentage ?? data.similarity_score),
+    plagiarized_content: (data.plagiarized_content ?? data.sources ?? data.matches ?? data.results ?? []).map((item: Record<string, unknown>) => ({
+      source_url: (item.source_url ?? item.url ?? item.source ?? '') as string,
+      matched_text: (item.matched_text ?? item.text ?? item.snippet ?? '') as string,
+      similarity_score: normalizeRatio(item.similarity_score ?? item.similarity ?? item.score),
     })),
   }
 }

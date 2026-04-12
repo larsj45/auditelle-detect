@@ -10,6 +10,17 @@ const rateLimit = new Map<string, { count: number; resetAt: number }>()
 const DAILY_LIMIT = 3
 const DAY_MS = 24 * 60 * 60 * 1000
 
+function asFiniteNumber(value: unknown): number | null {
+  const numberValue = typeof value === 'number' ? value : Number(value)
+  return Number.isFinite(numberValue) ? numberValue : null
+}
+
+function normalizePercent(value: unknown): number {
+  const numberValue = asFiniteNumber(value)
+  if (numberValue === null) return 0
+  return numberValue <= 1 ? numberValue * 100 : numberValue
+}
+
 function getRateLimitInfo(ip: string) {
   const now = Date.now()
   const entry = rateLimit.get(ip)
@@ -77,10 +88,10 @@ export async function POST(request: NextRequest) {
 
       incrementRateLimit(ip)
 
-      const score = Math.round((plagData.percent_plagiarized || 0) * 100)
+      const score = Math.round(normalizePercent(plagData.percent_plagiarized))
       const sources = (plagData.plagiarized_content || []).map((s: { source_url?: string; similarity_score?: number }) => ({
         url: s.source_url || '',
-        similarity: Math.round((s.similarity_score || 0) * 100),
+        similarity: Math.round(normalizePercent(s.similarity_score)),
       }))
 
       return NextResponse.json({

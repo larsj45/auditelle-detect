@@ -5,7 +5,7 @@ import { ExternalLink, ChevronDown, ChevronUp } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 
 interface PlagiarismResultProps {
-  percentPlagiarized: number    // 0-1 from API
+  percentPlagiarized: number    // 0-100 from Pangram API
   plagiarismDetected: boolean
   sources: Array<{
     source_url: string
@@ -60,8 +60,11 @@ function SourceItem({ source, strings }: {
   strings: { sourceLabel: string; matchedText: string; similarity: string }
 }) {
   const [expanded, setExpanded] = useState(false)
-  const similarity = Math.round(source.similarity_score * 100)
-  const { color } = getScoreColor(similarity)
+  const similarity = Number.isFinite(source.similarity_score)
+    ? Math.round(source.similarity_score * 100)
+    : null
+  const similarityForColor = similarity ?? 0
+  const { color } = getScoreColor(similarityForColor)
 
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -72,7 +75,7 @@ function SourceItem({ source, strings }: {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: `${color}20`, color }}>
-              {similarity}% {strings.similarity}
+              {similarity === null ? '—' : `${similarity}%`} {strings.similarity}
             </span>
           </div>
           <p className="text-sm text-gray-500 mt-1 truncate">{source.source_url}</p>
@@ -108,7 +111,7 @@ function SourceItem({ source, strings }: {
 export default function PlagiarismResult({ percentPlagiarized, plagiarismDetected, sources }: PlagiarismResultProps) {
   const config = useConfig()
   const s = config.strings.plagiarism
-  const score = Math.round(percentPlagiarized * 100)
+  const score = Number.isFinite(percentPlagiarized) ? Math.round(percentPlagiarized) : 0
   const { bg } = getScoreColor(score)
 
   const label = plagiarismDetected ? s.plagiarismFound : s.noPlagiarism

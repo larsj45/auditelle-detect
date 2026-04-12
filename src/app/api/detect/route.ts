@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
       await serviceSupabase.from('scans').insert({
         user_id: user.id,
         text_snippet: trimmedText.substring(0, 200),
-        ai_score: Math.round(plagResult.percent_plagiarized * 100),
+        ai_score: Math.round(plagResult.percent_plagiarized),
         detected_model: null,
         full_result: plagResult,
         scan_type: 'plagiarism',
