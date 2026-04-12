@@ -94,3 +94,48 @@ body {
 .card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-report,
+  .print-report * {
+    visibility: visible;
+  }
+
+  .print-report {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .no-print,
+  nav,
+  footer,
+  aside {
+    display: none !important;
+  }
+
+  .print-report {
+    display: block !important;
+  }
+
+  .print-report .card,
+  .print-report .rounded-2xl,
+  .print-report .rounded-xl {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .print-report a {
+    color: #111827 !important;
+    text-decoration: none !important;
+  }
+}

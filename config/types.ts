@@ -306,6 +306,7 @@ export interface ResellerStrings {
     aiAssisted: string
     humanWritten: string
     viewReport: string
+    exportPdf: string
   }
 
   // Hero demo

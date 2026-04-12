@@ -179,11 +179,11 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'TextVakt — Upptäck AI-genererat innehåll med 99,9 % precision',
-    description: 'Upptäck AI-genererat innehåll med 99,9 % precision. ChatGPT, Claude, Gemini och fler. Tredjepartsverifierad, nästan inga falska positiva resultat.',
-    keywords: ['AI-detektion', 'ChatGPT-detektor', 'AI-plagiatkontroll', 'akademisk integritet', 'TextVakt', 'AI-detektor Sverige'],
-    ogTitle: 'TextVakt — Upptäck AI-genererat innehåll med 99,9 % precision',
-    ogDescription: 'Upptäck AI-innehåll med 99,9 % precision. Tredjepartsverifierade resultat.',
+    title: 'TextVakt — Det bästa Turnitin-alternativet för AI och plagiat',
+    description: 'Ett modernt Turnitin-alternativ för skolor och universitet: AI-detektion, plagiatkontroll, modellidentifiering och exporterbara rapporter. 99,9 % precision.',
+    keywords: ['Turnitin-alternativ', 'AI-detektion', 'ChatGPT-detektor', 'AI-plagiatkontroll', 'akademisk integritet', 'TextVakt', 'AI-detektor Sverige'],
+    ogTitle: 'TextVakt — Svenskt Turnitin-alternativ',
+    ogDescription: 'AI + plagiatkontroll med tydliga rapporter, svenskt stöd och verifierad precision.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -205,13 +205,13 @@ const config: ResellerConfig = {
 
     // Hero
     hero: {
-      badge: '99,9 % verifierad precision',
-      title: 'AI-detektorn som ',
-      titleAccent: 'verkligen fungerar',
-      subtitle: 'Upptäck ChatGPT, Claude, Gemini och fler med oöverträffad precision. Verifierad av University of Maryland. Nästan inga falska positiva resultat.',
+      badge: 'Modernt Turnitin-alternativ',
+      title: 'Plattformen för akademisk integritet som ',
+      titleAccent: 'upptäcker AI och plagiat',
+      subtitle: 'TextVakt kombinerar AI-detektion, plagiatkontroll, modellidentifiering och exporterbara rapporter i ett enklare Turnitin-alternativ för utbildning.',
       trustBadges: [
-        'Avancerad AI-detektion',
-        'Tredjepartsverifierad',
+        'Turnitin-alternativ',
+        'AI + plagiat',
         'Gratis att testa',
       ],
       ctaPrimary: 'Testa gratis →',
@@ -296,12 +296,13 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Varför välja TextVakt?',
-      subtitle: 'Jämför de ledande AI-detektionslösningarna',
-      competitors: ['TextVakt', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      title: 'TextVakt, det svenska Turnitin-alternativet',
+      subtitle: 'Jämför ledande verktyg för akademisk integritet som upptäcker AI och plagiat.',
+      competitors: ['TextVakt', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'Precision', values: ['99,9 %', '~85 %', '~80 %', '~94 %'] },
         { label: 'Falska positiva', values: ['Nästan noll', 'Hög', 'Måttlig', 'Måttlig'] },
+        { label: 'AI + plagiat i samma rapport', values: [true, false, true, true] },
         { label: 'Stöd för svenska', values: [true, false, false, false] },
         { label: 'Pris (från)', values: ['Gratis', '$9.99/mån', 'På förfrågan', '$14.95/mån'] },
         { label: 'Sektionsanalys', values: [true, false, false, true] },
@@ -318,14 +319,14 @@ const config: ResellerConfig = {
 
     // CTA section
     cta: {
-      title: 'Redo att upptäcka AI-innehåll?',
-      subtitle: 'Gå med tusentals yrkesverksamma som litar på TextVakt för att skydda integriteten i sitt innehåll.',
+      title: 'Behöver du ett Turnitin-alternativ?',
+      subtitle: 'Testa TextVakt för att verifiera AI och plagiat i en tydlig, exporterbar rapport för utbildningsteam.',
       button: 'Skapa gratis konto →',
     },
 
     // Footer
     footer: {
-      description: 'Den svenska lösningen för detektion av AI-genererad text. Oöverträffad precision, GDPR-kompatibel.',
+      description: 'Den svenska lösningen för akademisk integritet och ett Turnitin-alternativ för att upptäcka AI, plagiat och misstänkt innehåll. GDPR-kompatibel.',
       productLabel: 'Produkt',
       companyLabel: 'Företag',
       contactLabel: 'Kontakt',
@@ -438,6 +439,7 @@ const config: ResellerConfig = {
       aiAssisted: 'AI-assisterad',
       humanWritten: 'Mänsklig',
       viewReport: 'Visa detaljerad rapport',
+      exportPdf: 'Exportera PDF-rapport',
     },
 
     // Hero demo

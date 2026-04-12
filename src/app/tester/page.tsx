@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import DetectionResult from '@/components/DetectionResult'
 import PlagiarismResult from '@/components/PlagiarismResult'
 import DetectionModeToggle, { type DetectionMode } from '@/components/DetectionModeToggle'
+import ExportReportButton from '@/components/ExportReportButton'
 import { FileSearch, Loader2, Sparkles, ArrowRight, Search } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import { useConfig } from '@/components/ConfigProvider'
@@ -40,6 +41,24 @@ interface CombinedDetectionResponse {
   partial?: boolean
   errors?: Partial<Record<'ai' | 'plagiarism', string>>
   tests_remaining?: number
+}
+
+function CombinedLoadingPanels({ aiLabel, plagiarismLabel }: { aiLabel: string; plagiarismLabel: string }) {
+  return (
+    <div className="grid gap-4 md:grid-cols-2 mb-6">
+      {[aiLabel, plagiarismLabel].map((label) => (
+        <div key={label} className="rounded-xl border border-gray-200 bg-white p-5">
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-5 w-5 animate-spin text-[var(--accent)]" />
+            <div>
+              <p className="text-sm font-semibold text-[var(--navy)]">{label}</p>
+              <p className="text-xs text-gray-500">Analyse en cours...</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default function TesterPage() {
@@ -207,37 +226,49 @@ export default function TesterPage() {
             </div>
           )}
 
-          {/* AI result */}
-          {aiResult && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-              {mode === 'both' && (
-                <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modeAI}</h2>
-              )}
-              <DetectionResult
-                score={Math.round(aiResult.ai_likelihood * 100)}
-                headline={aiResult.headline}
-                aiAssistedScore={aiResult.ai_assisted_likelihood}
-                humanScore={aiResult.human_likelihood}
-                dashboardLink={aiResult.dashboard_link}
-                sentences={aiResult.sentences?.map(s => ({
-                  ...s,
-                  ai_likelihood: Math.round(s.ai_likelihood * 100),
-                }))}
-              />
-            </div>
+          {loading && mode === 'both' && (
+            <CombinedLoadingPanels aiLabel={p.modeAI} plagiarismLabel={p.modePlagiarism} />
           )}
 
-          {/* Plagiarism result */}
-          {plagResult && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-              {mode === 'both' && (
-                <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modePlagiarism}</h2>
+          {(aiResult || plagResult) && (
+            <div className="print-report space-y-6 mb-8">
+              <div className="no-print flex justify-end">
+                <ExportReportButton />
+              </div>
+
+              {/* AI result */}
+              {aiResult && (
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                  {mode === 'both' && (
+                    <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modeAI}</h2>
+                  )}
+                  <DetectionResult
+                    score={Math.round(aiResult.ai_likelihood * 100)}
+                    headline={aiResult.headline}
+                    aiAssistedScore={aiResult.ai_assisted_likelihood}
+                    humanScore={aiResult.human_likelihood}
+                    dashboardLink={aiResult.dashboard_link}
+                    sentences={aiResult.sentences?.map(s => ({
+                      ...s,
+                      ai_likelihood: Math.round(s.ai_likelihood * 100),
+                    }))}
+                  />
+                </div>
               )}
-              <PlagiarismResult
-                percentPlagiarized={plagResult.percent_plagiarized}
-                plagiarismDetected={plagResult.plagiarism_detected}
-                sources={plagResult.plagiarized_content}
-              />
+
+              {/* Plagiarism result */}
+              {plagResult && (
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                  {mode === 'both' && (
+                    <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modePlagiarism}</h2>
+                  )}
+                  <PlagiarismResult
+                    percentPlagiarized={plagResult.percent_plagiarized}
+                    plagiarismDetected={plagResult.plagiarism_detected}
+                    sources={plagResult.plagiarized_content}
+                  />
+                </div>
+              )}
             </div>
           )}
 

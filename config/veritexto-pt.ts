@@ -193,11 +193,11 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'VeriTexto \u2014 Detecte Conteúdo Gerado por IA com 99,9% de Precisão',
-    description: 'Detecte conteúdo gerado por inteligência artificial com 99,9% de precisão. ChatGPT, Claude, Gemini e mais. Verificação por terceiros, taxa de falsos positivos quase nula.',
-    keywords: ['detecção IA', 'detector ChatGPT', 'detecção plágio IA', 'integridade acadêmica', 'VeriTexto'],
-    ogTitle: 'VeriTexto \u2014 Detecte Conteúdo Gerado por IA com 99,9% de Precisão',
-    ogDescription: 'Detecte conteúdo IA com 99,9% de precisão. Resultados verificados por terceiros.',
+    title: 'VeriTexto — A melhor alternativa ao Turnitin para IA e plágio',
+    description: 'Alternativa moderna ao Turnitin para escolas e universidades: detecção de IA, plágio, identificação do modelo e relatórios exportáveis. Precisão 99,9% e suporte em português.',
+    keywords: ['alternativa Turnitin', 'detecção IA', 'detector ChatGPT', 'detecção plágio IA', 'integridade acadêmica', 'VeriTexto'],
+    ogTitle: 'VeriTexto — Alternativa ao Turnitin em português',
+    ogDescription: 'Detecção de IA + plágio com relatórios claros, suporte local e precisão verificada.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -219,13 +219,13 @@ const config: ResellerConfig = {
 
     // Hero
     hero: {
-      badge: '99,9% de precisão verificada',
-      title: 'O detector de IA que ',
-      titleAccent: 'realmente funciona',
-      subtitle: 'Detecte ChatGPT, Claude, Gemini e mais com precisão incomparável. Verificado pela Universidade de Maryland. Taxa de falsos positivos quase nula.',
+      badge: 'Alternativa moderna ao Turnitin',
+      title: 'A plataforma de integridade acadêmica que ',
+      titleAccent: 'detecta IA e plágio',
+      subtitle: 'O VeriTexto reúne detecção de IA, plágio, identificação do modelo e relatórios exportáveis em uma alternativa ao Turnitin pensada para escolas, universidades e equipes no Brasil.',
       trustBadges: [
-        'Detecção IA avançada',
-        'Verificado por terceiros',
+        'Alternativa ao Turnitin',
+        'IA + plágio',
         'Teste gratuito',
       ],
       ctaPrimary: 'Testar grátis \u2192',
@@ -310,12 +310,13 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Por que escolher o VeriTexto?',
-      subtitle: 'Compare as principais soluções de detecção IA',
-      competitors: ['VeriTexto', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      title: 'VeriTexto, a alternativa em português ao Turnitin',
+      subtitle: 'Compare as principais soluções de integridade acadêmica para detectar IA e plágio.',
+      competitors: ['VeriTexto', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'Precisão', values: ['99,9%', '~85%', '~80%', '~94%'] },
         { label: 'Taxa de falsos positivos', values: ['Quase nula', 'Alta', 'Moderada', 'Moderada'] },
+        { label: 'IA + plágio no mesmo relatório', values: [true, false, true, true] },
         { label: 'Suporte em português', values: [true, false, false, false] },
         { label: 'Preço (a partir de)', values: ['Grátis', '$9.99/mês', 'Sob consulta', '$14.95/mês'] },
         { label: 'Análise por seção', values: [true, false, false, true] },
@@ -332,14 +333,14 @@ const config: ResellerConfig = {
 
     // CTA section
     cta: {
-      title: 'Pronto para detectar conteúdo IA?',
-      subtitle: 'Junte-se a milhares de profissionais que confiam no VeriTexto para proteger a integridade de seus conteúdos.',
+      title: 'Precisa de uma alternativa ao Turnitin?',
+      subtitle: 'Experimente o VeriTexto para verificar IA e plágio em um relatório claro, exportável e adaptado ao mercado brasileiro.',
       button: 'Criar conta gratuita \u2192',
     },
 
     // Footer
     footer: {
-      description: 'A solução brasileira de detecção de texto gerado por inteligência artificial. Precisão incomparável, conformidade LGPD. Uma solução Learnbase.',
+      description: 'A solução em português de integridade acadêmica e alternativa ao Turnitin para detectar IA, plágio e conteúdos suspeitos com conformidade LGPD. Uma solução Learnbase.',
       productLabel: 'Produto',
       companyLabel: 'Empresa',
       contactLabel: 'Contato',
@@ -450,6 +451,7 @@ const config: ResellerConfig = {
       aiAssisted: 'IA assistida',
       humanWritten: 'Humano',
       viewReport: 'Ver relatório detalhado',
+      exportPdf: 'Exportar relatório PDF',
     },
 
     // Hero demo

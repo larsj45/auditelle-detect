@@ -193,11 +193,11 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'VeriTexto — Detecta Contenido Generado por IA con 99,9% de Precisión',
-    description: 'Detecta contenido generado por inteligencia artificial con 99,9% de precisión. ChatGPT, Claude, Gemini y más. Verificación por terceros, tasa de falsos positivos casi nula.',
-    keywords: ['detección IA', 'detector ChatGPT', 'detección plagio IA', 'integridad académica', 'VeriTexto'],
-    ogTitle: 'VeriTexto — Detecta Contenido Generado por IA con 99,9% de Precisión',
-    ogDescription: 'Detecta contenido IA con 99,9% de precisión. Resultados verificados por terceros.',
+    title: 'VeriTexto — La mejor alternativa a Turnitin para IA y plagio',
+    description: 'Alternativa moderna a Turnitin para centros educativos: detección de IA, plagio, identificación del modelo e informes exportables. Precisión 99,9% y soporte en español.',
+    keywords: ['alternativa Turnitin', 'detección IA', 'detector ChatGPT', 'detección plagio IA', 'integridad académica', 'VeriTexto'],
+    ogTitle: 'VeriTexto — Alternativa a Turnitin en español',
+    ogDescription: 'Detección de IA + plagio con informes claros, soporte local y precisión verificada.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -219,13 +219,13 @@ const config: ResellerConfig = {
 
     // Hero
     hero: {
-      badge: '99,9% de precisión verificada',
-      title: 'El detector de IA que ',
-      titleAccent: 'realmente funciona',
-      subtitle: 'Detecta ChatGPT, Claude, Gemini y más con una precisión incomparable. Verificado por la Universidad de Maryland. Tasa de falsos positivos casi nula.',
+      badge: 'Alternativa moderna a Turnitin',
+      title: 'La plataforma de integridad académica que ',
+      titleAccent: 'detecta IA y plagio',
+      subtitle: 'VeriTexto reúne detección de IA, plagio, identificación del modelo e informes exportables en una alternativa a Turnitin pensada para instituciones educativas.',
       trustBadges: [
-        'Detección IA avanzada',
-        'Verificado por terceros',
+        'Alternativa a Turnitin',
+        'IA + plagio',
         'Prueba gratuita',
       ],
       ctaPrimary: 'Probar gratis →',
@@ -310,12 +310,13 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: '¿Por qué elegir VeriTexto?',
-      subtitle: 'Compara las principales soluciones de detección IA',
-      competitors: ['VeriTexto', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      title: 'VeriTexto, la alternativa en español a Turnitin',
+      subtitle: 'Compara las principales soluciones de integridad académica para detectar IA y plagio.',
+      competitors: ['VeriTexto', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'Precisión', values: ['99,9%', '~85%', '~80%', '~94%'] },
         { label: 'Tasa de falsos positivos', values: ['Casi nula', 'Alta', 'Moderada', 'Moderada'] },
+        { label: 'IA + plagio en el mismo informe', values: [true, false, true, true] },
         { label: 'Soporte en español', values: [true, false, false, false] },
         { label: 'Precio (desde)', values: ['Gratis', '$9.99/mes', 'Bajo consulta', '$14.95/mes'] },
         { label: 'Análisis por sección', values: [true, false, false, true] },
@@ -332,14 +333,14 @@ const config: ResellerConfig = {
 
     // CTA section
     cta: {
-      title: '¿Listo para detectar contenido IA?',
-      subtitle: 'Únete a miles de profesionales que confían en VeriTexto para proteger la integridad de sus contenidos.',
+      title: '¿Necesitas una alternativa a Turnitin?',
+      subtitle: 'Prueba VeriTexto para verificar IA y plagio en un informe claro, exportable y adaptado a instituciones hispanohablantes.',
       button: 'Crear cuenta gratuita →',
     },
 
     // Footer
     footer: {
-      description: 'La solución en español para la detección de texto generado por inteligencia artificial. Precisión incomparable, conformidad RGPD.',
+      description: 'La solución en español de integridad académica y alternativa a Turnitin para detectar IA, plagio y contenidos sospechosos con conformidad RGPD.',
       productLabel: 'Producto',
       companyLabel: 'Empresa',
       contactLabel: 'Contacto',
@@ -450,6 +451,7 @@ const config: ResellerConfig = {
       aiAssisted: 'IA asistida',
       humanWritten: 'Humano',
       viewReport: 'Ver informe detallado',
+      exportPdf: 'Exportar informe PDF',
     },
 
     // Hero demo

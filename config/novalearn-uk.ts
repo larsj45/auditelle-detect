@@ -184,11 +184,11 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'NovaLearn \u2014 The Most Accurate AI Detector on the Market',
-    description: 'Detect AI-generated content with 99.9% accuracy. ChatGPT, Claude, Gemini and more. Third-party verified, near-zero false positive rate. UK-based support.',
-    keywords: ['AI detection', 'ChatGPT detector', 'AI plagiarism detection', 'academic integrity', 'NovaLearn', 'UK AI detector'],
-    ogTitle: 'NovaLearn \u2014 The Most Accurate AI Detector on the Market',
-    ogDescription: 'Detect AI content with 99.9% accuracy. Third-party verified results. UK-based support.',
+    title: 'NovaLearn — The Best Turnitin Alternative for AI and Plagiarism',
+    description: 'A modern Turnitin alternative for schools and universities: AI detection, plagiarism checks, model identification and exportable reports. 99.9% accuracy and UK-based support.',
+    keywords: ['Turnitin alternative', 'AI detection', 'ChatGPT detector', 'AI plagiarism detection', 'academic integrity', 'NovaLearn', 'UK AI detector'],
+    ogTitle: 'NovaLearn — A Modern Turnitin Alternative',
+    ogDescription: 'AI + plagiarism detection with clear reports, UK support and verified accuracy.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -210,13 +210,13 @@ const config: ResellerConfig = {
 
     // Hero
     hero: {
-      badge: '99.9% verified accuracy',
-      title: 'The AI detector that ',
-      titleAccent: 'actually works',
-      subtitle: 'Detect ChatGPT, Claude, Gemini and more with unmatched accuracy. Verified by the University of Maryland. Near-zero false positive rate.',
+      badge: 'Modern Turnitin alternative',
+      title: 'The academic integrity platform that ',
+      titleAccent: 'detects AI and plagiarism',
+      subtitle: 'NovaLearn combines AI detection, plagiarism checks, model identification and exportable reports in a simpler Turnitin alternative for schools and universities.',
       trustBadges: [
-        'Advanced AI Detection',
-        'Third-party Verified',
+        'Turnitin alternative',
+        'AI + plagiarism',
         'Free Trial',
       ],
       ctaPrimary: 'Try for Free \u2192',
@@ -301,12 +301,13 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Why Choose NovaLearn?',
-      subtitle: 'Compare the leading AI detection solutions',
-      competitors: ['NovaLearn', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      title: 'NovaLearn, the UK Turnitin alternative',
+      subtitle: 'Compare leading academic integrity tools for detecting AI and plagiarism.',
+      competitors: ['NovaLearn', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'Accuracy', values: ['99.9%', '~85%', '~80%', '~94%'] },
         { label: 'False positive rate', values: ['Near-zero', 'High', 'Moderate', 'Moderate'] },
+        { label: 'AI + plagiarism in one report', values: [true, false, true, true] },
         { label: 'UK support', values: [true, false, false, false] },
         { label: 'Starting price', values: ['Free', '$9.99/mo', 'On request', '$14.95/mo'] },
         { label: 'Section analysis', values: [true, false, false, true] },
@@ -323,14 +324,14 @@ const config: ResellerConfig = {
 
     // CTA section
     cta: {
-      title: 'Ready to detect AI content?',
-      subtitle: 'Join education professionals who trust NovaLearn to protect the integrity of their content.',
+      title: 'Need a Turnitin alternative?',
+      subtitle: 'Try NovaLearn to verify AI and plagiarism in a clear, exportable report built for education teams.',
       button: 'Create Free Account \u2192',
     },
 
     // Footer
     footer: {
-      description: 'The UK AI detection solution with unmatched accuracy. Privacy-first, GDPR compliant, UK-based support.',
+      description: 'The UK academic integrity and Turnitin alternative for detecting AI, plagiarism and suspicious content. Privacy-first and GDPR compliant.',
       productLabel: 'Product',
       companyLabel: 'Company',
       contactLabel: 'Contact',
@@ -443,6 +444,7 @@ const config: ResellerConfig = {
       aiAssisted: 'AI-assisted',
       humanWritten: 'Human',
       viewReport: 'View detailed report',
+      exportPdf: 'Export PDF report',
     },
 
     // Hero demo

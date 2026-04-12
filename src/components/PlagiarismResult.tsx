@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ExternalLink, ChevronDown, ChevronUp } from 'lucide-react'
+import { ExternalLink, ChevronDown, ChevronUp, Globe } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 
 interface PlagiarismResultProps {
@@ -18,6 +18,36 @@ function getScoreColor(score: number) {
   if (score < 10) return { color: '#10b981', bg: 'bg-emerald-50' }
   if (score < 30) return { color: '#f59e0b', bg: 'bg-amber-50' }
   return { color: '#ef4444', bg: 'bg-red-50' }
+}
+
+function getHostname(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
+
+function SourceFavicon({ url }: { url: string }) {
+  const [failed, setFailed] = useState(false)
+  const hostname = getHostname(url)
+
+  if (!hostname || failed) {
+    return (
+      <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+        <Globe className="h-4 w-4" />
+      </span>
+    )
+  }
+
+  return (
+    <img
+      src={`https://icons.duckduckgo.com/ip3/${hostname}.ico`}
+      alt=""
+      className="h-8 w-8 flex-shrink-0 rounded-full border border-gray-100 bg-white object-contain p-1"
+      onError={() => setFailed(true)}
+    />
+  )
 }
 
 function ScoreRing({ score }: { score: number }) {
@@ -72,13 +102,17 @@ function SourceItem({ source, strings }: {
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
       >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: `${color}20`, color }}>
-              {similarity === null ? '—' : `${similarity}%`} {strings.similarity}
-            </span>
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <SourceFavicon url={source.source_url} />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: `${color}20`, color }}>
+                {similarity === null ? '—' : `${similarity}%`} {strings.similarity}
+              </span>
+            </div>
+            <p className="text-sm font-medium text-[var(--navy)] mt-1 truncate">{getHostname(source.source_url)}</p>
+            <p className="text-xs text-gray-400 mt-0.5 truncate">{source.source_url}</p>
           </div>
-          <p className="text-sm text-gray-500 mt-1 truncate">{source.source_url}</p>
         </div>
         {expanded ? <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />}
       </button>

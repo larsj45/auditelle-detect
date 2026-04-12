@@ -167,11 +167,11 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'Auditelle \u2014 D\u00e9tection IA la plus pr\u00e9cise du march\u00e9',
-    description: 'D\u00e9tectez le contenu g\u00e9n\u00e9r\u00e9 par intelligence artificielle avec une pr\u00e9cision de 99,9%. ChatGPT, Claude, Gemini et plus. V\u00e9rification par des tiers, taux de faux positifs quasi nul.',
-    keywords: ['d\u00e9tection IA', 'd\u00e9tection ChatGPT', 'd\u00e9tection plagiat IA', 'int\u00e9grit\u00e9 acad\u00e9mique', 'Auditelle'],
-    ogTitle: 'Auditelle \u2014 D\u00e9tection IA la plus pr\u00e9cise du march\u00e9',
-    ogDescription: 'D\u00e9tectez le contenu IA avec une pr\u00e9cision de 99,9%. R\u00e9sultats v\u00e9rifi\u00e9s par des tiers.',
+    title: 'Auditelle — La meilleure alternative à Turnitin pour l’IA et le plagiat',
+    description: 'Alternative moderne à Turnitin pour les enseignants : détection IA, plagiat, identification du modèle et rapports exportables. Précision 99,9%, support français, conformité RGPD.',
+    keywords: ['alternative Turnitin', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'intégrité académique', 'Auditelle'],
+    ogTitle: 'Auditelle — Alternative française à Turnitin',
+    ogDescription: 'Détection IA + plagiat avec rapports clairs, support français et précision vérifiée.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -193,13 +193,13 @@ const config: ResellerConfig = {
 
     // Hero
     hero: {
-      badge: '99,9% de pr\u00e9cision v\u00e9rifi\u00e9e',
-      title: 'Le d\u00e9tecteur IA qui ',
-      titleAccent: 'fonctionne vraiment',
-      subtitle: "D\u00e9tectez ChatGPT, Claude, Gemini et plus avec une pr\u00e9cision in\u00e9gal\u00e9e. V\u00e9rifi\u00e9 par l'Universit\u00e9 du Maryland. Taux de faux positifs quasi nul.",
+      badge: 'Alternative moderne à Turnitin',
+      title: 'La plateforme d’intégrité académique qui ',
+      titleAccent: 'détecte IA et plagiat',
+      subtitle: "Auditelle réunit détection IA, plagiat, identification du modèle et rapports exportables dans une alternative française à Turnitin, plus simple à déployer et pensée pour les enseignants.",
       trustBadges: [
-        'D\u00e9tection IA avanc\u00e9e',
-        'V\u00e9rifi\u00e9 par des tiers',
+        'Alternative à Turnitin',
+        'IA + plagiat',
         'Essai gratuit',
       ],
       ctaPrimary: 'Essayer gratuitement \u2192',
@@ -284,12 +284,13 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Pourquoi choisir Auditelle ?',
-      subtitle: 'Comparez les principales solutions de d\u00e9tection IA',
-      competitors: ['Auditelle', 'GPTZero', 'Turnitin AI', 'Originality.ai'],
+      title: 'Auditelle, l’alternative française à Turnitin',
+      subtitle: 'Comparez les principales solutions d’intégrité académique pour détecter IA et plagiat.',
+      competitors: ['Auditelle', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'Pr\u00e9cision', values: ['99,9%', '~85%', '~80%', '~94%'] },
         { label: 'Taux de faux positifs', values: ['Quasi nul', '\u00c9lev\u00e9', 'Mod\u00e9r\u00e9', 'Mod\u00e9r\u00e9'] },
+        { label: 'IA + plagiat dans le même rapport', values: [true, false, true, true] },
         { label: 'Support fran\u00e7ais', values: [true, false, false, false] },
         { label: 'Prix (\u00e0 partir de)', values: ['Gratuit', '$9.99/mois', 'Sur devis', '$14.95/mois'] },
         { label: 'Analyse par section', values: [true, false, false, true] },
@@ -306,14 +307,14 @@ const config: ResellerConfig = {
 
     // CTA section
     cta: {
-      title: 'Pr\u00eat \u00e0 d\u00e9tecter le contenu IA ?',
-      subtitle: "Rejoignez des milliers de professionnels qui font confiance \u00e0 Auditelle pour prot\u00e9ger l'int\u00e9grit\u00e9 de leurs contenus.",
+      title: 'Besoin d’une alternative à Turnitin ?',
+      subtitle: "Essayez Auditelle pour vérifier l’IA et le plagiat dans un rapport clair, exportable et adapté aux établissements francophones.",
       button: 'Cr\u00e9er un compte gratuit \u2192',
     },
 
     // Footer
     footer: {
-      description: 'La solution fran\u00e7aise de d\u00e9tection de texte g\u00e9n\u00e9r\u00e9 par intelligence artificielle. Pr\u00e9cision in\u00e9gal\u00e9e, respect de la vie priv\u00e9e, conformit\u00e9 RGPD.',
+      description: 'La solution française d’intégrité académique et alternative à Turnitin pour détecter IA, plagiat et contenus suspects avec conformité RGPD.',
       productLabel: 'Produit',
       companyLabel: 'Entreprise',
       contactLabel: 'Contact',
@@ -426,6 +427,7 @@ const config: ResellerConfig = {
       aiAssisted: 'IA assist\u00e9e',
       humanWritten: 'Humain',
       viewReport: 'Voir le rapport d\u00e9taill\u00e9',
+      exportPdf: 'Exporter le rapport PDF',
     },
 
     // Hero demo
