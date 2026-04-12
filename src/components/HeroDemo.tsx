@@ -2,30 +2,44 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Sparkles, AlertCircle, Lock, Search } from 'lucide-react'
+import { Loader2, Sparkles, AlertCircle, Lock, Search, FileSearch } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
-import DetectionModeToggle from '@/components/DetectionModeToggle'
+import DetectionModeToggle, { type DetectionMode } from '@/components/DetectionModeToggle'
 import FileUpload from '@/components/FileUpload'
 
-interface DemoAIResult {
-  mode: 'ai'
+interface DemoAISummary {
   score: number
   model: string | null
-  verdict: string
+  verdict: string | null
   isAI: boolean
+}
+
+interface DemoAIResult extends DemoAISummary {
+  mode: 'ai'
   remaining: number
 }
 
-interface DemoPlagiarismResult {
-  mode: 'plagiarism'
+interface DemoPlagiarismSummary {
   plagiarism_detected: boolean
   score: number
   source_count: number
   sources: Array<{ url: string; similarity: number }>
+}
+
+interface DemoPlagiarismResult extends DemoPlagiarismSummary {
+  mode: 'plagiarism'
   remaining: number
 }
 
-type DemoResult = DemoAIResult | DemoPlagiarismResult
+interface DemoCombinedResult {
+  mode: 'both'
+  ai: DemoAISummary | null
+  plagiarism: DemoPlagiarismSummary | null
+  partial?: boolean
+  remaining: number
+}
+
+type DemoResult = DemoAIResult | DemoPlagiarismResult | DemoCombinedResult
 
 export default function HeroDemo() {
   const config = useConfig()
@@ -34,13 +48,13 @@ export default function HeroDemo() {
   const p = config.strings.plagiarism
   const router = useRouter()
   const [text, setText] = useState('')
-  const [mode, setMode] = useState<'ai' | 'plagiarism'>('ai')
+  const [mode, setMode] = useState<DetectionMode>('ai')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<DemoResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [remaining, setRemaining] = useState<number | null>(null)
 
-  const runAnalysis = useCallback(async (analysisText: string, analysisMode: 'ai' | 'plagiarism') => {
+  const runAnalysis = useCallback(async (analysisText: string, analysisMode: DetectionMode) => {
     if (analysisText.trim().length < 50) {
       setError(config.strings.errors.textTooShort)
       return
@@ -96,7 +110,7 @@ export default function HeroDemo() {
   // Auto-analyze on return from signup
   useEffect(() => {
     const pendingText = sessionStorage.getItem('pendingAnalysisText')
-    const pendingMode = sessionStorage.getItem('pendingAnalysisMode') as 'ai' | 'plagiarism' | null
+    const pendingMode = sessionStorage.getItem('pendingAnalysisMode') as DetectionMode | null
 
     if (pendingText) {
       import('@/lib/supabase').then(({ supabase }) => {
@@ -119,7 +133,7 @@ export default function HeroDemo() {
     return 'text-green-500'
   }
 
-  const handleModeChange = (newMode: 'ai' | 'plagiarism') => {
+  const handleModeChange = (newMode: DetectionMode) => {
     setMode(newMode)
     setResult(null)
     setError(null)
@@ -141,6 +155,23 @@ export default function HeroDemo() {
         className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {s.chatgptButton}
+      </button>
+    </>
+  ) : mode === 'both' ? (
+    <>
+      <button
+        onClick={() => setText(s.chatgptSample)}
+        disabled={loading}
+        className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {s.chatgptButton}
+      </button>
+      <button
+        onClick={() => setText(p.copiedSample)}
+        disabled={loading}
+        className="text-xs px-3 py-1 bg-amber-50 text-amber-700 rounded-full hover:bg-amber-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {p.copiedButton}
       </button>
     </>
   ) : (
@@ -213,6 +244,11 @@ export default function HeroDemo() {
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
               {s.analyzingLabel.split('...')[0]}...
+            </>
+          ) : mode === 'both' ? (
+            <>
+              <FileSearch className="w-4 h-4" />
+              {p.analyzeBoth}
             </>
           ) : mode === 'plagiarism' ? (
             <>
@@ -375,6 +411,85 @@ export default function HeroDemo() {
                     <div className="h-2 bg-gray-100 rounded w-1/4" />
                   </div>
                 ))}
+              </div>
+            </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
+              <Lock className="w-8 h-8 text-gray-400 mb-2" />
+              <p className="text-sm font-semibold text-gray-700 text-center px-4">
+                {s.unlockLabel}
+              </p>
+              <a
+                href="/signup"
+                className="mt-2 text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+              >
+                {s.ctaButton}
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Combined Result */}
+      {result && result.mode === 'both' && (
+        <>
+          <div className="mt-4 p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl">
+            {result.partial && (
+              <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm">
+                {p.partialWarning}
+              </div>
+            )}
+            <div className="grid sm:grid-cols-2 gap-3">
+              {result.ai && (
+                <div className="rounded-xl border border-gray-100 bg-white p-4">
+                  <div className={`text-3xl font-bold ${getScoreColor(result.ai.score)}`}>
+                    {result.ai.score}%
+                  </div>
+                  <div className="text-sm font-medium text-gray-700 mt-1">{result.ai.verdict}</div>
+                  <div className="text-xs text-gray-500 mt-1">{p.modeAI}</div>
+                </div>
+              )}
+              {result.plagiarism && (
+                <div className="rounded-xl border border-gray-100 bg-white p-4">
+                  <div className={`text-3xl font-bold ${result.plagiarism.score > 20 ? 'text-red-500' : result.plagiarism.score > 5 ? 'text-yellow-500' : 'text-green-500'}`}>
+                    {result.plagiarism.score}%
+                  </div>
+                  <div className="text-sm font-medium text-gray-700 mt-1">
+                    {result.plagiarism.plagiarism_detected ? p.plagiarismFound : p.noPlagiarism}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {p.sourcesFound.replace('{count}', String(result.plagiarism.source_count))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+              <a
+                href="/signup"
+                className="inline-block w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20"
+              >
+                {s.ctaButton}
+              </a>
+              <p className="text-xs text-gray-500 mt-2">
+                {s.ctaTeaser}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 relative">
+            <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
+              <p className="text-sm font-semibold text-gray-700 mb-3">{p.analyzeBoth}</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div className="p-4 rounded-lg border border-gray-100">
+                  <div className="h-3 bg-red-100 rounded w-2/3 mb-2" />
+                  <div className="h-2 bg-gray-100 rounded w-full mb-1" />
+                  <div className="h-2 bg-gray-100 rounded w-1/3" />
+                </div>
+                <div className="p-4 rounded-lg border border-gray-100">
+                  <div className="h-3 bg-amber-100 rounded w-2/3 mb-2" />
+                  <div className="h-2 bg-gray-100 rounded w-full mb-1" />
+                  <div className="h-2 bg-gray-100 rounded w-1/3" />
+                </div>
               </div>
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">

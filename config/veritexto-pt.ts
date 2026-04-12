@@ -482,6 +482,7 @@ const config: ResellerConfig = {
     plagiarism: {
       modeAI: 'Detecção IA',
       modePlagiarism: 'Detecção de plágio',
+      modeBoth: 'Análise completa',
       noPlagiarism: 'Nenhum plágio detectado',
       plagiarismFound: 'Plágio detectado',
       percentPlagiarized: '{score}% de plágio detectado',
@@ -490,6 +491,8 @@ const config: ResellerConfig = {
       matchedText: 'Texto correspondente',
       similarity: 'Similaridade',
       analyzePlagiarism: 'Verificar plágio',
+      analyzeBoth: 'Análise IA + plágio',
+      partialWarning: 'Uma parte da análise não pôde ser finalizada. Os resultados disponíveis são exibidos abaixo.',
       originalSample: 'A fotossíntese é um processo biológico fundamental pelo qual as plantas convertem a luz solar em energia química, produzindo oxigênio como subproduto essencial para a vida na Terra.',
       copiedSample: 'A fotossíntese é o processo bioenergético que permite aos organismos clorofilados sintetizar matéria orgânica utilizando a energia luminosa. Consiste em reduzir o dióxido de carbono pela água em glicídios e dioxigênio.',
       originalButton: 'Texto original',

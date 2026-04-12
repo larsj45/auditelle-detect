@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DetectionResult from '@/components/DetectionResult'
 import PlagiarismResult from '@/components/PlagiarismResult'
-import DetectionModeToggle from '@/components/DetectionModeToggle'
+import DetectionModeToggle, { type DetectionMode } from '@/components/DetectionModeToggle'
 import { FileSearch, Search, Loader2, CheckCircle, Coins } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import { useConfig } from '@/components/ConfigProvider'
@@ -27,6 +27,15 @@ interface PlagiarismResponse {
     matched_text: string
     similarity_score: number
   }>
+  scans_remaining?: number
+}
+
+interface CombinedDetectionResponse {
+  mode: 'both'
+  ai: DetectionResponse | null
+  plagiarism: PlagiarismResponse | null
+  partial?: boolean
+  errors?: Partial<Record<'ai' | 'plagiarism', string>>
   scans_remaining?: number
 }
 
@@ -63,11 +72,12 @@ export default function DashboardPage() {
   const s = config.strings.dashboard
   const p = config.strings.plagiarism
   const [text, setText] = useState('')
-  const [mode, setMode] = useState<'ai' | 'plagiarism'>('ai')
+  const [mode, setMode] = useState<DetectionMode>('ai')
   const [loading, setLoading] = useState(false)
   const [aiResult, setAiResult] = useState<DetectionResponse | null>(null)
   const [plagResult, setPlagResult] = useState<PlagiarismResponse | null>(null)
   const [error, setError] = useState('')
+  const [partialWarning, setPartialWarning] = useState('')
   const [scansRemaining, setScansRemaining] = useState<number | null>(null)
   const [showSuccessBanner, setShowSuccessBanner] = useState(false)
   const [showCreditsBanner, setShowCreditsBanner] = useState<number | null>(null)
@@ -108,11 +118,12 @@ export default function DashboardPage() {
     localStorage.setItem('auditelle_onboarded', '1')
   }
 
-  const handleModeChange = (newMode: 'ai' | 'plagiarism') => {
+  const handleModeChange = (newMode: DetectionMode) => {
     setMode(newMode)
     setAiResult(null)
     setPlagResult(null)
     setError('')
+    setPartialWarning('')
   }
 
   const handleAnalyze = async () => {
@@ -123,6 +134,7 @@ export default function DashboardPage() {
 
     setLoading(true)
     setError('')
+    setPartialWarning('')
     setAiResult(null)
     setPlagResult(null)
 
@@ -145,7 +157,15 @@ export default function DashboardPage() {
         throw new Error(data.error || config.strings.errors.analysisError)
       }
 
-      if (mode === 'plagiarism') {
+      if (data.mode === 'both') {
+        const combined = data as CombinedDetectionResponse
+        setAiResult(combined.ai)
+        setPlagResult(combined.plagiarism)
+        if (combined.partial) {
+          const details = Object.values(combined.errors ?? {}).filter(Boolean).join(' ')
+          setPartialWarning(details || config.strings.errors.analysisError)
+        }
+      } else if (mode === 'plagiarism') {
         setPlagResult(data)
       } else {
         setAiResult(data)
@@ -270,6 +290,11 @@ export default function DashboardPage() {
                 <Loader2 className="w-4 h-4 animate-spin" />
                 {s.analyzing}
               </>
+            ) : mode === 'both' ? (
+              <>
+                <FileSearch className="w-4 h-4" />
+                {p.analyzeBoth}
+              </>
             ) : mode === 'plagiarism' ? (
               <>
                 <Search className="w-4 h-4" />
@@ -302,8 +327,17 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {partialWarning && (
+        <div className="bg-amber-50 text-amber-800 border border-amber-200 text-sm p-4 rounded-lg mb-6">
+          {p.partialWarning}
+        </div>
+      )}
+
       {aiResult && (
         <div className="card">
+          {mode === 'both' && (
+            <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modeAI}</h2>
+          )}
           <DetectionResult
             score={Math.round(aiResult.ai_likelihood * 100)}
             headline={aiResult.headline}
@@ -320,6 +354,9 @@ export default function DashboardPage() {
 
       {plagResult && (
         <div className="card">
+          {mode === 'both' && (
+            <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modePlagiarism}</h2>
+          )}
           <PlagiarismResult
             percentPlagiarized={plagResult.percent_plagiarized}
             plagiarismDetected={plagResult.plagiarism_detected}

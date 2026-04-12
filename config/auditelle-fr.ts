@@ -458,6 +458,7 @@ const config: ResellerConfig = {
     plagiarism: {
       modeAI: 'Détection IA',
       modePlagiarism: 'Détection de plagiat',
+      modeBoth: 'Analyse complète',
       noPlagiarism: 'Aucun plagiat détecté',
       plagiarismFound: 'Plagiat détecté',
       percentPlagiarized: '{score}% de plagiat détecté',
@@ -466,6 +467,8 @@ const config: ResellerConfig = {
       matchedText: 'Texte correspondant',
       similarity: 'Similarité',
       analyzePlagiarism: 'Vérifier le plagiat',
+      analyzeBoth: 'Analyse IA + plagiat',
+      partialWarning: "Une partie de l'analyse n'a pas pu être finalisée. Les résultats disponibles sont affichés ci-dessous.",
       originalSample: "La photosynthèse est un processus biologique fondamental par lequel les plantes convertissent la lumière du soleil en énergie chimique, produisant de l'oxygène comme sous-produit essentiel à la vie sur Terre.",
       copiedSample: "La photosynthèse est le processus bioénergétique qui permet aux organismes chlorophylliens de synthétiser de la matière organique en utilisant l'énergie lumineuse. Elle consiste à réduire le dioxyde de carbone par l'eau en glucides et dioxygène.",
       originalButton: 'Texte original',

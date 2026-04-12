@@ -475,6 +475,7 @@ const config: ResellerConfig = {
     plagiarism: {
       modeAI: 'AI Detection',
       modePlagiarism: 'Plagiarism detection',
+      modeBoth: 'Full analysis',
       noPlagiarism: 'No plagiarism detected',
       plagiarismFound: 'Plagiarism detected',
       percentPlagiarized: '{score}% plagiarism detected',
@@ -483,6 +484,8 @@ const config: ResellerConfig = {
       matchedText: 'Matched text',
       similarity: 'Similarity',
       analyzePlagiarism: 'Check for plagiarism',
+      analyzeBoth: 'AI + plagiarism analysis',
+      partialWarning: 'Part of the analysis could not be completed. Available results are shown below.',
       originalSample: 'Photosynthesis is a fundamental biological process by which plants convert sunlight into chemical energy, producing oxygen as a by-product essential to life on Earth.',
       copiedSample: 'Photosynthesis is the bioenergetic process allowing chlorophyll-containing organisms to synthesise organic matter from light energy, reducing carbon dioxide with water to produce carbohydrates and dioxygen.',
       originalButton: 'Original text',

@@ -5,8 +5,11 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import DetectionResult from '@/components/DetectionResult'
-import { FileSearch, Loader2, Sparkles, ArrowRight } from 'lucide-react'
+import PlagiarismResult from '@/components/PlagiarismResult'
+import DetectionModeToggle, { type DetectionMode } from '@/components/DetectionModeToggle'
+import { FileSearch, Loader2, Sparkles, ArrowRight, Search } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
+import { useConfig } from '@/components/ConfigProvider'
 
 interface DetectionResponse {
   ai_likelihood: number
@@ -19,11 +22,36 @@ interface DetectionResponse {
   limit_reached?: boolean
 }
 
+interface PlagiarismResponse {
+  plagiarism_detected: boolean
+  percent_plagiarized: number
+  plagiarized_content: Array<{
+    source_url: string
+    matched_text: string
+    similarity_score: number
+  }>
+  tests_remaining?: number
+}
+
+interface CombinedDetectionResponse {
+  mode: 'both'
+  ai: DetectionResponse | null
+  plagiarism: PlagiarismResponse | null
+  partial?: boolean
+  errors?: Partial<Record<'ai' | 'plagiarism', string>>
+  tests_remaining?: number
+}
+
 export default function TesterPage() {
+  const config = useConfig()
+  const p = config.strings.plagiarism
   const [text, setText] = useState('')
+  const [mode, setMode] = useState<DetectionMode>('ai')
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<DetectionResponse | null>(null)
+  const [aiResult, setAiResult] = useState<DetectionResponse | null>(null)
+  const [plagResult, setPlagResult] = useState<PlagiarismResponse | null>(null)
   const [error, setError] = useState('')
+  const [partialWarning, setPartialWarning] = useState(false)
   const [testsRemaining, setTestsRemaining] = useState<number | null>(null)
   const [limitReached, setLimitReached] = useState(false)
 
@@ -35,13 +63,15 @@ export default function TesterPage() {
 
     setLoading(true)
     setError('')
-    setResult(null)
+    setPartialWarning(false)
+    setAiResult(null)
+    setPlagResult(null)
 
     try {
       const response = await fetch('/api/detect-public', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text.trim() }),
+        body: JSON.stringify({ text: text.trim(), mode }),
       })
 
       const data = await response.json()
@@ -54,7 +84,16 @@ export default function TesterPage() {
         throw new Error(data.error || 'Erreur lors de l\'analyse')
       }
 
-      setResult(data)
+      if (data.mode === 'both') {
+        const combined = data as CombinedDetectionResponse
+        setAiResult(combined.ai)
+        setPlagResult(combined.plagiarism)
+        setPartialWarning(Boolean(combined.partial))
+      } else if (mode === 'plagiarism') {
+        setPlagResult(data)
+      } else {
+        setAiResult(data)
+      }
       if (data.tests_remaining !== undefined) {
         setTestsRemaining(data.tests_remaining)
       }
@@ -102,6 +141,19 @@ export default function TesterPage() {
 
           {/* Main card */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+            <div className="mb-4">
+              <DetectionModeToggle
+                mode={mode}
+                onModeChange={(nextMode) => {
+                  setMode(nextMode)
+                  setAiResult(null)
+                  setPlagResult(null)
+                  setPartialWarning(false)
+                  setError('')
+                }}
+                disabled={loading || limitReached}
+              />
+            </div>
             <FileUpload onTextExtracted={(extractedText) => { if (extractedText) setText(extractedText) }} />
             <textarea
               value={text}
@@ -124,6 +176,16 @@ export default function TesterPage() {
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Analyse en cours...
                   </>
+                ) : mode === 'both' ? (
+                  <>
+                    <FileSearch className="w-4 h-4" />
+                    {p.analyzeBoth}
+                  </>
+                ) : mode === 'plagiarism' ? (
+                  <>
+                    <Search className="w-4 h-4" />
+                    {p.analyzePlagiarism}
+                  </>
                 ) : (
                   <>
                     <FileSearch className="w-4 h-4" />
@@ -139,16 +201,25 @@ export default function TesterPage() {
             <div className="bg-red-50 text-red-700 text-sm p-4 rounded-lg mb-6">{error}</div>
           )}
 
-          {/* Result */}
-          {result && (
+          {partialWarning && (
+            <div className="bg-amber-50 text-amber-800 border border-amber-200 text-sm p-4 rounded-lg mb-6">
+              {p.partialWarning}
+            </div>
+          )}
+
+          {/* AI result */}
+          {aiResult && (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+              {mode === 'both' && (
+                <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modeAI}</h2>
+              )}
               <DetectionResult
-                score={Math.round(result.ai_likelihood * 100)}
-                headline={result.headline}
-                aiAssistedScore={result.ai_assisted_likelihood}
-                humanScore={result.human_likelihood}
-                dashboardLink={result.dashboard_link}
-                sentences={result.sentences?.map(s => ({
+                score={Math.round(aiResult.ai_likelihood * 100)}
+                headline={aiResult.headline}
+                aiAssistedScore={aiResult.ai_assisted_likelihood}
+                humanScore={aiResult.human_likelihood}
+                dashboardLink={aiResult.dashboard_link}
+                sentences={aiResult.sentences?.map(s => ({
                   ...s,
                   ai_likelihood: Math.round(s.ai_likelihood * 100),
                 }))}
@@ -156,8 +227,22 @@ export default function TesterPage() {
             </div>
           )}
 
+          {/* Plagiarism result */}
+          {plagResult && (
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+              {mode === 'both' && (
+                <h2 className="text-lg font-semibold text-[var(--navy)] mb-4">{p.modePlagiarism}</h2>
+              )}
+              <PlagiarismResult
+                percentPlagiarized={plagResult.percent_plagiarized}
+                plagiarismDetected={plagResult.plagiarism_detected}
+                sources={plagResult.plagiarized_content}
+              />
+            </div>
+          )}
+
           {/* CTA */}
-          {(result || limitReached) && (
+          {(aiResult || plagResult || limitReached) && (
             <div className="bg-gradient-to-r from-[var(--navy)] to-[var(--accent)] rounded-2xl p-8 text-center text-white">
               <h2 className="text-2xl font-bold mb-4">
                 {limitReached ? 'Continuez avec un compte gratuit' : 'Vous aimez Auditelle ?'}
@@ -176,7 +261,7 @@ export default function TesterPage() {
           )}
 
           {/* Features */}
-          {!result && !limitReached && (
+          {!aiResult && !plagResult && !limitReached && (
             <div className="grid md:grid-cols-3 gap-6 mt-12">
               <div className="bg-white rounded-xl p-6 border border-gray-100">
                 <div className="text-3xl mb-4">🎯</div>

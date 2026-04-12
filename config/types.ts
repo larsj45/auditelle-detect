@@ -338,6 +338,7 @@ export interface ResellerStrings {
   plagiarism: {
     modeAI: string
     modePlagiarism: string
+    modeBoth: string
     noPlagiarism: string
     plagiarismFound: string
     percentPlagiarized: string    // {score}% placeholder
@@ -346,6 +347,8 @@ export interface ResellerStrings {
     matchedText: string
     similarity: string
     analyzePlagiarism: string
+    analyzeBoth: string
+    partialWarning: string
     originalSample: string
     copiedSample: string
     originalButton: string

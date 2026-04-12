@@ -470,6 +470,7 @@ const config: ResellerConfig = {
     plagiarism: {
       modeAI: 'AI-detektion',
       modePlagiarism: 'Plagiatkontroll',
+      modeBoth: 'Fullständig analys',
       noPlagiarism: 'Inget plagiat upptäckt',
       plagiarismFound: 'Plagiat upptäckt',
       percentPlagiarized: '{score} % plagiat upptäckt',
@@ -478,6 +479,8 @@ const config: ResellerConfig = {
       matchedText: 'Matchande text',
       similarity: 'Likhet',
       analyzePlagiarism: 'Kontrollera plagiat',
+      analyzeBoth: 'AI + plagiatanalys',
+      partialWarning: 'En del av analysen kunde inte slutföras. Tillgängliga resultat visas nedan.',
       originalSample: 'Fotosyntesen är en grundläggande biologisk process där växter omvandlar solljus till kemisk energi och producerar syre som en viktig biprodukt för livet på jorden.',
       copiedSample: 'Fotosyntesen är den bioenergetiska process som gör det möjligt för klorofyllbärande organismer att syntetisera organiskt material med hjälp av ljusenergi genom att reducera koldioxid med vatten.',
       originalButton: 'Original',
