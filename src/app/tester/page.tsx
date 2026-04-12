@@ -43,7 +43,7 @@ interface CombinedDetectionResponse {
   tests_remaining?: number
 }
 
-function CombinedLoadingPanels({ aiLabel, plagiarismLabel }: { aiLabel: string; plagiarismLabel: string }) {
+function CombinedLoadingPanels({ aiLabel, plagiarismLabel, loadingText }: { aiLabel: string; plagiarismLabel: string; loadingText: string }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 mb-6">
       {[aiLabel, plagiarismLabel].map((label) => (
@@ -52,7 +52,7 @@ function CombinedLoadingPanels({ aiLabel, plagiarismLabel }: { aiLabel: string; 
             <Loader2 className="h-5 w-5 animate-spin text-[var(--accent)]" />
             <div>
               <p className="text-sm font-semibold text-[var(--navy)]">{label}</p>
-              <p className="text-xs text-gray-500">Analyse en cours...</p>
+              <p className="text-xs text-gray-500">{loadingText}</p>
             </div>
           </div>
         </div>
@@ -64,11 +64,13 @@ function CombinedLoadingPanels({ aiLabel, plagiarismLabel }: { aiLabel: string; 
 export default function TesterPage() {
   const config = useConfig()
   const p = config.strings.plagiarism
+  const tester = config.strings.tester
   const [text, setText] = useState('')
   const [mode, setMode] = useState<DetectionMode>('ai')
   const [loading, setLoading] = useState(false)
   const [aiResult, setAiResult] = useState<DetectionResponse | null>(null)
   const [plagResult, setPlagResult] = useState<PlagiarismResponse | null>(null)
+  const [resultText, setResultText] = useState('')
   const [error, setError] = useState('')
   const [partialWarning, setPartialWarning] = useState(false)
   const [testsRemaining, setTestsRemaining] = useState<number | null>(null)
@@ -76,7 +78,7 @@ export default function TesterPage() {
 
   const handleAnalyze = async () => {
     if (!text.trim() || text.trim().length < 50) {
-      setError('Veuillez entrer au moins 50 caractères pour une analyse fiable.')
+      setError(tester.minCharsError)
       return
     }
 
@@ -85,12 +87,14 @@ export default function TesterPage() {
     setPartialWarning(false)
     setAiResult(null)
     setPlagResult(null)
+    setResultText('')
 
     try {
+      const trimmedText = text.trim()
       const response = await fetch('/api/detect-public', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text.trim(), mode }),
+        body: JSON.stringify({ text: trimmedText, mode }),
       })
 
       const data = await response.json()
@@ -100,8 +104,10 @@ export default function TesterPage() {
           setLimitReached(true)
           setTestsRemaining(0)
         }
-        throw new Error(data.error || 'Erreur lors de l\'analyse')
+        throw new Error(data.error || tester.analysisError)
       }
+
+      setResultText(trimmedText)
 
       if (data.mode === 'both') {
         const combined = data as CombinedDetectionResponse
@@ -117,7 +123,7 @@ export default function TesterPage() {
         setTestsRemaining(data.tests_remaining)
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Une erreur est survenue'
+      const message = err instanceof Error ? err.message : tester.internalError
       setError(message)
     } finally {
       setLoading(false)
@@ -133,13 +139,13 @@ export default function TesterPage() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-[var(--accent)]/10 text-[var(--accent)] px-4 py-2 rounded-full text-sm font-medium mb-4">
               <Sparkles className="w-4 h-4" />
-              Test gratuit — Aucun compte requis
+              {tester.badge}
             </div>
             <h1 className="text-4xl font-bold text-[var(--navy)] mb-4">
-              Testez la détection IA
+              {tester.title}
             </h1>
             <p className="text-xl text-gray-600">
-              Collez un texte et découvrez s&apos;il a été généré par IA — en quelques secondes
+              {tester.subtitle}
             </p>
           </div>
 
@@ -149,10 +155,10 @@ export default function TesterPage() {
               <span className="text-sm text-gray-500 bg-white px-4 py-2 rounded-lg border border-gray-200">
                 {testsRemaining > 0 ? (
                   <>
-                    <span className="font-semibold text-[var(--navy)]">{testsRemaining}</span> test{testsRemaining > 1 ? 's' : ''} gratuit{testsRemaining > 1 ? 's' : ''} restant{testsRemaining > 1 ? 's' : ''}
+                    {tester.testsRemaining.replace('{count}', String(testsRemaining))}
                   </>
                 ) : (
-                  <span className="text-amber-600">Limite atteinte — créez un compte pour continuer</span>
+                  <span className="text-amber-600">{tester.limitReached}</span>
                 )}
               </span>
             </div>
@@ -167,6 +173,7 @@ export default function TesterPage() {
                   setMode(nextMode)
                   setAiResult(null)
                   setPlagResult(null)
+                  setResultText('')
                   setPartialWarning(false)
                   setError('')
                 }}
@@ -177,13 +184,13 @@ export default function TesterPage() {
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Collez ici le texte à analyser (minimum 50 caractères, maximum 5000)..."
+              placeholder={tester.textareaPlaceholder}
               className="w-full h-48 resize-y border border-gray-200 rounded-lg p-4 text-sm focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 outline-none transition"
               disabled={limitReached}
             />
             <div className="flex items-center justify-between mt-4">
               <span className="text-xs text-gray-400">
-                {text.length} / 5000 caractères
+                {tester.characterCount.replace('{count}', String(text.length))}
               </span>
               <button
                 onClick={handleAnalyze}
@@ -193,7 +200,7 @@ export default function TesterPage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Analyse en cours...
+                    {tester.loading}
                   </>
                 ) : mode === 'both' ? (
                   <>
@@ -208,7 +215,7 @@ export default function TesterPage() {
                 ) : (
                   <>
                     <FileSearch className="w-4 h-4" />
-                    Analyser gratuitement
+                    {tester.analyzeFree}
                   </>
                 )}
               </button>
@@ -227,7 +234,7 @@ export default function TesterPage() {
           )}
 
           {loading && mode === 'both' && (
-            <CombinedLoadingPanels aiLabel={p.modeAI} plagiarismLabel={p.modePlagiarism} />
+            <CombinedLoadingPanels aiLabel={p.modeAI} plagiarismLabel={p.modePlagiarism} loadingText={tester.loading} />
           )}
 
           {(aiResult || plagResult) && (
@@ -266,6 +273,7 @@ export default function TesterPage() {
                     percentPlagiarized={plagResult.percent_plagiarized}
                     plagiarismDetected={plagResult.plagiarism_detected}
                     sources={plagResult.plagiarized_content}
+                    analyzedText={resultText}
                   />
                 </div>
               )}
@@ -276,16 +284,16 @@ export default function TesterPage() {
           {(aiResult || plagResult || limitReached) && (
             <div className="bg-gradient-to-r from-[var(--navy)] to-[var(--accent)] rounded-2xl p-8 text-center text-white">
               <h2 className="text-2xl font-bold mb-4">
-                {limitReached ? 'Continuez avec un compte gratuit' : 'Vous aimez Auditelle ?'}
+                {limitReached ? tester.ctaTitleLimit : tester.ctaTitle}
               </h2>
               <p className="text-white/80 mb-6">
-                Créez un compte gratuit pour analyser jusqu&apos;à 50 textes par mois, avec l&apos;historique complet et l&apos;intégration Moodle.
+                {tester.ctaBody}
               </p>
               <Link
                 href="/signup"
                 className="inline-flex items-center gap-2 bg-white text-[var(--navy)] px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
               >
-                Créer un compte gratuit
+                {tester.ctaButton}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -296,18 +304,18 @@ export default function TesterPage() {
             <div className="grid md:grid-cols-3 gap-6 mt-12">
               <div className="bg-white rounded-xl p-6 border border-gray-100">
                 <div className="text-3xl mb-4">🎯</div>
-                <h3 className="font-semibold text-[var(--navy)] mb-2">99,9% de précision</h3>
-                <p className="text-gray-600 text-sm">Technologie validée par l&apos;Université du Maryland</p>
+                <h3 className="font-semibold text-[var(--navy)] mb-2">{tester.featureAccuracyTitle}</h3>
+                <p className="text-gray-600 text-sm">{tester.featureAccuracyBody}</p>
               </div>
               <div className="bg-white rounded-xl p-6 border border-gray-100">
                 <div className="text-3xl mb-4">🔍</div>
-                <h3 className="font-semibold text-[var(--navy)] mb-2">Analyse par section</h3>
-                <p className="text-gray-600 text-sm">Identifie précisément quelles parties sont générées par IA</p>
+                <h3 className="font-semibold text-[var(--navy)] mb-2">{tester.featureSectionTitle}</h3>
+                <p className="text-gray-600 text-sm">{tester.featureSectionBody}</p>
               </div>
               <div className="bg-white rounded-xl p-6 border border-gray-100">
                 <div className="text-3xl mb-4">🤖</div>
-                <h3 className="font-semibold text-[var(--navy)] mb-2">Détection du modèle</h3>
-                <p className="text-gray-600 text-sm">ChatGPT, Claude, Gemini, Llama... on les identifie tous</p>
+                <h3 className="font-semibold text-[var(--navy)] mb-2">{tester.featureModelTitle}</h3>
+                <p className="text-gray-600 text-sm">{tester.featureModelBody}</p>
               </div>
             </div>
           )}

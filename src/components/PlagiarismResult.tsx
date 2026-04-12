@@ -7,6 +7,7 @@ import { useConfig } from '@/components/ConfigProvider'
 interface PlagiarismResultProps {
   percentPlagiarized: number    // 0-100 from Pangram API
   plagiarismDetected: boolean
+  analyzedText?: string
   sources: Array<{
     source_url: string
     matched_text: string
@@ -47,6 +48,78 @@ function SourceFavicon({ url }: { url: string }) {
       className="h-8 w-8 flex-shrink-0 rounded-full border border-gray-100 bg-white object-contain p-1"
       onError={() => setFailed(true)}
     />
+  )
+}
+
+interface HighlightRange {
+  start: number
+  end: number
+  sourceIndex: number
+}
+
+function buildHighlightRanges(text: string, sources: PlagiarismResultProps['sources']) {
+  const lowerText = text.toLowerCase()
+  const ranges: HighlightRange[] = []
+
+  sources.forEach((source, sourceIndex) => {
+    const needle = source.matched_text.trim()
+    if (needle.length < 12) return
+
+    const start = lowerText.indexOf(needle.toLowerCase())
+    if (start === -1) return
+
+    const end = start + needle.length
+    const overlaps = ranges.some((range) => start < range.end && end > range.start)
+    if (!overlaps) {
+      ranges.push({ start, end, sourceIndex })
+    }
+  })
+
+  return ranges.sort((a, b) => a.start - b.start)
+}
+
+function HighlightedText({ text, sources, title }: {
+  text: string
+  sources: PlagiarismResultProps['sources']
+  title: string
+}) {
+  const ranges = buildHighlightRanges(text, sources)
+  if (ranges.length === 0) return null
+
+  const segments: Array<{ text: string; sourceIndex?: number }> = []
+  let cursor = 0
+
+  ranges.forEach((range) => {
+    if (range.start > cursor) {
+      segments.push({ text: text.slice(cursor, range.start) })
+    }
+    segments.push({ text: text.slice(range.start, range.end), sourceIndex: range.sourceIndex })
+    cursor = range.end
+  })
+
+  if (cursor < text.length) {
+    segments.push({ text: text.slice(cursor) })
+  }
+
+  return (
+    <div className="rounded-xl border border-amber-200 bg-amber-50/40 p-5">
+      <h4 className="mb-3 text-sm font-semibold text-[var(--navy)]">{title}</h4>
+      <p className="max-h-80 overflow-y-auto whitespace-pre-wrap text-sm leading-7 text-gray-700">
+        {segments.map((segment, index) => (
+          segment.sourceIndex === undefined ? (
+            <span key={index}>{segment.text}</span>
+          ) : (
+            <mark
+              key={index}
+              className="rounded bg-amber-200 px-1 py-0.5 font-medium text-amber-950"
+              title={sources[segment.sourceIndex]?.source_url}
+            >
+              {segment.text}
+            </mark>
+          )
+        ))}
+      </p>
+    </div>
   )
 }
 
@@ -142,7 +215,7 @@ function SourceItem({ source, strings }: {
   )
 }
 
-export default function PlagiarismResult({ percentPlagiarized, plagiarismDetected, sources }: PlagiarismResultProps) {
+export default function PlagiarismResult({ percentPlagiarized, plagiarismDetected, analyzedText, sources }: PlagiarismResultProps) {
   const config = useConfig()
   const s = config.strings.plagiarism
   const score = Number.isFinite(percentPlagiarized) ? Math.round(percentPlagiarized) : 0
@@ -166,6 +239,14 @@ export default function PlagiarismResult({ percentPlagiarized, plagiarismDetecte
           )}
         </div>
       </div>
+
+      {analyzedText && sources.length > 0 && (
+        <HighlightedText
+          text={analyzedText}
+          sources={sources}
+          title={s.highlightedPassages}
+        />
+      )}
 
       {sources.length > 0 && (
         <div className="space-y-3">

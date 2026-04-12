@@ -442,6 +442,32 @@ const config: ResellerConfig = {
       exportPdf: 'Exportera PDF-rapport',
     },
 
+    // Public tester page
+    tester: {
+      badge: 'Gratis test — Inget konto krävs',
+      title: 'Testa Turnitin-alternativet',
+      subtitle: 'Klistra in en text och kontrollera AI, plagiat eller båda på några sekunder.',
+      testsRemaining: '{count} gratis tester kvar',
+      limitReached: 'Gränsen är nådd — skapa ett konto för att fortsätta',
+      minCharsError: 'Ange minst 50 tecken för en tillförlitlig analys.',
+      analysisError: 'Fel vid analysen',
+      internalError: 'Något gick fel',
+      textareaPlaceholder: 'Klistra in texten som ska analyseras här (minst 50 tecken, max 5000)...',
+      characterCount: '{count} / 5000 tecken',
+      analyzeFree: 'Analysera gratis',
+      loading: 'Analyserar...',
+      ctaTitle: 'Gillar du TextVakt?',
+      ctaTitleLimit: 'Fortsätt med ett gratis konto',
+      ctaBody: 'Skapa ett gratis konto för att analysera texter med full historik, exporterbara rapporter och stöd för akademisk integritet.',
+      ctaButton: 'Skapa gratis konto',
+      featureAccuracyTitle: '99,9 % precision',
+      featureAccuracyBody: 'Teknik validerad av University of Maryland',
+      featureSectionTitle: 'Sektionsanalys',
+      featureSectionBody: 'Identifierar exakt vilka delar som genererats av AI',
+      featureModelTitle: 'Modelldetektion',
+      featureModelBody: 'ChatGPT, Claude, Gemini, Llama... vi identifierar dem alla',
+    },
+
     // Hero demo
     heroDemo: {
       testNow: 'Testa nu',
@@ -480,6 +506,7 @@ const config: ResellerConfig = {
       sourceLabel: 'Källa',
       matchedText: 'Matchande text',
       similarity: 'Likhet',
+      highlightedPassages: 'Identifierade avsnitt i din text',
       analyzePlagiarism: 'Kontrollera plagiat',
       analyzeBoth: 'AI + plagiatanalys',
       partialWarning: 'En del av analysen kunde inte slutföras. Tillgängliga resultat visas nedan.',

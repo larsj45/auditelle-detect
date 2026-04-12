@@ -454,6 +454,32 @@ const config: ResellerConfig = {
       exportPdf: 'Exportar informe PDF',
     },
 
+    // Public tester page
+    tester: {
+      badge: 'Prueba gratis — Sin cuenta',
+      title: 'Prueba la alternativa a Turnitin',
+      subtitle: 'Pega un texto y verifica IA, plagio o ambos en pocos segundos.',
+      testsRemaining: '{count} pruebas gratuitas restantes',
+      limitReached: 'Límite alcanzado — crea una cuenta para continuar',
+      minCharsError: 'Introduce al menos 50 caracteres para un análisis fiable.',
+      analysisError: 'Error durante el análisis',
+      internalError: 'Se produjo un error',
+      textareaPlaceholder: 'Pega aquí el texto a analizar (mínimo 50 caracteres, máximo 5000)...',
+      characterCount: '{count} / 5000 caracteres',
+      analyzeFree: 'Analizar gratis',
+      loading: 'Analizando...',
+      ctaTitle: '¿Te gusta VeriTexto?',
+      ctaTitleLimit: 'Continúa con una cuenta gratuita',
+      ctaBody: 'Crea una cuenta gratuita para analizar textos con historial completo, informes exportables y soporte para integridad académica.',
+      ctaButton: 'Crear cuenta gratuita',
+      featureAccuracyTitle: '99,9% de precisión',
+      featureAccuracyBody: 'Tecnología validada por la Universidad de Maryland',
+      featureSectionTitle: 'Análisis por sección',
+      featureSectionBody: 'Identifica con precisión qué partes fueron generadas por IA',
+      featureModelTitle: 'Detección del modelo',
+      featureModelBody: 'ChatGPT, Claude, Gemini, Llama... los identificamos todos',
+    },
+
     // Hero demo
     heroDemo: {
       testNow: 'Prueba ahora',
@@ -492,6 +518,7 @@ const config: ResellerConfig = {
       sourceLabel: 'Fuente',
       matchedText: 'Texto correspondiente',
       similarity: 'Similitud',
+      highlightedPassages: 'Fragmentos detectados en tu texto',
       analyzePlagiarism: 'Verificar plagio',
       analyzeBoth: 'Análisis IA + plagio',
       partialWarning: 'Una parte del análisis no pudo finalizarse. Los resultados disponibles se muestran abajo.',

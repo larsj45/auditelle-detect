@@ -309,6 +309,32 @@ export interface ResellerStrings {
     exportPdf: string
   }
 
+  // Public tester page
+  tester: {
+    badge: string
+    title: string
+    subtitle: string
+    testsRemaining: string      // with {count} placeholder
+    limitReached: string
+    minCharsError: string
+    analysisError: string
+    internalError: string
+    textareaPlaceholder: string
+    characterCount: string      // with {count} placeholder
+    analyzeFree: string
+    loading: string
+    ctaTitle: string
+    ctaTitleLimit: string
+    ctaBody: string
+    ctaButton: string
+    featureAccuracyTitle: string
+    featureAccuracyBody: string
+    featureSectionTitle: string
+    featureSectionBody: string
+    featureModelTitle: string
+    featureModelBody: string
+  }
+
   // Hero demo
   heroDemo: {
     testNow: string
@@ -347,6 +373,7 @@ export interface ResellerStrings {
     sourceLabel: string
     matchedText: string
     similarity: string
+    highlightedPassages: string
     analyzePlagiarism: string
     analyzeBoth: string
     partialWarning: string

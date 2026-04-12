@@ -430,6 +430,32 @@ const config: ResellerConfig = {
       exportPdf: 'Exporter le rapport PDF',
     },
 
+    // Public tester page
+    tester: {
+      badge: 'Test gratuit — Aucun compte requis',
+      title: 'Testez l’alternative à Turnitin',
+      subtitle: 'Collez un texte et vérifiez l’IA, le plagiat ou les deux en quelques secondes.',
+      testsRemaining: '{count} tests gratuits restants',
+      limitReached: 'Limite atteinte — créez un compte pour continuer',
+      minCharsError: 'Veuillez entrer au moins 50 caractères pour une analyse fiable.',
+      analysisError: "Erreur lors de l'analyse",
+      internalError: 'Une erreur est survenue',
+      textareaPlaceholder: 'Collez ici le texte à analyser (minimum 50 caractères, maximum 5000)...',
+      characterCount: '{count} / 5000 caractères',
+      analyzeFree: 'Analyser gratuitement',
+      loading: 'Analyse en cours...',
+      ctaTitle: 'Vous aimez Auditelle ?',
+      ctaTitleLimit: 'Continuez avec un compte gratuit',
+      ctaBody: "Créez un compte gratuit pour analyser jusqu'à 50 textes par mois, avec l'historique complet et l'intégration Moodle.",
+      ctaButton: 'Créer un compte gratuit',
+      featureAccuracyTitle: '99,9% de précision',
+      featureAccuracyBody: "Technologie validée par l'Université du Maryland",
+      featureSectionTitle: 'Analyse par section',
+      featureSectionBody: 'Identifie précisément quelles parties sont générées par IA',
+      featureModelTitle: 'Détection du modèle',
+      featureModelBody: 'ChatGPT, Claude, Gemini, Llama... on les identifie tous',
+    },
+
     // Hero demo
     heroDemo: {
       testNow: 'Testez maintenant',
@@ -468,6 +494,7 @@ const config: ResellerConfig = {
       sourceLabel: 'Source',
       matchedText: 'Texte correspondant',
       similarity: 'Similarité',
+      highlightedPassages: 'Passages détectés dans votre texte',
       analyzePlagiarism: 'Vérifier le plagiat',
       analyzeBoth: 'Analyse IA + plagiat',
       partialWarning: "Une partie de l'analyse n'a pas pu être finalisée. Les résultats disponibles sont affichés ci-dessous.",

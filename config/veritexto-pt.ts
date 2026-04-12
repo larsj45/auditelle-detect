@@ -454,6 +454,32 @@ const config: ResellerConfig = {
       exportPdf: 'Exportar relatório PDF',
     },
 
+    // Public tester page
+    tester: {
+      badge: 'Teste grátis — Sem conta',
+      title: 'Teste a alternativa ao Turnitin',
+      subtitle: 'Cole um texto e verifique IA, plágio ou ambos em poucos segundos.',
+      testsRemaining: '{count} testes gratuitos restantes',
+      limitReached: 'Limite atingido — crie uma conta para continuar',
+      minCharsError: 'Insira pelo menos 50 caracteres para uma análise confiável.',
+      analysisError: 'Erro durante a análise',
+      internalError: 'Ocorreu um erro',
+      textareaPlaceholder: 'Cole aqui o texto a analisar (mínimo 50 caracteres, máximo 5000)...',
+      characterCount: '{count} / 5000 caracteres',
+      analyzeFree: 'Analisar grátis',
+      loading: 'Analisando...',
+      ctaTitle: 'Gostou do VeriTexto?',
+      ctaTitleLimit: 'Continue com uma conta gratuita',
+      ctaBody: 'Crie uma conta gratuita para analisar textos com histórico completo, relatórios exportáveis e suporte para integridade acadêmica.',
+      ctaButton: 'Criar conta gratuita',
+      featureAccuracyTitle: '99,9% de precisão',
+      featureAccuracyBody: 'Tecnologia validada pela Universidade de Maryland',
+      featureSectionTitle: 'Análise por seção',
+      featureSectionBody: 'Identifica precisamente quais partes foram geradas por IA',
+      featureModelTitle: 'Detecção do modelo',
+      featureModelBody: 'ChatGPT, Claude, Gemini, Llama... identificamos todos',
+    },
+
     // Hero demo
     heroDemo: {
       testNow: 'Teste agora',
@@ -492,6 +518,7 @@ const config: ResellerConfig = {
       sourceLabel: 'Fonte',
       matchedText: 'Texto correspondente',
       similarity: 'Similaridade',
+      highlightedPassages: 'Trechos detectados no seu texto',
       analyzePlagiarism: 'Verificar plágio',
       analyzeBoth: 'Análise IA + plágio',
       partialWarning: 'Uma parte da análise não pôde ser finalizada. Os resultados disponíveis são exibidos abaixo.',

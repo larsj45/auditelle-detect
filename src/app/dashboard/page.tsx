@@ -95,6 +95,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false)
   const [aiResult, setAiResult] = useState<DetectionResponse | null>(null)
   const [plagResult, setPlagResult] = useState<PlagiarismResponse | null>(null)
+  const [resultText, setResultText] = useState('')
   const [error, setError] = useState('')
   const [partialWarning, setPartialWarning] = useState('')
   const [scansRemaining, setScansRemaining] = useState<number | null>(null)
@@ -141,6 +142,7 @@ export default function DashboardPage() {
     setMode(newMode)
     setAiResult(null)
     setPlagResult(null)
+    setResultText('')
     setError('')
     setPartialWarning('')
   }
@@ -156,8 +158,10 @@ export default function DashboardPage() {
     setPartialWarning('')
     setAiResult(null)
     setPlagResult(null)
+    setResultText('')
 
     try {
+      const trimmedText = text.trim()
       const { supabase } = await import('@/lib/supabase')
       const { data: { session } } = await supabase.auth.getSession()
 
@@ -167,7 +171,7 @@ export default function DashboardPage() {
           'Content-Type': 'application/json',
           ...(session?.access_token && { Authorization: `Bearer ${session.access_token}` }),
         },
-        body: JSON.stringify({ text: text.trim(), mode }),
+        body: JSON.stringify({ text: trimmedText, mode }),
       })
 
       const data = await response.json()
@@ -175,6 +179,8 @@ export default function DashboardPage() {
       if (!response.ok) {
         throw new Error(data.error || config.strings.errors.analysisError)
       }
+
+      setResultText(trimmedText)
 
       if (data.mode === 'both') {
         const combined = data as CombinedDetectionResponse
@@ -390,6 +396,7 @@ export default function DashboardPage() {
                 percentPlagiarized={plagResult.percent_plagiarized}
                 plagiarismDetected={plagResult.plagiarism_detected}
                 sources={plagResult.plagiarized_content}
+                analyzedText={resultText}
               />
             </div>
           )}
