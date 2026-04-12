@@ -2,12 +2,35 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, CREDIT_PACKS, PRICE_PER_SCAN_CENTS } from '@/lib/config'
+import type { ResellerConfig } from '@/lib/config'
 
 export const dynamic = 'force-dynamic'
+
+function getCreditPackCopy(quantity: number, strings: ResellerConfig['strings']['dashboard']) {
+  if (quantity === 1) {
+    return {
+      label: strings.upgradeCreditPackTrialLabel,
+      description: strings.upgradeCreditPackTrialDescription,
+    }
+  }
+
+  if (quantity === 50) {
+    return {
+      label: strings.upgradeCreditPackBestLabel,
+      description: strings.upgradeCreditPackBestDescription,
+    }
+  }
+
+  return {
+    label: strings.upgradeCreditPackStandardLabel,
+    description: strings.upgradeCreditPackStandardDescription,
+  }
+}
 
 export async function POST(request: NextRequest) {
   const config = await getResellerConfig()
   const errors = config.strings.errors
+  const dashboard = config.strings.dashboard
 
   try {
     const authHeader = request.headers.get('Authorization')
@@ -60,7 +83,7 @@ export async function POST(request: NextRequest) {
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user.email,
-        metadata: { supabase_user_id: user.id },
+        metadata: { supabase_user_id: user.id, brand: config.id },
       })
       customerId = customer.id
       await serviceSupabase
@@ -75,21 +98,24 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
-          currency: 'eur',
+          currency: config.currency.toLowerCase(),
           unit_amount: PRICE_PER_SCAN_CENTS,
           product_data: {
-            name: `${pack.label} — ${config.name}`,
-            description: `${pack.quantity} analyse${pack.quantity > 1 ? 's' : ''} de détection IA`,
+            name: `${getCreditPackCopy(pack.quantity, dashboard).label} — ${config.name}`,
+            description: dashboard.upgradeCheckoutCreditsDescription.replace('{count}', String(pack.quantity)),
           },
         },
         quantity: pack.quantity,
       }],
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?credits_added=${pack.quantity}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/upgrade?canceled=true`,
+      locale: 'auto',
+      allow_promotion_codes: true,
       metadata: {
         type: 'credits',
         quantity: String(pack.quantity),
         supabase_user_id: user.id,
+        brand: config.id,
       },
     })
 

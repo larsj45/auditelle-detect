@@ -288,6 +288,26 @@ export interface ResellerStrings {
     upgradeContact: string
     upgradeChoose: string      // with {plan} placeholder
     upgradeError: string
+    upgradeCreditsTitle: string
+    upgradeCreditsSubtitle: string
+    upgradeCurrentBalance: string // with {count} placeholder
+    upgradeCreditSingular: string
+    upgradeCreditPlural: string
+    upgradeCreditPackTrialLabel: string
+    upgradeCreditPackTrialDescription: string
+    upgradeCreditPackStandardLabel: string
+    upgradeCreditPackStandardDescription: string
+    upgradeCreditPackBestLabel: string
+    upgradeCreditPackBestDescription: string
+    upgradePerAnalysis: string // with {price} placeholder
+    upgradeBuy: string
+    upgradeRedirecting: string
+    upgradeSubscriptionsTitle: string
+    upgradeSubscriptionsSubtitle: string
+    upgradeTrustStripe: string
+    upgradeTrustCredits: string
+    upgradeTrustReports: string
+    upgradeCheckoutCreditsDescription: string // with {count} placeholder
   }
 
   // Detection results

@@ -1,15 +1,50 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Check, ArrowLeft, Sparkles, Coins, Zap } from 'lucide-react'
+import { Check, ArrowLeft, Sparkles, Coins, Zap, ShieldCheck, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
 
+const PRICE_PER_ANALYSIS_MINOR = 50
+
 const CREDIT_PACKS = [
-  { quantity: 1, label: '1 analyse', price: '0,50 €', description: 'Essayez une analyse', icon: '🔍' },
-  { quantity: 10, label: '10 analyses', price: '5 €', description: 'Pack standard', icon: '📦', popular: true },
-  { quantity: 50, label: '50 analyses', price: '25 €', description: 'Meilleur rapport qualité-prix', icon: '🏫' },
-]
+  {
+    quantity: 1,
+    labelKey: 'upgradeCreditPackTrialLabel',
+    descriptionKey: 'upgradeCreditPackTrialDescription',
+    icon: '🔍',
+    popular: false,
+  },
+  {
+    quantity: 10,
+    labelKey: 'upgradeCreditPackStandardLabel',
+    descriptionKey: 'upgradeCreditPackStandardDescription',
+    icon: '📦',
+    popular: true,
+  },
+  {
+    quantity: 50,
+    labelKey: 'upgradeCreditPackBestLabel',
+    descriptionKey: 'upgradeCreditPackBestDescription',
+    icon: '🏫',
+    popular: false,
+  },
+] as const
+
+function formatCurrency(minorUnits: number, currency: string, locale: string) {
+  try {
+    return new Intl.NumberFormat(locale.replace('_', '-'), {
+      style: 'currency',
+      currency,
+    }).format(minorUnits / 100)
+  } catch {
+    return `${currency} ${(minorUnits / 100).toFixed(2)}`
+  }
+}
+
+function formatAnalysisCount(count: number, singular: string, plural: string) {
+  return `${count} ${count === 1 ? singular : plural}`
+}
 
 export default function UpgradePage() {
   const config = useConfig()
@@ -17,6 +52,7 @@ export default function UpgradePage() {
   const plans = config.plans.upgrade
   const [loading, setLoading] = useState<string | null>(null)
   const [credits, setCredits] = useState<number | null>(null)
+  const perAnalysisPrice = formatCurrency(PRICE_PER_ANALYSIS_MINOR, config.currency, config.locale)
 
   useEffect(() => {
     loadCredits()
@@ -70,7 +106,7 @@ export default function UpgradePage() {
 
   async function handleUpgrade(planId: string) {
     if (planId === 'enterprise') {
-      window.location.href = `mailto:${config.supportEmail}?subject=Demande%20Plan%20Enterprise`
+      window.location.href = `mailto:${config.supportEmail}?subject=${encodeURIComponent(`${config.name} - ${s.upgradeContact}`)}`
       return
     }
 
@@ -107,13 +143,35 @@ export default function UpgradePage() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="mb-8">
+      <div className="mb-8 rounded-3xl border border-[var(--accent)]/15 bg-gradient-to-br from-[var(--accent-light)] via-white to-white p-6 md:p-8 shadow-sm">
         <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[var(--navy)] mb-4">
           <ArrowLeft className="w-4 h-4" />
-          Retour au tableau de bord
+          {s.upgradeBack}
         </Link>
-        <h1 className="text-2xl font-bold text-[var(--navy)]">Acheter des analyses</h1>
-        <p className="text-gray-500 mt-1">Chaque analyse coûte 0,50 € — choisissez votre pack</p>
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-[var(--accent)] shadow-sm mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              {config.name}
+            </div>
+            <h1 className="text-3xl font-bold text-[var(--navy)]">{s.upgradeCreditsTitle}</h1>
+            <p className="text-gray-600 mt-2 max-w-2xl">{s.upgradeCreditsSubtitle}</p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-xs text-[var(--navy)]">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-[var(--success)]" />
+              {s.upgradeTrustStripe}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 shadow-sm">
+              <Coins className="w-3.5 h-3.5 text-[var(--accent)]" />
+              {s.upgradeTrustCredits}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 shadow-sm">
+              <FileText className="w-3.5 h-3.5 text-[var(--accent)]" />
+              {s.upgradeTrustReports}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Current balance */}
@@ -121,7 +179,10 @@ export default function UpgradePage() {
         <div className="flex items-center gap-3 bg-[var(--accent-light)] border border-[var(--accent)]/20 rounded-xl px-5 py-4 mb-8">
           <Coins className="w-5 h-5 text-[var(--accent)]" />
           <span className="text-sm text-[var(--navy)]">
-            Solde actuel : <strong className="text-lg">{credits} analyse{credits !== 1 ? 's' : ''}</strong>
+            {s.upgradeCurrentBalance.replace(
+              '{count}',
+              formatAnalysisCount(credits, s.upgradeCreditSingular, s.upgradeCreditPlural)
+            )}
           </span>
         </div>
       )}
@@ -136,18 +197,22 @@ export default function UpgradePage() {
             {pack.popular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
                 <Zap className="w-3 h-3" />
-                POPULAIRE
+                {s.upgradePopular}
               </div>
             )}
 
             <div className="text-center mb-6">
               <div className="text-3xl mb-2">{pack.icon}</div>
-              <h3 className="text-lg font-semibold text-[var(--navy)]">{pack.label}</h3>
-              <p className="text-sm text-gray-500 mt-1">{pack.description}</p>
+              <h3 className="text-lg font-semibold text-[var(--navy)]">{s[pack.labelKey]}</h3>
+              <p className="text-sm text-gray-500 mt-1">{s[pack.descriptionKey]}</p>
               <div className="mt-4">
-                <span className="text-3xl font-bold text-[var(--navy)]">{pack.price}</span>
+                <span className="text-3xl font-bold text-[var(--navy)]">
+                  {formatCurrency(pack.quantity * PRICE_PER_ANALYSIS_MINOR, config.currency, config.locale)}
+                </span>
               </div>
-              <p className="text-xs text-gray-400 mt-1">0,50 € par analyse</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {s.upgradePerAnalysis.replace('{price}', perAnalysisPrice)}
+              </p>
             </div>
 
             <button
@@ -159,7 +224,7 @@ export default function UpgradePage() {
                   : 'bg-gray-100 text-[var(--navy)] hover:bg-gray-200'
               } disabled:opacity-50`}
             >
-              {loading === `credits-${pack.quantity}` ? 'Redirection...' : 'Acheter'}
+              {loading === `credits-${pack.quantity}` ? s.upgradeRedirecting : s.upgradeBuy}
             </button>
           </div>
         ))}
@@ -169,9 +234,9 @@ export default function UpgradePage() {
       <div className="border-t border-gray-200 pt-8">
         <h2 className="text-lg font-semibold text-[var(--navy)] mb-2 flex items-center gap-2">
           <Sparkles className="w-5 h-5" />
-          Abonnements pour professionnels
+          {s.upgradeSubscriptionsTitle}
         </h2>
-        <p className="text-sm text-gray-500 mb-6">Pour un usage intensif, les abonnements offrent plus de valeur</p>
+        <p className="text-sm text-gray-500 mb-6">{s.upgradeSubscriptionsSubtitle}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => (
@@ -179,6 +244,12 @@ export default function UpgradePage() {
               key={plan.id}
               className={`card relative ${plan.popular ? 'ring-2 ring-[var(--accent)]' : ''}`}
             >
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  {s.upgradePopular}
+                </div>
+              )}
               <div className="text-center mb-6">
                 {plan.badge && <div className="text-2xl mb-2">{plan.badge}</div>}
                 <h3 className="text-lg font-semibold text-[var(--navy)]">{plan.name}</h3>
@@ -201,7 +272,11 @@ export default function UpgradePage() {
               <button
                 onClick={() => handleUpgrade(plan.id)}
                 disabled={loading !== null}
-                className="w-full py-3 rounded-xl font-semibold transition bg-gray-100 text-[var(--navy)] hover:bg-gray-200 disabled:opacity-50"
+                className={`w-full py-3 rounded-xl font-semibold transition disabled:opacity-50 ${
+                  plan.popular
+                    ? 'btn-primary'
+                    : 'bg-gray-100 text-[var(--navy)] hover:bg-gray-200'
+                }`}
               >
                 {loading === plan.id
                   ? s.upgradeLoading
@@ -215,7 +290,7 @@ export default function UpgradePage() {
       </div>
 
       <div className="text-center mt-8 text-sm text-gray-400">
-        Paiement sécurisé par Stripe. Les crédits n&apos;expirent jamais.
+        {s.upgradeFooter}
       </div>
     </div>
   )
