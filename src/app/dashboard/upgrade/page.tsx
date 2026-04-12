@@ -5,6 +5,8 @@ import { Check, ArrowLeft, Sparkles, Coins, Zap, ShieldCheck, FileText } from 'l
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
 
+declare function gtag(...args: unknown[]): void
+
 const PRICE_PER_ANALYSIS_MINOR = 50
 
 const CREDIT_PACKS = [
@@ -46,6 +48,49 @@ function formatAnalysisCount(count: number, singular: string, plural: string) {
   return `${count} ${count === 1 ? singular : plural}`
 }
 
+function trackCheckoutStart({
+  checkoutType,
+  itemId,
+  itemName,
+  currency,
+  value,
+}: {
+  checkoutType: 'credits' | 'subscription'
+  itemId: string
+  itemName: string
+  currency: string
+  value?: number
+}) {
+  if (typeof window !== 'undefined') {
+    const plausible = (window as Window & {
+      plausible?: (eventName: string, options?: { props?: Record<string, string | number | undefined> }) => void
+    }).plausible
+
+    if (typeof plausible === 'function') {
+      plausible('Checkout Started', {
+        props: {
+          type: checkoutType,
+          item: itemId,
+          currency,
+          value,
+        },
+      })
+    }
+  }
+
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'begin_checkout', {
+      currency,
+      value,
+      items: [{
+        item_id: itemId,
+        item_name: itemName,
+        item_category: checkoutType,
+      }],
+    })
+  }
+}
+
 export default function UpgradePage() {
   const config = useConfig()
   const s = config.strings.dashboard
@@ -81,6 +126,15 @@ export default function UpgradePage() {
         window.location.href = '/login'
         return
       }
+      const pack = CREDIT_PACKS.find(item => item.quantity === quantity)
+      const label = pack ? s[pack.labelKey] : String(quantity)
+      trackCheckoutStart({
+        checkoutType: 'credits',
+        itemId: `credits-${quantity}`,
+        itemName: label,
+        currency: config.currency,
+        value: (quantity * PRICE_PER_ANALYSIS_MINOR) / 100,
+      })
 
       const response = await fetch('/api/checkout-credits', {
         method: 'POST',
@@ -118,6 +172,13 @@ export default function UpgradePage() {
         window.location.href = '/login'
         return
       }
+      const selectedPlan = plans.find(plan => plan.id === planId)
+      trackCheckoutStart({
+        checkoutType: 'subscription',
+        itemId: planId,
+        itemName: selectedPlan?.name || planId,
+        currency: config.currency,
+      })
 
       const response = await fetch('/api/checkout', {
         method: 'POST',

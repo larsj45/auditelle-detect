@@ -10,11 +10,15 @@ export const dynamic = 'force-dynamic'
 
 // Map price IDs to plan names
 const getPlanFromPriceId = (priceId: string): string => {
-  const priceMap: Record<string, string> = {
-    [process.env.STRIPE_PRO_PRICE_ID || '']: 'pro',
-    [process.env.STRIPE_UNIVERSITY_PRICE_ID || '']: 'university',
-    [process.env.STRIPE_ENTERPRISE_PRICE_ID || '']: 'enterprise',
-  }
+  const priceMap = Object.fromEntries(
+    [
+      [process.env.STRIPE_STUDENT_PRICE_ID, 'student'],
+      [process.env.STRIPE_STARTER_PRICE_ID, 'starter'],
+      [process.env.STRIPE_PRO_PRICE_ID, 'pro'],
+      [process.env.STRIPE_UNIVERSITY_PRICE_ID, 'university'],
+      [process.env.STRIPE_ENTERPRISE_PRICE_ID, 'enterprise'],
+    ].filter((entry): entry is [string, string] => Boolean(entry[0]))
+  )
   return priceMap[priceId] || 'pro'
 }
 
