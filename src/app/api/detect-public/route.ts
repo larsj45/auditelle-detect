@@ -4,6 +4,19 @@ import { getResellerConfig } from '@/lib/config'
 
 export const dynamic = 'force-dynamic'
 
+type DetectMode = 'ai' | 'plagiarism' | 'both'
+
+function isDetectMode(value: unknown): value is DetectMode {
+  return value === 'ai' || value === 'plagiarism' || value === 'both'
+}
+
+function getSafeErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message.substring(0, 200) : 'Unknown error'
+}
+
+function getSettledErrorMessage(result: PromiseSettledResult<unknown>) {
+  return result.status === 'rejected' ? getSafeErrorMessage(result.reason) : 'No result'
+}
 
 // Simple in-memory rate limiting (resets on server restart)
 // For production, use Redis or similar
@@ -58,32 +71,70 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
+    if (!isDetectMode(mode)) {
+      return NextResponse.json({ error: 'Mode invalide. Utilisez "ai", "plagiarism" ou "both".' }, { status: 400 })
+    }
+
     if (text.trim().length > 5000) {
       return NextResponse.json({
         error: errors.demoTextTooLong
       }, { status: 400 })
     }
 
-    // Increment usage
-    const currentUsage = ipUsage.get(ip)!
-    currentUsage.count += 1
-    ipUsage.set(ip, currentUsage)
+    if (mode === 'both') {
+      const [aiResult, plagResult] = await Promise.allSettled([
+        detectAI(text.trim()),
+        detectPlagiarism(text.trim()),
+      ])
 
-    const testsRemaining = FREE_DEMO_LIMIT - currentUsage.count
+      const ai = aiResult.status === 'fulfilled' ? aiResult.value : null
+      const plagiarism = plagResult.status === 'fulfilled' ? plagResult.value : null
 
-    if (mode === 'plagiarism') {
-      const plagResult = await detectPlagiarism(text.trim())
+      if (!ai && !plagiarism) {
+        console.error('Public combined detection failed:', {
+          ai_error: getSettledErrorMessage(aiResult),
+          plagiarism_error: getSettledErrorMessage(plagResult),
+        })
+        return NextResponse.json({ error: errors.internalError }, { status: 500 })
+      }
+
+      const currentUsage = ipUsage.get(ip)!
+      currentUsage.count += 1
+      ipUsage.set(ip, currentUsage)
+      const testsRemaining = FREE_DEMO_LIMIT - currentUsage.count
+
       return NextResponse.json({
-        ...plagResult,
+        mode: 'both',
+        ai,
+        plagiarism,
+        partial: !ai || !plagiarism,
+        errors: {
+          ...(ai ? {} : { ai: errors.analysisError }),
+          ...(plagiarism ? {} : { plagiarism: errors.analysisError }),
+        },
         tests_remaining: testsRemaining,
       })
     }
 
+    if (mode === 'plagiarism') {
+      const plagResult = await detectPlagiarism(text.trim())
+      const currentUsage = ipUsage.get(ip)!
+      currentUsage.count += 1
+      ipUsage.set(ip, currentUsage)
+      return NextResponse.json({
+        ...plagResult,
+        tests_remaining: FREE_DEMO_LIMIT - currentUsage.count,
+      })
+    }
+
     const result = await detectAI(text.trim())
+    const currentUsage = ipUsage.get(ip)!
+    currentUsage.count += 1
+    ipUsage.set(ip, currentUsage)
 
     return NextResponse.json({
       ...result,
-      tests_remaining: testsRemaining,
+      tests_remaining: FREE_DEMO_LIMIT - currentUsage.count,
     })
   } catch (error: unknown) {
     console.error('Public detection error:', error)

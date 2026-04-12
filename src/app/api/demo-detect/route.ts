@@ -10,6 +10,12 @@ const rateLimit = new Map<string, { count: number; resetAt: number }>()
 const DAILY_LIMIT = 3
 const DAY_MS = 24 * 60 * 60 * 1000
 
+type DetectMode = 'ai' | 'plagiarism' | 'both'
+
+function isDetectMode(value: unknown): value is DetectMode {
+  return value === 'ai' || value === 'plagiarism' || value === 'both'
+}
+
 function asFiniteNumber(value: unknown): number | null {
   const numberValue = typeof value === 'number' ? value : Number(value)
   return Number.isFinite(numberValue) ? numberValue : null
@@ -59,6 +65,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
     }
 
+    if (!isDetectMode(mode)) {
+      return NextResponse.json({ error: 'Mode invalide. Utilisez "ai", "plagiarism" ou "both".' }, { status: 400 })
+    }
+
     if (text.trim().length < 50) {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
     }
@@ -66,6 +76,77 @@ export async function POST(request: NextRequest) {
     const pangramKey = process.env.PANGRAM_API_KEY
     if (!pangramKey) {
       return NextResponse.json({ error: errors.serviceUnavailable }, { status: 503 })
+    }
+
+    if (mode === 'both') {
+      const [aiResult, plagResult] = await Promise.allSettled([
+        fetch('https://text.api.pangramlabs.com/v3', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': pangramKey
+          },
+          body: JSON.stringify({ text: text.slice(0, 2000) })
+        }),
+        fetch('https://plagiarism.api.pangram.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': pangramKey
+          },
+          body: JSON.stringify({ text: text.slice(0, 2000) })
+        }),
+      ])
+
+      const aiRes = aiResult.status === 'fulfilled' ? aiResult.value : null
+      const plagRes = plagResult.status === 'fulfilled' ? plagResult.value : null
+
+      const aiData = aiRes?.ok ? await aiRes.json() : null
+      const plagData = plagRes?.ok ? await plagRes.json() : null
+
+      if (!aiData && !plagData) {
+        if (aiRes && !aiRes.ok) {
+          console.error('Pangram API error:', (await aiRes.text()).substring(0, 200))
+        }
+        if (plagRes && !plagRes.ok) {
+          console.error('Pangram Plagiarism API error:', (await plagRes.text()).substring(0, 200))
+        }
+        return NextResponse.json({ error: errors.analysisError }, { status: 500 })
+      }
+
+      incrementRateLimit(ip)
+
+      const aiScore = aiData ? Math.round((aiData.fraction_ai || 0) * 100) : null
+      const heroStrings = config.strings.heroDemo
+      const verdict = aiScore === null
+        ? null
+        : aiScore >= 80
+          ? heroStrings.veryLikelyAI
+          : aiScore >= 50
+            ? heroStrings.possiblyAI
+            : heroStrings.probablyHuman
+      const sources = (plagData?.plagiarized_content || []).map((s: { source_url?: string; similarity_score?: number }) => ({
+        url: s.source_url || '',
+        similarity: Math.round(normalizePercent(s.similarity_score)),
+      }))
+
+      return NextResponse.json({
+        mode: 'both',
+        ai: aiData ? {
+          score: aiScore,
+          model: aiData.prediction_short || null,
+          verdict,
+          isAI: (aiScore ?? 0) >= 50,
+        } : null,
+        plagiarism: plagData ? {
+          plagiarism_detected: plagData.plagiarism_detected ?? false,
+          score: Math.round(normalizePercent(plagData.percent_plagiarized)),
+          source_count: sources.length,
+          sources,
+        } : null,
+        partial: !aiData || !plagData,
+        remaining: DAILY_LIMIT - limitInfo.count - 1
+      })
     }
 
     // Route to plagiarism API

@@ -6,6 +6,19 @@ import { sendEmail, limitReachedEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
 
+type DetectMode = 'ai' | 'plagiarism' | 'both'
+
+function isDetectMode(value: unknown): value is DetectMode {
+  return value === 'ai' || value === 'plagiarism' || value === 'both'
+}
+
+function getSafeErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message.substring(0, 200) : 'Unknown error'
+}
+
+function getSettledErrorMessage(result: PromiseSettledResult<unknown>) {
+  return result.status === 'rejected' ? getSafeErrorMessage(result.reason) : 'No result'
+}
 
 export async function POST(request: NextRequest) {
   const config = await getResellerConfig()
@@ -125,6 +138,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
     }
 
+    if (!isDetectMode(mode)) {
+      return NextResponse.json({ error: 'Mode invalide. Utilisez "ai", "plagiarism" ou "both".' }, { status: 400 })
+    }
+
     // Security fix: max text length
     if (text.trim().length > 50000) {
       return NextResponse.json({ error: errors.textTooLong }, { status: 413 })
@@ -163,6 +180,58 @@ export async function POST(request: NextRequest) {
         if (updateError) return null // concurrency conflict
         return limit - scansToday - 1
       }
+    }
+
+    if (mode === 'both') {
+      const [aiResult, plagResult] = await Promise.allSettled([
+        detectAI(trimmedText),
+        detectPlagiarism(trimmedText),
+      ])
+
+      const ai = aiResult.status === 'fulfilled' ? aiResult.value : null
+      const plagiarism = plagResult.status === 'fulfilled' ? plagResult.value : null
+
+      if (!ai && !plagiarism) {
+        console.error('Combined detection failed:', {
+          ai_error: getSettledErrorMessage(aiResult),
+          plagiarism_error: getSettledErrorMessage(plagResult),
+        })
+        return NextResponse.json({ error: errors.internalError }, { status: 500 })
+      }
+
+      const remaining = await recordUsage()
+      if (remaining === null) {
+        return NextResponse.json({ error: errors.rateLimitRetry, scans_remaining: 0 }, { status: 429 })
+      }
+
+      const fullResult = {
+        mode: 'both' as const,
+        ai,
+        plagiarism,
+        partial: !ai || !plagiarism,
+        errors: {
+          ...(ai ? {} : { ai: errors.analysisError }),
+          ...(plagiarism ? {} : { plagiarism: errors.analysisError }),
+        },
+      }
+
+      await serviceSupabase.from('scans').insert({
+        user_id: user.id,
+        text_snippet: trimmedText.substring(0, 200),
+        ai_score: plagiarism
+          ? Math.round(plagiarism.percent_plagiarized)
+          : Math.round((ai?.ai_likelihood ?? 0) * 100),
+        detected_model: ai?.headline || null,
+        full_result: fullResult,
+        // The current DB constraint allows only single-engine scan types.
+        // Combined integrity scans keep both engines in full_result.
+        scan_type: plagiarism ? 'plagiarism' : 'ai',
+      })
+
+      return NextResponse.json({
+        ...fullResult,
+        scans_remaining: remaining,
+      })
     }
 
     // Route to appropriate detection API
