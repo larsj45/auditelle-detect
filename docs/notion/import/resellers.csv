@@ -1,0 +1,6 @@
+"Name","Reseller ID","Domain","Market","Locale","Currency","Status","Config File","Assets Path","tmux Window","Owner","Next Action"
+"Auditelle","auditelle-fr","auditelle.fr","France","fr_FR","EUR","Config Ready","config/auditelle-fr.ts","public/images/","auditelle-fr","","Run full local QA"
+"NovaLearn","novalearn-uk","novalearn.co.uk","United Kingdom","en_GB","GBP","Config Ready","config/novalearn-uk.ts","public/brands/novalearn-uk/","novalearn-uk","","Confirm production env vars"
+"VeriTexto BR","veritexto-pt","veritexto.com.br","Brazil","pt_BR","BRL","Config Ready","config/veritexto-pt.ts","public/brands/veritexto/","veritexto-pt","","Review legal/entity data"
+"VeriTexto ES","veritexto-es","veritexto.es","Spain","es_ES","EUR","Config Ready","config/veritexto-es.ts","public/brands/veritexto-es/","veritexto-es","","Review Spanish copy"
+"TextVakt","klartext-se","textvakt.com","Sweden","sv_SE","SEK","Config Ready","config/klartext-se.ts","public/brands/klartext-se/","klartext-se","","Resolve naming/domain final check"
