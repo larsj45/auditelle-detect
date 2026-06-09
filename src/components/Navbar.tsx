@@ -8,6 +8,9 @@ import { useConfig } from '@/components/ConfigProvider';
 export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
   const config = useConfig();
   const s = config.strings.nav;
+  const signupHref = ['veritexto-pt', 'veritexto-br', 'veritexto-es'].includes(config.id)
+    ? '/signup?next=credits'
+    : '/signup';
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(isAuthProp ?? false);
 
@@ -56,7 +59,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
                   {s.login}
                 </Link>
                 <Link
-                  href="/signup"
+                  href={signupHref}
                   className="bg-accent text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
                 >
                   {s.freeTrial}
@@ -93,7 +96,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
                 {s.login}
               </Link>
               <Link
-                href="/signup"
+                href={signupHref}
                 className="block bg-accent text-white text-center px-5 py-2 rounded-lg font-medium"
                 onClick={() => setMenuOpen(false)}
               >

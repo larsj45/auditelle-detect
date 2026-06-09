@@ -36,15 +36,87 @@ CREATE TABLE IF NOT EXISTS public.scans (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Payment events table (server-side checkout/subscription tracking)
+CREATE TABLE IF NOT EXISTS public.payment_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  dedupe_key TEXT NOT NULL UNIQUE,
+  event_name TEXT NOT NULL CHECK (event_name IN ('checkout_completed', 'credits_purchased', 'subscription_started')),
+  user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  brand TEXT NOT NULL,
+  plan TEXT,
+  quantity INTEGER,
+  amount_minor INTEGER,
+  currency TEXT,
+  checkout_type TEXT CHECK (checkout_type IN ('credits', 'subscription')),
+  landing_path TEXT,
+  referrer TEXT,
+  utm_source TEXT,
+  utm_medium TEXT,
+  utm_campaign TEXT,
+  utm_term TEXT,
+  utm_content TEXT,
+  stripe_event_id TEXT,
+  stripe_session_id TEXT,
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
+  metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Provider credentials cache table (service-role only)
+CREATE TABLE IF NOT EXISTS public.provider_credentials_cache (
+  provider TEXT PRIMARY KEY CHECK (provider IN ('copyleaks', 'pangram', 'gptzero')),
+  access_token TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Async detection jobs table
+CREATE TABLE IF NOT EXISTS public.detection_jobs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  capability TEXT NOT NULL CHECK (capability IN ('plagiarism')),
+  provider TEXT NOT NULL CHECK (provider IN ('copyleaks')),
+  status TEXT NOT NULL DEFAULT 'queued' CHECK (status IN ('queued', 'processing', 'completed', 'error')),
+  user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  reseller_id TEXT NOT NULL,
+  institution_slug TEXT,
+  provider_job_id TEXT UNIQUE,
+  text_sha256 TEXT,
+  word_count INTEGER CHECK (word_count IS NULL OR word_count >= 0),
+  credit_cost INTEGER NOT NULL DEFAULT 1 CHECK (credit_cost >= 0),
+  error_message TEXT,
+  result_payload JSONB,
+  provider_payload JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  completed_at TIMESTAMPTZ
+);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_scans_user_id ON public.scans(user_id);
 CREATE INDEX IF NOT EXISTS idx_scans_created_at ON public.scans(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_profiles_stripe_customer ON public.profiles(stripe_customer_id);
 CREATE INDEX IF NOT EXISTS idx_profiles_stripe_subscription ON public.profiles(stripe_subscription_id);
+CREATE INDEX IF NOT EXISTS idx_payment_events_created_at ON public.payment_events(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_payment_events_event_name ON public.payment_events(event_name);
+CREATE INDEX IF NOT EXISTS idx_payment_events_user_id ON public.payment_events(user_id);
+CREATE INDEX IF NOT EXISTS idx_payment_events_brand ON public.payment_events(brand);
+CREATE INDEX IF NOT EXISTS idx_payment_events_utm_source ON public.payment_events(utm_source);
+CREATE INDEX IF NOT EXISTS idx_payment_events_utm_campaign ON public.payment_events(utm_campaign);
+CREATE INDEX IF NOT EXISTS provider_credentials_cache_expires_at_idx ON public.provider_credentials_cache(expires_at);
+CREATE INDEX IF NOT EXISTS detection_jobs_user_created_at_idx ON public.detection_jobs(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS detection_jobs_reseller_created_at_idx ON public.detection_jobs(reseller_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS detection_jobs_institution_created_at_idx ON public.detection_jobs(institution_slug, created_at DESC) WHERE institution_slug IS NOT NULL;
+CREATE INDEX IF NOT EXISTS detection_jobs_status_created_at_idx ON public.detection_jobs(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS detection_jobs_provider_text_sha_created_at_idx ON public.detection_jobs(provider, text_sha256, created_at DESC) WHERE text_sha256 IS NOT NULL;
 
 -- Enable RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payment_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.provider_credentials_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.detection_jobs ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: users can read their own profile
 CREATE POLICY "Users can view own profile" ON public.profiles
@@ -63,6 +135,19 @@ CREATE POLICY "Users can view own scans" ON public.scans
 CREATE POLICY "Users can insert own scans" ON public.scans
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
+-- Payment events: users can read their own payment history
+CREATE POLICY "Users can view own payment events" ON public.payment_events
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- Provider credentials cache: service-role only
+CREATE POLICY "deny all provider credentials cache access" ON public.provider_credentials_cache
+  FOR ALL USING (FALSE)
+  WITH CHECK (FALSE);
+
+-- Detection jobs: users can poll their own jobs
+CREATE POLICY "Users can view own detection jobs" ON public.detection_jobs
+  FOR SELECT USING (auth.uid() = user_id);
+
 -- Function to create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -74,7 +159,7 @@ BEGIN
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
     0,
     0,
-    NOW() + INTERVAL '30 days'
+    NULL
   );
   RETURN NEW;
 END;

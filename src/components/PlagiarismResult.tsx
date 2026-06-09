@@ -123,7 +123,7 @@ function HighlightedText({ text, sources, title }: {
   )
 }
 
-function ScoreRing({ score }: { score: number }) {
+function ScoreRing({ score, label }: { score: number; label: string }) {
   const circleRef = useRef<SVGCircleElement>(null)
   const { color } = getScoreColor(score)
 
@@ -152,7 +152,7 @@ function ScoreRing({ score }: { score: number }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-3xl font-bold" style={{ color }}>{score}%</span>
-        <span className="text-xs text-gray-500">Plagiat</span>
+        <span className="text-xs text-gray-500">{label}</span>
       </div>
     </div>
   )
@@ -220,13 +220,20 @@ export default function PlagiarismResult({ percentPlagiarized, plagiarismDetecte
   const s = config.strings.plagiarism
   const score = Number.isFinite(percentPlagiarized) ? Math.round(percentPlagiarized) : 0
   const { bg } = getScoreColor(score)
+  const scoreLabel = config.htmlLang === 'pt'
+    ? 'Plágio'
+    : config.htmlLang === 'es'
+    ? 'Plagio'
+    : config.htmlLang === 'en'
+    ? 'Plagiarism'
+    : 'Plagiat'
 
   const label = plagiarismDetected ? s.plagiarismFound : s.noPlagiarism
 
   return (
     <div className="space-y-6">
       <div className={`${bg} rounded-xl p-8 flex flex-col sm:flex-row items-center gap-8`}>
-        <ScoreRing score={score} />
+        <ScoreRing score={score} label={scoreLabel} />
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-[var(--navy)]">{label}</h3>
           <p className="text-gray-600 mt-1">

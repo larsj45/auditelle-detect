@@ -1,10 +1,12 @@
 import type { MetadataRoute } from 'next'
+import { getResellerConfig } from '@/lib/config'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://auditelle.fr'
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const config = await getResellerConfig()
+  const baseUrl = `https://${config.domain}`
   const now = new Date()
 
-  return [
+  const routes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: now,
@@ -54,4 +56,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
   ]
+
+  return routes
 }

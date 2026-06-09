@@ -3,6 +3,13 @@ import { detectAI, detectPlagiarism } from '@/lib/pangram'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS, CREDIT_PLANS } from '@/lib/config'
 import { sendEmail, limitReachedEmail } from '@/lib/email'
+import {
+  buildCopyleaksDeveloperPayload,
+  createCopyleaksScanId,
+  submitCopyleaksPlagiarismTextScan,
+} from '@/lib/copyleaks'
+import { createDetectionJob, updateDetectionJob } from '@/lib/detection-jobs'
+import { resolveDetectionProvider } from '@/lib/detection-providers'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,6 +25,23 @@ function getSafeErrorMessage(error: unknown) {
 
 function getSettledErrorMessage(result: PromiseSettledResult<unknown>) {
   return result.status === 'rejected' ? getSafeErrorMessage(result.reason) : 'No result'
+}
+
+function countWords(text: string) {
+  return text.trim().split(/\s+/).filter(Boolean).length
+}
+
+function parsePositiveInteger(value: string | undefined, fallback: number) {
+  if (!value) return fallback
+  const parsed = Number(value)
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+}
+
+function getCopyleaksCreditCost(mode: DetectMode) {
+  if (mode === 'both') {
+    return parsePositiveInteger(process.env.COPYLEAKS_COMPLETE_SCAN_CREDIT_COST, 3)
+  }
+  return parsePositiveInteger(process.env.COPYLEAKS_PLAGIARISM_CREDIT_COST, 2)
 }
 
 export async function POST(request: NextRequest) {
@@ -69,7 +93,7 @@ export async function POST(request: NextRequest) {
       const credits = profile?.scan_credits || 0
       if (credits <= 0) {
         return NextResponse.json({
-          error: 'Vous n\'avez plus de crédits. Achetez des analyses pour continuer.',
+          error: errors.noCredits,
           scans_remaining: 0,
           needs_credits: true,
         }, { status: 402 })
@@ -133,6 +157,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const { text, mode = 'ai' } = body
+    const institutionSlug = typeof body.institutionSlug === 'string' ? body.institutionSlug : undefined
 
     if (!text || typeof text !== 'string' || text.trim().length < 50) {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
@@ -148,9 +173,16 @@ export async function POST(request: NextRequest) {
     }
 
     const trimmedText = text.trim()
+    const plagiarismProviderDecision = mode === 'plagiarism' || mode === 'both'
+      ? resolveDetectionProvider({
+          capability: 'plagiarism',
+          resellerId: config.id,
+          institutionSlug,
+        })
+      : null
 
     // ── Helper: update usage after scan ──────────────────────────────────
-    async function recordUsage() {
+    async function recordUsage(creditCost = 1) {
       const { data: freshProfile } = await serviceSupabase
         .from('profiles')
         .select('monthly_usage, scan_credits')
@@ -159,17 +191,18 @@ export async function POST(request: NextRequest) {
       const currentMonthlyUsage = freshProfile?.monthly_usage || 0
 
       if (isCreditPlan) {
-        // Deduct 1 credit
         const currentCredits = freshProfile?.scan_credits || 0
+        if (currentCredits < creditCost) return null
+
         await serviceSupabase
           .from('profiles')
           .update({
-            scan_credits: currentCredits - 1,
+            scan_credits: currentCredits - creditCost,
             monthly_usage: currentMonthlyUsage + 1,
             scans_today: scansToday + 1,
           })
           .eq('id', user!.id)
-        return currentCredits - 1
+        return currentCredits - creditCost
       } else {
         // Increment daily counter
         const { error: updateError } = await serviceSupabase
@@ -182,7 +215,117 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    async function queueCopyleaksPlagiarismJob(creditCost: number) {
+      const job = await createDetectionJob({
+        capability: 'plagiarism',
+        provider: 'copyleaks',
+        userId: user!.id,
+        resellerId: config.id,
+        institutionSlug,
+        text: trimmedText,
+        wordCount: countWords(trimmedText),
+        creditCost,
+      })
+      const scanId = createCopyleaksScanId(job.id)
+
+      try {
+        await updateDetectionJob(job.id, {
+          status: 'processing',
+          provider_job_id: scanId,
+        })
+
+        await submitCopyleaksPlagiarismTextScan({
+          scanId,
+          text: trimmedText,
+          filename: `${config.id}-${job.id}.txt`,
+          developerPayload: buildCopyleaksDeveloperPayload(job.id),
+        })
+
+        return {
+          jobId: job.id,
+          providerJobId: scanId,
+        }
+      } catch (error) {
+        await updateDetectionJob(job.id, {
+          status: 'error',
+          provider_job_id: scanId,
+          error_message: getSafeErrorMessage(error),
+        })
+        throw error
+      }
+    }
+
     if (mode === 'both') {
+      if (plagiarismProviderDecision?.provider === 'copyleaks') {
+        const creditCost = getCopyleaksCreditCost(mode)
+        const availableCredits = profile?.scan_credits || 0
+        if (isCreditPlan && availableCredits < creditCost) {
+          return NextResponse.json({
+            error: errors.noCredits,
+            scans_remaining: availableCredits,
+            needs_credits: true,
+          }, { status: 402 })
+        }
+
+        const [aiResult, copyleaksResult] = await Promise.allSettled([
+          detectAI(trimmedText),
+          queueCopyleaksPlagiarismJob(creditCost),
+        ])
+
+        const ai = aiResult.status === 'fulfilled' ? aiResult.value : null
+        const copyleaksJob = copyleaksResult.status === 'fulfilled' ? copyleaksResult.value : null
+
+        if (!ai && !copyleaksJob) {
+          console.error('Combined detection failed:', {
+            ai_error: getSettledErrorMessage(aiResult),
+            plagiarism_error: getSettledErrorMessage(copyleaksResult),
+          })
+          return NextResponse.json({ error: errors.internalError }, { status: 500 })
+        }
+
+        const remaining = await recordUsage(creditCost)
+        if (remaining === null) {
+          return NextResponse.json({ error: errors.rateLimitRetry, scans_remaining: 0 }, { status: 429 })
+        }
+
+        const pendingPlagiarism = copyleaksJob
+          ? {
+              status: 'pending' as const,
+              provider: 'copyleaks' as const,
+              job_id: copyleaksJob.jobId,
+              provider_job_id: copyleaksJob.providerJobId,
+            }
+          : null
+
+        const fullResult = {
+          mode: 'both' as const,
+          ai,
+          plagiarism: pendingPlagiarism,
+          partial: !ai || !pendingPlagiarism,
+          async: true,
+          errors: {
+            ...(ai ? {} : { ai: errors.analysisError }),
+            ...(pendingPlagiarism ? {} : { plagiarism: errors.analysisError }),
+          },
+        }
+
+        if (ai) {
+          await serviceSupabase.from('scans').insert({
+            user_id: user.id,
+            text_snippet: trimmedText.substring(0, 200),
+            ai_score: Math.round(ai.ai_likelihood * 100),
+            detected_model: ai.headline || null,
+            full_result: fullResult,
+            scan_type: 'ai',
+          })
+        }
+
+        return NextResponse.json({
+          ...fullResult,
+          scans_remaining: remaining,
+        }, { status: 202 })
+      }
+
       const [aiResult, plagResult] = await Promise.allSettled([
         detectAI(trimmedText),
         detectPlagiarism(trimmedText),
@@ -236,6 +379,33 @@ export async function POST(request: NextRequest) {
 
     // Route to appropriate detection API
     if (mode === 'plagiarism') {
+      if (plagiarismProviderDecision?.provider === 'copyleaks') {
+        const creditCost = getCopyleaksCreditCost(mode)
+        const availableCredits = profile?.scan_credits || 0
+        if (isCreditPlan && availableCredits < creditCost) {
+          return NextResponse.json({
+            error: errors.noCredits,
+            scans_remaining: availableCredits,
+            needs_credits: true,
+          }, { status: 402 })
+        }
+
+        const copyleaksJob = await queueCopyleaksPlagiarismJob(creditCost)
+        const remaining = await recordUsage(creditCost)
+        if (remaining === null) {
+          return NextResponse.json({ error: errors.rateLimitRetry, scans_remaining: 0 }, { status: 429 })
+        }
+
+        return NextResponse.json({
+          mode: 'plagiarism',
+          status: 'pending',
+          provider: 'copyleaks',
+          job_id: copyleaksJob.jobId,
+          provider_job_id: copyleaksJob.providerJobId,
+          scans_remaining: remaining,
+        }, { status: 202 })
+      }
+
       const plagResult = await detectPlagiarism(trimmedText)
       const remaining = await recordUsage()
       if (remaining === null) {

@@ -1,0 +1,3 @@
+-- Placeholder migration to align local history with remote Supabase project.
+-- The remote database already records version 20260407231429.
+-- No-op by design.

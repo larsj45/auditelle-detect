@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">VeriTexto — preview do portal institucional</title>
+  <desc id="desc">Mockup neutro representando a tela de histórico do portal institucional com tabela de análises recentes, filtros e navegação lateral.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#EFF6FF"/>
+    </linearGradient>
+    <linearGradient id="sidebar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E3A5F"/>
+      <stop offset="1" stop-color="#2A4A6B"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="600" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="40" y="40" width="880" height="520" rx="16" fill="#FFFFFF"/>
+  </g>
+
+  <rect x="40" y="40" width="220" height="520" rx="16" fill="url(#sidebar)"/>
+  <rect x="40" y="220" width="220" height="340" fill="url(#sidebar)"/>
+
+  <rect x="64" y="72" width="120" height="12" rx="4" fill="#FFFFFF" opacity="0.95"/>
+  <rect x="64" y="92" width="72" height="8" rx="3" fill="#FFFFFF" opacity="0.55"/>
+
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#FFFFFF">
+    <rect x="60" y="140" width="180" height="36" rx="8" fill="#FFFFFF" opacity="0.12"/>
+    <circle cx="80" cy="158" r="5" fill="#FFFFFF" opacity="0.9"/>
+    <text x="96" y="162" opacity="0.95">Nova análise</text>
+
+    <rect x="60" y="184" width="180" height="36" rx="8" fill="#FFFFFF" opacity="0.24"/>
+    <circle cx="80" cy="202" r="5" fill="#FFFFFF"/>
+    <text x="96" y="206" font-weight="600">Histórico</text>
+
+    <circle cx="80" cy="244" r="5" fill="#FFFFFF" opacity="0.7"/>
+    <text x="96" y="248" opacity="0.8">Turmas</text>
+
+    <circle cx="80" cy="280" r="5" fill="#FFFFFF" opacity="0.7"/>
+    <text x="96" y="284" opacity="0.8">Usuários</text>
+
+    <circle cx="80" cy="316" r="5" fill="#FFFFFF" opacity="0.7"/>
+    <text x="96" y="320" opacity="0.8">Configurações</text>
+
+    <circle cx="80" cy="352" r="5" fill="#FFFFFF" opacity="0.7"/>
+    <text x="96" y="356" opacity="0.8">Ajuda</text>
+  </g>
+
+  <rect x="280" y="64" width="620" height="56" rx="10" fill="#FFFFFF"/>
+  <rect x="300" y="84" width="200" height="16" rx="4" fill="#1E3A5F"/>
+  <rect x="300" y="106" width="120" height="8" rx="3" fill="#94A3B8"/>
+  <rect x="760" y="80" width="120" height="24" rx="12" fill="#3B82F6"/>
+  <text x="820" y="96" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">Nova análise</text>
+
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <rect x="280" y="140" width="620" height="48" rx="10" fill="#F1F5F9"/>
+    <rect x="300" y="156" width="120" height="16" rx="4" fill="#CBD5E1"/>
+    <rect x="440" y="156" width="80" height="16" rx="4" fill="#CBD5E1"/>
+    <rect x="540" y="156" width="120" height="16" rx="4" fill="#CBD5E1"/>
+    <rect x="820" y="156" width="60" height="16" rx="4" fill="#3B82F6"/>
+  </g>
+
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="11">
+    <rect x="280" y="208" width="620" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="298" y="232" fill="#0F172A" font-weight="600">Título</text>
+    <text x="440" y="232" fill="#64748B">Turma</text>
+    <text x="580" y="232" fill="#64748B">Data</text>
+    <text x="700" y="232" fill="#64748B">IA</text>
+    <text x="760" y="232" fill="#64748B">Similaridade</text>
+    <text x="858" y="232" fill="#64748B">Status</text>
+
+    <g>
+      <rect x="280" y="256" width="620" height="52" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+      <rect x="298" y="272" width="120" height="10" rx="3" fill="#0F172A"/>
+      <rect x="298" y="288" width="80" height="8" rx="3" fill="#94A3B8"/>
+      <rect x="440" y="280" width="90" height="10" rx="3" fill="#475569"/>
+      <rect x="580" y="280" width="70" height="10" rx="3" fill="#475569"/>
+      <rect x="700" y="276" width="36" height="18" rx="9" fill="#FEE2E2"/>
+      <text x="718" y="289" fill="#B91C1C" font-weight="700" text-anchor="middle">92%</text>
+      <rect x="760" y="276" width="36" height="18" rx="9" fill="#FEF3C7"/>
+      <text x="778" y="289" fill="#B45309" font-weight="700" text-anchor="middle">18%</text>
+      <rect x="838" y="276" width="50" height="18" rx="9" fill="#DCFCE7"/>
+      <text x="863" y="289" fill="#15803D" font-weight="600" text-anchor="middle">pronto</text>
+    </g>
+
+    <g>
+      <rect x="280" y="316" width="620" height="52" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <rect x="298" y="332" width="150" height="10" rx="3" fill="#0F172A"/>
+      <rect x="298" y="348" width="100" height="8" rx="3" fill="#94A3B8"/>
+      <rect x="440" y="340" width="90" height="10" rx="3" fill="#475569"/>
+      <rect x="580" y="340" width="70" height="10" rx="3" fill="#475569"/>
+      <rect x="700" y="336" width="36" height="18" rx="9" fill="#DCFCE7"/>
+      <text x="718" y="349" fill="#15803D" font-weight="700" text-anchor="middle">6%</text>
+      <rect x="760" y="336" width="36" height="18" rx="9" fill="#DCFCE7"/>
+      <text x="778" y="349" fill="#15803D" font-weight="700" text-anchor="middle">4%</text>
+      <rect x="838" y="336" width="50" height="18" rx="9" fill="#DCFCE7"/>
+      <text x="863" y="349" fill="#15803D" font-weight="600" text-anchor="middle">pronto</text>
+    </g>
+
+    <g>
+      <rect x="280" y="376" width="620" height="52" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+      <rect x="298" y="392" width="140" height="10" rx="3" fill="#0F172A"/>
+      <rect x="298" y="408" width="90" height="8" rx="3" fill="#94A3B8"/>
+      <rect x="440" y="400" width="90" height="10" rx="3" fill="#475569"/>
+      <rect x="580" y="400" width="70" height="10" rx="3" fill="#475569"/>
+      <rect x="700" y="396" width="36" height="18" rx="9" fill="#FEF3C7"/>
+      <text x="718" y="409" fill="#B45309" font-weight="700" text-anchor="middle">54%</text>
+      <rect x="760" y="396" width="36" height="18" rx="9" fill="#FEE2E2"/>
+      <text x="778" y="409" fill="#B91C1C" font-weight="700" text-anchor="middle">31%</text>
+      <rect x="838" y="396" width="50" height="18" rx="9" fill="#E0E7FF"/>
+      <text x="863" y="409" fill="#3730A3" font-weight="600" text-anchor="middle">revisão</text>
+    </g>
+
+    <g>
+      <rect x="280" y="436" width="620" height="52" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <rect x="298" y="452" width="130" height="10" rx="3" fill="#0F172A"/>
+      <rect x="298" y="468" width="110" height="8" rx="3" fill="#94A3B8"/>
+      <rect x="440" y="460" width="90" height="10" rx="3" fill="#475569"/>
+      <rect x="580" y="460" width="70" height="10" rx="3" fill="#475569"/>
+      <rect x="700" y="456" width="36" height="18" rx="9" fill="#DCFCE7"/>
+      <text x="718" y="469" fill="#15803D" font-weight="700" text-anchor="middle">12%</text>
+      <rect x="760" y="456" width="36" height="18" rx="9" fill="#FEF3C7"/>
+      <text x="778" y="469" fill="#B45309" font-weight="700" text-anchor="middle">22%</text>
+      <rect x="838" y="456" width="50" height="18" rx="9" fill="#DCFCE7"/>
+      <text x="863" y="469" fill="#15803D" font-weight="600" text-anchor="middle">pronto</text>
+    </g>
+
+    <rect x="280" y="512" width="620" height="32" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="300" y="524" width="80" height="8" rx="3" fill="#94A3B8"/>
+    <rect x="820" y="520" width="60" height="16" rx="4" fill="#3B82F6"/>
+  </g>
+</svg>

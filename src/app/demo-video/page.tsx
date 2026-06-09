@@ -8,6 +8,9 @@ import { useConfig } from '@/components/ConfigProvider'
 export default function DemoVideoPage() {
   const config = useConfig()
   const s = config.strings.demoVideo
+  const signupHref = ['veritexto-pt', 'veritexto-br', 'veritexto-es'].includes(config.id)
+    ? '/signup?next=credits'
+    : '/signup'
 
   return (
     <>
@@ -41,7 +44,7 @@ export default function DemoVideoPage() {
               {s.readySubtitle}
             </p>
             <Link
-              href="/signup"
+              href={signupHref}
               className="btn-primary px-8 py-4 rounded-xl text-lg inline-block"
             >
               {s.readyButton}

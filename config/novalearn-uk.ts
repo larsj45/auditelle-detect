@@ -25,6 +25,7 @@ const config: ResellerConfig = {
   currency: 'GBP',
   currencySymbol: '\u00a3',
   timezone: 'Europe/London',
+  creditPricePerScanMinor: 50,
 
   // ── Legal ─────────────────────────────────────────────────────────────────
   legalEntity: 'NovaLearn Ltd',
@@ -713,6 +714,7 @@ const config: ResellerConfig = {
     errors: {
       unauthorized: 'Unauthorised',
       dailyLimitReached: 'Daily limit reached. Upgrade your plan for more analyses.',
+      noCredits: 'You have no credits left. Buy a pack to continue.',
       rateLimitRetry: 'Limit reached. Please try again in a moment.',
       textTooShort: 'Text must contain at least 50 characters.',
       textTooLong: 'Text must not exceed 50,000 characters.',

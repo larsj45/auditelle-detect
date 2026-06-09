@@ -26,6 +26,7 @@ const config: ResellerConfig = {
   currency: 'SEK',
   currencySymbol: 'kr',
   timezone: 'Europe/Stockholm',
+  creditPricePerScanMinor: 50,
 
   // ── Legal ─────────────────────────────────────────────────────────────────
   legalEntity: 'TextVakt AB',
@@ -708,6 +709,7 @@ const config: ResellerConfig = {
     errors: {
       unauthorized: 'Ej behörig',
       dailyLimitReached: 'Daglig gräns nådd. Uppgradera till en högre plan för fler analyser.',
+      noCredits: 'Du har inga krediter kvar. Köp ett paket för att fortsätta.',
       rateLimitRetry: 'Gräns nådd. Försök igen om en stund.',
       textTooShort: 'Texten måste innehålla minst 50 tecken.',
       textTooLong: 'Texten får inte överstiga 50 000 tecken.',

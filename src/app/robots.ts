@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next'
+import { getResellerConfig } from '@/lib/config'
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const config = await getResellerConfig()
+
   return {
     rules: [
       {
@@ -9,6 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/', '/auth/', '/sso/', '/reset-password/'],
       },
     ],
-    sitemap: 'https://auditelle.fr/sitemap.xml',
+    sitemap: `https://${config.domain}/sitemap.xml`,
   }
 }

@@ -1,158 +1,43 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Sparkles, AlertCircle, Lock, Search, FileSearch } from 'lucide-react'
+import { ArrowRight, FileSearch, Search, Sparkles } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 import DetectionModeToggle, { type DetectionMode } from '@/components/DetectionModeToggle'
 import FileUpload from '@/components/FileUpload'
 
-interface DemoAISummary {
-  score: number
-  model: string | null
-  verdict: string | null
-  isAI: boolean
-}
-
-interface DemoAIResult extends DemoAISummary {
-  mode: 'ai'
-  remaining: number
-}
-
-interface DemoPlagiarismSummary {
-  plagiarism_detected: boolean
-  score: number
-  source_count: number
-  sources: Array<{ url: string; similarity: number }>
-}
-
-interface DemoPlagiarismResult extends DemoPlagiarismSummary {
-  mode: 'plagiarism'
-  remaining: number
-}
-
-interface DemoCombinedResult {
-  mode: 'both'
-  ai: DemoAISummary | null
-  plagiarism: DemoPlagiarismSummary | null
-  partial?: boolean
-  remaining: number
-}
-
-type DemoResult = DemoAIResult | DemoPlagiarismResult | DemoCombinedResult
-
 export default function HeroDemo() {
   const config = useConfig()
   const s = config.strings.heroDemo
-  const r = config.strings.results
   const p = config.strings.plagiarism
   const router = useRouter()
   const [text, setText] = useState('')
   const [mode, setMode] = useState<DetectionMode>('ai')
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<DemoResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [remaining, setRemaining] = useState<number | null>(null)
+  const [redirecting, setRedirecting] = useState(false)
 
-  const runAnalysis = useCallback(async (analysisText: string, analysisMode: DetectionMode) => {
-    if (analysisText.trim().length < 50) {
-      setError(config.strings.errors.textTooShort)
-      return
-    }
-
-    setLoading(true)
-    setError(null)
-    setResult(null)
-
+  async function handleStart() {
+    setRedirecting(true)
     try {
-      const [res] = await Promise.all([
-        fetch('/api/demo-detect', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: analysisText.slice(0, 2000), mode: analysisMode })
-        }),
-        new Promise(resolve => setTimeout(resolve, 800))
-      ])
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error || config.strings.errors.analysisError)
-        return
-      }
-
-      setResult(data)
-      if (typeof data.remaining === 'number') {
-        setRemaining(data.remaining)
-      }
+      const { supabase } = await import('@/lib/supabase')
+      const { data: { session } } = await supabase.auth.getSession()
+      router.push(session ? '/dashboard/upgrade' : '/signup?next=credits')
     } catch {
-      setError(s.connectionError)
-    } finally {
-      setLoading(false)
+      router.push('/signup?next=credits')
     }
-  }, [config.strings.errors.textTooShort, config.strings.errors.analysisError, s.connectionError])
-
-  const analyze = async () => {
-    // Check auth — gate signup for homepage demo
-    const { supabase } = await import('@/lib/supabase')
-    const { data: { session } } = await supabase.auth.getSession()
-
-    if (!session) {
-      sessionStorage.setItem('pendingAnalysisText', text)
-      sessionStorage.setItem('pendingAnalysisMode', mode)
-      router.push('/signup?pending=1')
-      return
-    }
-
-    runAnalysis(text, mode)
   }
 
-  // Auto-analyze on return from signup
-  useEffect(() => {
-    const pendingText = sessionStorage.getItem('pendingAnalysisText')
-    const pendingMode = sessionStorage.getItem('pendingAnalysisMode') as DetectionMode | null
-
-    if (pendingText) {
-      import('@/lib/supabase').then(({ supabase }) => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-          if (session) {
-            sessionStorage.removeItem('pendingAnalysisText')
-            sessionStorage.removeItem('pendingAnalysisMode')
-            setText(pendingText)
-            if (pendingMode) setMode(pendingMode)
-            runAnalysis(pendingText, pendingMode || 'ai')
-          }
-        })
-      })
-    }
-  }, [runAnalysis])
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-red-500'
-    if (score >= 50) return 'text-yellow-500'
-    return 'text-green-500'
-  }
-
-  const handleModeChange = (newMode: DetectionMode) => {
-    setMode(newMode)
-    setResult(null)
-    setError(null)
-  }
-
-  // Sample buttons depend on mode
   const sampleButtons = mode === 'ai' ? (
     <>
       <button
         onClick={() => setText(s.humanSample)}
-        disabled={loading}
-        className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full hover:bg-green-100 transition-colors"
       >
         {s.humanButton}
       </button>
       <button
         onClick={() => setText(s.chatgptSample)}
-        disabled={loading}
-        className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors"
       >
         {s.chatgptButton}
       </button>
@@ -161,15 +46,13 @@ export default function HeroDemo() {
     <>
       <button
         onClick={() => setText(s.chatgptSample)}
-        disabled={loading}
-        className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs px-3 py-1 bg-red-50 text-red-700 rounded-full hover:bg-red-100 transition-colors"
       >
         {s.chatgptButton}
       </button>
       <button
         onClick={() => setText(p.copiedSample)}
-        disabled={loading}
-        className="text-xs px-3 py-1 bg-amber-50 text-amber-700 rounded-full hover:bg-amber-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs px-3 py-1 bg-amber-50 text-amber-700 rounded-full hover:bg-amber-100 transition-colors"
       >
         {p.copiedButton}
       </button>
@@ -178,15 +61,13 @@ export default function HeroDemo() {
     <>
       <button
         onClick={() => setText(p.originalSample)}
-        disabled={loading}
-        className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full hover:bg-green-100 transition-colors"
       >
         {p.originalButton}
       </button>
       <button
         onClick={() => setText(p.copiedSample)}
-        disabled={loading}
-        className="text-xs px-3 py-1 bg-amber-50 text-amber-700 rounded-full hover:bg-amber-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs px-3 py-1 bg-amber-50 text-amber-700 rounded-full hover:bg-amber-100 transition-colors"
       >
         {p.copiedButton}
       </button>
@@ -195,17 +76,16 @@ export default function HeroDemo() {
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-3">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-[var(--accent)]" />
           <span className="text-gray-800 font-semibold">{s.testNow}</span>
         </div>
-        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{s.free}</span>
+        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{s.free}</span>
       </div>
 
-      {/* Mode toggle */}
       <div className="mb-4">
-        <DetectionModeToggle mode={mode} onModeChange={handleModeChange} disabled={loading} />
+        <DetectionModeToggle mode={mode} onModeChange={setMode} disabled={redirecting} />
       </div>
 
       <FileUpload onTextExtracted={(extracted) => { if (extracted) setText(extracted) }} />
@@ -213,8 +93,8 @@ export default function HeroDemo() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder={s.placeholder}
-        disabled={loading}
-        className={`w-full h-32 p-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={redirecting}
+        className={`w-full h-32 p-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all ${redirecting ? 'opacity-50 cursor-not-allowed' : ''}`}
         maxLength={2000}
       />
 
@@ -223,290 +103,23 @@ export default function HeroDemo() {
         {sampleButtons}
       </div>
 
-      {loading && (
-        <div className="mt-3 p-3 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl flex items-center gap-3">
-          <Loader2 className="w-4 h-4 text-[var(--accent)] animate-spin" />
-          <div className="flex-1">
-            <div className="text-sm font-semibold text-gray-800">{s.analyzingLabel}</div>
-            <div className="text-xs text-gray-500 mt-0.5">{s.analyzingDetail}</div>
-          </div>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between mt-4">
-        <span className="text-gray-400 text-sm">{text.length}/2000</span>
-        <button
-          onClick={analyze}
-          disabled={loading || text.trim().length < 50}
-          className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-orange-500/20"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {s.analyzingLabel.split('...')[0]}...
-            </>
-          ) : mode === 'both' ? (
-            <>
-              <FileSearch className="w-4 h-4" />
-              {p.analyzeBoth}
-            </>
-          ) : mode === 'plagiarism' ? (
-            <>
-              <Search className="w-4 h-4" />
-              {p.analyzePlagiarism}
-            </>
-          ) : (
-            s.scanner
-          )}
-        </button>
+      <div className="mt-5 rounded-xl border border-[var(--accent)]/15 bg-[var(--accent-light)] p-4">
+        <p className="text-sm font-semibold text-[var(--navy)]">{s.unlockLabel}</p>
+        <p className="text-sm text-gray-600 mt-1">{s.ctaTeaser}</p>
       </div>
 
-      {error && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-700">{error}</span>
-        </div>
-      )}
-
-      {/* Scarcity counter — remaining scans */}
-      {remaining !== null && remaining >= 0 && !loading && (
-        <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
-          <span className="text-sm font-medium text-amber-700">
-            {s.scansRemaining.replace('{count}', String(remaining))}
-          </span>
-        </div>
-      )}
-
-      {/* AI Detection Result */}
-      {result && result.mode === 'ai' && (
-        <>
-          <div className="mt-4 p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className={`text-4xl font-bold ${getScoreColor(result.score)}`}>
-                  {result.score}%
-                </div>
-                <div className="text-gray-600 text-sm mt-1 font-medium">
-                  {result.verdict}
-                </div>
-              </div>
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center ${result.isAI ? 'bg-red-100' : 'bg-green-100'}`}>
-                {result.isAI ? (
-                  <span className="text-2xl">🤖</span>
-                ) : (
-                  <span className="text-2xl">👤</span>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-              <a
-                href="/signup"
-                className="inline-block w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20"
-              >
-                {s.ctaButton}
-              </a>
-              <p className="text-xs text-gray-500 mt-2">
-                {s.ctaTeaser}
-              </p>
-            </div>
-          </div>
-
-          {/* Blurred preview of full report */}
-          <div className="mt-4 relative">
-            <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
-              <p className="text-sm font-semibold text-gray-700 mb-2">{r.breakdown}</p>
-              <div className="flex h-3 rounded-full overflow-hidden bg-gray-100">
-                <div className="bg-red-400" style={{ width: '65%' }} />
-                <div className="bg-amber-400" style={{ width: '15%' }} />
-                <div className="bg-emerald-400" style={{ width: '20%' }} />
-              </div>
-              <div className="flex gap-4 mt-2 text-xs text-gray-500">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                  {r.aiGenerated} 65%
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                  {r.aiAssisted} 15%
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                  {r.humanWritten} 20%
-                </span>
-              </div>
-              <div className="mt-4 space-y-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100">
-                    <div className="w-2 h-2 rounded-full bg-red-400 mt-2 flex-shrink-0" />
-                    <div className="flex-1">
-                      <div className="h-3 bg-gray-200 rounded w-full mb-1" />
-                      <div className="h-2 bg-gray-100 rounded w-1/3" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
-              <Lock className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-sm font-semibold text-gray-700 text-center px-4">
-                {s.unlockLabel}
-              </p>
-              <a
-                href="/signup"
-                className="mt-2 text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
-              >
-                {s.ctaButton}
-              </a>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Plagiarism Detection Result */}
-      {result && result.mode === 'plagiarism' && (
-        <>
-          <div className="mt-4 p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className={`text-4xl font-bold ${result.score > 20 ? 'text-red-500' : result.score > 5 ? 'text-yellow-500' : 'text-green-500'}`}>
-                  {result.score}%
-                </div>
-                <div className="text-gray-600 text-sm mt-1 font-medium">
-                  {result.plagiarism_detected ? p.plagiarismFound : p.noPlagiarism}
-                </div>
-                {result.source_count > 0 && (
-                  <div className="text-gray-500 text-xs mt-1">
-                    {p.sourcesFound.replace('{count}', String(result.source_count))}
-                  </div>
-                )}
-              </div>
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center ${result.plagiarism_detected ? 'bg-red-100' : 'bg-green-100'}`}>
-                <span className="text-2xl">{result.plagiarism_detected ? '🔍' : '✅'}</span>
-              </div>
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-              <a
-                href="/signup"
-                className="inline-block w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20"
-              >
-                {s.ctaButton}
-              </a>
-              <p className="text-xs text-gray-500 mt-2">
-                {s.ctaTeaser}
-              </p>
-            </div>
-          </div>
-
-          {/* Blurred preview of sources */}
-          <div className="mt-4 relative">
-            <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
-              <p className="text-sm font-semibold text-gray-700 mb-3">{p.sourceLabel}</p>
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="p-3 rounded-lg border border-gray-100">
-                    <div className="h-3 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-2 bg-amber-100 rounded w-full mb-1" />
-                    <div className="h-2 bg-gray-100 rounded w-1/4" />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
-              <Lock className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-sm font-semibold text-gray-700 text-center px-4">
-                {s.unlockLabel}
-              </p>
-              <a
-                href="/signup"
-                className="mt-2 text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
-              >
-                {s.ctaButton}
-              </a>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Combined Result */}
-      {result && result.mode === 'both' && (
-        <>
-          <div className="mt-4 p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl">
-            {result.partial && (
-              <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm">
-                {p.partialWarning}
-              </div>
-            )}
-            <div className="grid sm:grid-cols-2 gap-3">
-              {result.ai && (
-                <div className="rounded-xl border border-gray-100 bg-white p-4">
-                  <div className={`text-3xl font-bold ${getScoreColor(result.ai.score)}`}>
-                    {result.ai.score}%
-                  </div>
-                  <div className="text-sm font-medium text-gray-700 mt-1">{result.ai.verdict}</div>
-                  <div className="text-xs text-gray-500 mt-1">{p.modeAI}</div>
-                </div>
-              )}
-              {result.plagiarism && (
-                <div className="rounded-xl border border-gray-100 bg-white p-4">
-                  <div className={`text-3xl font-bold ${result.plagiarism.score > 20 ? 'text-red-500' : result.plagiarism.score > 5 ? 'text-yellow-500' : 'text-green-500'}`}>
-                    {result.plagiarism.score}%
-                  </div>
-                  <div className="text-sm font-medium text-gray-700 mt-1">
-                    {result.plagiarism.plagiarism_detected ? p.plagiarismFound : p.noPlagiarism}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    {p.sourcesFound.replace('{count}', String(result.plagiarism.source_count))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-              <a
-                href="/signup"
-                className="inline-block w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20"
-              >
-                {s.ctaButton}
-              </a>
-              <p className="text-xs text-gray-500 mt-2">
-                {s.ctaTeaser}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-4 relative">
-            <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
-              <p className="text-sm font-semibold text-gray-700 mb-3">{p.analyzeBoth}</p>
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div className="p-4 rounded-lg border border-gray-100">
-                  <div className="h-3 bg-red-100 rounded w-2/3 mb-2" />
-                  <div className="h-2 bg-gray-100 rounded w-full mb-1" />
-                  <div className="h-2 bg-gray-100 rounded w-1/3" />
-                </div>
-                <div className="p-4 rounded-lg border border-gray-100">
-                  <div className="h-3 bg-amber-100 rounded w-2/3 mb-2" />
-                  <div className="h-2 bg-gray-100 rounded w-full mb-1" />
-                  <div className="h-2 bg-gray-100 rounded w-1/3" />
-                </div>
-              </div>
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
-              <Lock className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-sm font-semibold text-gray-700 text-center px-4">
-                {s.unlockLabel}
-              </p>
-              <a
-                href="/signup"
-                className="mt-2 text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
-              >
-                {s.ctaButton}
-              </a>
-            </div>
-          </div>
-        </>
-      )}
+      <div className="flex items-center justify-between mt-4 gap-3">
+        <span className="text-gray-400 text-sm">{text.length}/2000</span>
+        <button
+          onClick={handleStart}
+          disabled={redirecting}
+          className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-orange-500/20"
+        >
+          {mode === 'both' ? <FileSearch className="w-4 h-4" /> : mode === 'plagiarism' ? <Search className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+          {redirecting ? s.analyzingLabel : s.ctaButton}
+          {!redirecting && <ArrowRight className="w-4 h-4" />}
+        </button>
+      </div>
     </div>
   )
 }

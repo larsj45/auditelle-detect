@@ -1,37 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Check, ArrowLeft, Sparkles, Coins, Zap, ShieldCheck, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
+import { readStoredAttribution } from '@/lib/attribution'
+import { getCreditPackOffers } from '@/lib/credit-packs'
 
 declare function gtag(...args: unknown[]): void
-
-const PRICE_PER_ANALYSIS_MINOR = 50
-
-const CREDIT_PACKS = [
-  {
-    quantity: 1,
-    labelKey: 'upgradeCreditPackTrialLabel',
-    descriptionKey: 'upgradeCreditPackTrialDescription',
-    icon: '🔍',
-    popular: false,
-  },
-  {
-    quantity: 10,
-    labelKey: 'upgradeCreditPackStandardLabel',
-    descriptionKey: 'upgradeCreditPackStandardDescription',
-    icon: '📦',
-    popular: true,
-  },
-  {
-    quantity: 50,
-    labelKey: 'upgradeCreditPackBestLabel',
-    descriptionKey: 'upgradeCreditPackBestDescription',
-    icon: '🏫',
-    popular: false,
-  },
-] as const
 
 function formatCurrency(minorUnits: number, currency: string, locale: string) {
   try {
@@ -46,6 +22,16 @@ function formatCurrency(minorUnits: number, currency: string, locale: string) {
 
 function formatAnalysisCount(count: number, singular: string, plural: string) {
   return `${count} ${count === 1 ? singular : plural}`
+}
+
+function getModeCreditGuide(htmlLang: string, labels: { modeAI: string; modePlagiarism: string; modeBoth: string }) {
+  const credit = htmlLang === 'es' ? 'crédito' : htmlLang === 'pt' ? 'crédito' : 'crédit'
+  const credits = htmlLang === 'es' ? 'créditos' : htmlLang === 'pt' ? 'créditos' : 'crédits'
+  return [
+    { label: labels.modeAI, cost: `1 ${credit}` },
+    { label: labels.modePlagiarism, cost: `2 ${credits}` },
+    { label: labels.modeBoth, cost: `3 ${credits}` },
+  ]
 }
 
 function trackCheckoutStart({
@@ -94,10 +80,13 @@ function trackCheckoutStart({
 export default function UpgradePage() {
   const config = useConfig()
   const s = config.strings.dashboard
+  const p = config.strings.plagiarism
   const plans = config.plans.upgrade
+  const creditPacks = useMemo(() => getCreditPackOffers(config), [config])
+  const modeCreditGuide = useMemo(() => getModeCreditGuide(config.htmlLang, p), [config.htmlLang, p])
   const [loading, setLoading] = useState<string | null>(null)
   const [credits, setCredits] = useState<number | null>(null)
-  const perAnalysisPrice = formatCurrency(PRICE_PER_ANALYSIS_MINOR, config.currency, config.locale)
+  const pricePerCreditMinor = config.creditPricePerScanMinor
 
   useEffect(() => {
     loadCredits()
@@ -126,14 +115,14 @@ export default function UpgradePage() {
         window.location.href = '/login'
         return
       }
-      const pack = CREDIT_PACKS.find(item => item.quantity === quantity)
-      const label = pack ? s[pack.labelKey] : String(quantity)
+      const pack = creditPacks.find(item => item.quantity === quantity)
+      const label = pack?.label || String(quantity)
       trackCheckoutStart({
         checkoutType: 'credits',
         itemId: `credits-${quantity}`,
         itemName: label,
         currency: config.currency,
-        value: (quantity * PRICE_PER_ANALYSIS_MINOR) / 100,
+        value: (pack?.totalPriceMinor ?? (quantity * pricePerCreditMinor)) / 100,
       })
 
       const response = await fetch('/api/checkout-credits', {
@@ -142,7 +131,10 @@ export default function UpgradePage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ quantity }),
+        body: JSON.stringify({
+          quantity,
+          attribution: readStoredAttribution(),
+        }),
       })
 
       const data = await response.json()
@@ -186,7 +178,10 @@ export default function UpgradePage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ plan: planId }),
+        body: JSON.stringify({
+          plan: planId,
+          attribution: readStoredAttribution(),
+        }),
       })
 
       const data = await response.json()
@@ -248,9 +243,20 @@ export default function UpgradePage() {
         </div>
       )}
 
+      {config.features.plagiarismDetection && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+          {modeCreditGuide.map((item) => (
+            <div key={item.label} className="rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
+              <p className="text-sm font-semibold text-[var(--navy)]">{item.label}</p>
+              <p className="text-xs text-gray-500 mt-1">{item.cost}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Credit packs */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {CREDIT_PACKS.map((pack) => (
+        {creditPacks.map((pack) => (
           <div
             key={pack.quantity}
             className={`card relative ${pack.popular ? 'ring-2 ring-[var(--accent)]' : ''}`}
@@ -264,15 +270,15 @@ export default function UpgradePage() {
 
             <div className="text-center mb-6">
               <div className="text-3xl mb-2">{pack.icon}</div>
-              <h3 className="text-lg font-semibold text-[var(--navy)]">{s[pack.labelKey]}</h3>
-              <p className="text-sm text-gray-500 mt-1">{s[pack.descriptionKey]}</p>
+              <h3 className="text-lg font-semibold text-[var(--navy)]">{pack.label}</h3>
+              <p className="text-sm text-gray-500 mt-1">{pack.description}</p>
               <div className="mt-4">
                 <span className="text-3xl font-bold text-[var(--navy)]">
-                  {formatCurrency(pack.quantity * PRICE_PER_ANALYSIS_MINOR, config.currency, config.locale)}
+                  {formatCurrency(pack.totalPriceMinor, config.currency, config.locale)}
                 </span>
               </div>
               <p className="text-xs text-gray-400 mt-1">
-                {s.upgradePerAnalysis.replace('{price}', perAnalysisPrice)}
+                {s.upgradePerAnalysis.replace('{price}', formatCurrency(Math.round(pack.totalPriceMinor / pack.quantity), config.currency, config.locale))}
               </p>
             </div>
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, VALID_PLAN_IDS } from '@/lib/config'
+import { flattenAttributionForMetadata, sanitizeAttribution } from '@/lib/attribution'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,9 +22,11 @@ export async function POST(request: NextRequest) {
     const token = match[1]
 
     let plan = 'pro'
+    let attribution = null
     try {
       const body = await request.json()
       plan = body.plan || 'pro'
+      attribution = sanitizeAttribution(body.attribution)
     } catch {
       // Default to pro if no body
     }
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
       try {
         const customer = await stripe.customers.create({
           email: user.email,
-          metadata: { supabase_user_id: user.id },
+          metadata: { supabase_user_id: user.id, brand: config.id },
         })
         customerId = customer.id
         await serviceSupabase
@@ -104,7 +107,20 @@ export async function POST(request: NextRequest) {
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?canceled=true`,
         locale: 'auto',
-        metadata: { supabase_user_id: user.id, plan, brand: config.id },
+        metadata: {
+          supabase_user_id: user.id,
+          plan,
+          brand: config.id,
+          ...flattenAttributionForMetadata(attribution),
+        },
+        subscription_data: {
+          metadata: {
+            supabase_user_id: user.id,
+            plan,
+            brand: config.id,
+            ...flattenAttributionForMetadata(attribution),
+          },
+        },
         allow_promotion_codes: true,
       })
 

@@ -1,3 +1,4 @@
+import type { Route } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PricingCard from '@/components/PricingCard'
@@ -18,6 +19,9 @@ const iconMap: Record<string, React.ReactNode> = {
 export default async function Home() {
   const config = await getResellerConfig()
   const s = config.strings
+  const signupHref = ['veritexto-pt', 'veritexto-br', 'veritexto-es'].includes(config.id)
+    ? '/signup?next=credits'
+    : '/signup'
 
   return (
     <>
@@ -52,7 +56,7 @@ export default async function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
-                <Link href="/signup" className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
+                <Link href={signupHref} className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
                   {s.hero.ctaPrimary}
                 </Link>
                 <Link href="/#how-it-works" className="btn-secondary text-lg px-8 py-4 rounded-xl">
@@ -206,6 +210,33 @@ export default async function Home() {
         </div>
       </section>
 
+      {config.institutional?.enabled ? (
+        <section className="bg-white px-4 py-18">
+          <div className="mx-auto flex max-w-6xl flex-col gap-6 rounded-lg border border-gray-100 bg-[var(--bg-light)] p-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-wide text-[var(--accent)]">
+                {config.institutional.label}
+              </p>
+              <h2 className="mt-2 text-3xl font-bold text-[var(--navy)]">
+                Alternativa institucional ao Turnitin para escolas e universidades
+              </h2>
+              <p className="mt-3 text-lg text-gray-600">
+                Conheça o portal institucional do {config.name} para governança acadêmica,
+                histórico auditável, turmas, usuários e implantação em português.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col">
+              <Link href={config.institutional.basePath as Route} className="btn-primary inline-flex items-center justify-center px-6 py-3 text-base">
+                Ver portal institucional
+              </Link>
+              <Link href="/contact?subject=Demo%20institucional" className="btn-secondary inline-flex items-center justify-center px-6 py-3 text-base">
+                Agendar demonstração
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* Pricing */}
       <section id="pricing" className="py-24 px-4 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto">
@@ -244,13 +275,13 @@ export default async function Home() {
       {/* CTA */}
       <section className="gradient-hero py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
             {s.cta.title}
           </h2>
-          <p className="text-gray-300 mt-4 text-lg">
+          <p className="text-gray-600 mt-4 text-lg">
             {s.cta.subtitle}
           </p>
-          <Link href="/signup" className="btn-primary text-lg px-8 py-4 mt-8 inline-block">
+          <Link href={signupHref} className="btn-primary text-lg px-8 py-4 mt-8 inline-block">
             {s.cta.button}
           </Link>
         </div>

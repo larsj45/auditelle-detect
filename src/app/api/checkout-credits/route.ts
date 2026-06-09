@@ -1,31 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
-import { getResellerConfig, CREDIT_PACKS, PRICE_PER_SCAN_CENTS } from '@/lib/config'
-import type { ResellerConfig } from '@/lib/config'
+import { getResellerConfig } from '@/lib/config'
+import { flattenAttributionForMetadata, sanitizeAttribution } from '@/lib/attribution'
+import { findCreditPackOffer, getCreditPackOffers } from '@/lib/credit-packs'
 
 export const dynamic = 'force-dynamic'
-
-function getCreditPackCopy(quantity: number, strings: ResellerConfig['strings']['dashboard']) {
-  if (quantity === 1) {
-    return {
-      label: strings.upgradeCreditPackTrialLabel,
-      description: strings.upgradeCreditPackTrialDescription,
-    }
-  }
-
-  if (quantity === 50) {
-    return {
-      label: strings.upgradeCreditPackBestLabel,
-      description: strings.upgradeCreditPackBestDescription,
-    }
-  }
-
-  return {
-    label: strings.upgradeCreditPackStandardLabel,
-    description: strings.upgradeCreditPackStandardDescription,
-  }
-}
 
 export async function POST(request: NextRequest) {
   const config = await getResellerConfig()
@@ -42,18 +22,21 @@ export async function POST(request: NextRequest) {
     if (!match) return NextResponse.json({ error: errors.unauthorized }, { status: 401 })
     const token = match[1]
 
-    let quantity = 10
+    const availablePacks = getCreditPackOffers(config)
+    let quantity = availablePacks[0]?.quantity ?? 10
+    let attribution = null
     try {
       const body = await request.json()
-      quantity = Number(body.quantity) || 10
+      quantity = Number(body.quantity) || quantity
+      attribution = sanitizeAttribution(body.attribution)
     } catch {
-      // default 10
+      // default first available pack
     }
 
     // Validate quantity against packs
-    const pack = CREDIT_PACKS.find(p => p.quantity === quantity)
+    const pack = findCreditPackOffer(config, quantity)
     if (!pack) {
-      return NextResponse.json({ error: errors.invalidPlan, valid_packs: CREDIT_PACKS.map(p => p.quantity) }, { status: 400 })
+      return NextResponse.json({ error: errors.invalidPlan }, { status: 400 })
     }
 
     const supabase = createClient(
@@ -99,13 +82,13 @@ export async function POST(request: NextRequest) {
       line_items: [{
         price_data: {
           currency: config.currency.toLowerCase(),
-          unit_amount: PRICE_PER_SCAN_CENTS,
+          unit_amount: pack.totalPriceMinor,
           product_data: {
-            name: `${getCreditPackCopy(pack.quantity, dashboard).label} — ${config.name}`,
+            name: `${pack.label} — ${config.name}`,
             description: dashboard.upgradeCheckoutCreditsDescription.replace('{count}', String(pack.quantity)),
           },
         },
-        quantity: pack.quantity,
+        quantity: 1,
       }],
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?credits_added=${pack.quantity}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/upgrade?canceled=true`,
@@ -114,8 +97,10 @@ export async function POST(request: NextRequest) {
       metadata: {
         type: 'credits',
         quantity: String(pack.quantity),
+        amount_minor: String(pack.totalPriceMinor),
         supabase_user_id: user.id,
         brand: config.id,
+        ...flattenAttributionForMetadata(attribution),
       },
     })
 

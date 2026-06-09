@@ -17,8 +17,12 @@ export async function getResellerConfig(): Promise<ResellerConfig> {
     case 'veritexto-es':
       mod = await import('./veritexto-es')
       break
+    // Compat layer per docs/institutional-blueprint.md §11.4
+    // Both IDs resolve to the canonical veritexto-br config during transition.
+    // Flip Vercel env to RESELLER_ID=veritexto-br once verified in preview.
+    case 'veritexto-br':
     case 'veritexto-pt':
-      mod = await import('./veritexto-pt')
+      mod = await import('./veritexto-br')
       break
     case 'klartext-se':
       mod = await import('./klartext-se')
@@ -41,6 +45,6 @@ export function getCachedConfig(): ResellerConfig {
 }
 
 // Re-export types for convenience
-export type { ResellerConfig } from './types'
-export { DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS, CREDIT_PLANS, CREDIT_PACKS, PRICE_PER_SCAN_CENTS } from './types'
+export type { ResellerConfig, CreditPackOffer } from './types'
+export { DAILY_LIMITS, VALID_PLAN_IDS, MONTHLY_PLANS, CREDIT_PLANS, CREDIT_PACKS } from './types'
 export type { PlanId } from './types'

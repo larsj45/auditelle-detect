@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { getResellerConfig } from '@/lib/config'
+import { DAILY_LIMITS, getResellerConfig } from '@/lib/config'
 import {
 
   sendEmail,
@@ -36,57 +36,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // ============ 1. UPGRADE REMINDERS (>80% usage) ============
-    const { data: highUsageUsers } = await supabase
-      .from('profiles')
-      .select('id, email, full_name, monthly_usage, monthly_limit, upgrade_reminder_sent')
-      .is('subscription_status', null) // Free users only
-      .eq('upgrade_reminder_sent', false)
-
-    for (const user of highUsageUsers || []) {
-      const usagePercent = Math.round((user.monthly_usage / user.monthly_limit) * 100)
-      
-      if (usagePercent >= 80) {
-        const email = upgradeReminderEmail(config, user.full_name || user.email, usagePercent)
-        const result = await sendEmail({
-          to: user.email,
-          subject: email.subject,
-          html: email.html,
-          text: email.text,
-        })
-
-        if (result.success) {
-          await supabase
-            .from('profiles')
-            .update({ upgrade_reminder_sent: true })
-            .eq('id', user.id)
-          results.upgradeReminders++
-        } else {
-          results.errors.push(`Upgrade reminder failed for ${user.email}: ${result.error}`)
-        }
-      }
-    }
-
-    // ============ 2. TRIAL EXPIRING (7, 3, 1 days) ============
     const now = new Date()
-    const { data: trialUsers } = await supabase
-      .from('profiles')
-      .select('id, email, full_name, trial_ends_at, trial_reminder_days_sent')
-      .is('subscription_status', null)
-      .not('trial_ends_at', 'is', null)
-      .gt('trial_ends_at', now.toISOString())
+    if (DAILY_LIMITS.free !== 0) {
+      const { data: highUsageUsers } = await supabase
+        .from('profiles')
+        .select('id, email, full_name, monthly_usage, monthly_limit, upgrade_reminder_sent')
+        .is('subscription_status', null)
+        .gt('monthly_limit', 0)
+        .eq('upgrade_reminder_sent', false)
 
-    for (const user of trialUsers || []) {
-      const trialEnd = new Date(user.trial_ends_at)
-      const daysLeft = Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-      const sentDays = user.trial_reminder_days_sent || []
+      for (const user of highUsageUsers || []) {
+        const usagePercent = Math.round((user.monthly_usage / user.monthly_limit) * 100)
 
-      // Send reminders at 7, 3, and 1 days
-      const reminderDays = [7, 3, 1]
-      
-      for (const reminderDay of reminderDays) {
-        if (daysLeft <= reminderDay && !sentDays.includes(reminderDay)) {
-          const email = trialExpiringEmail(config, user.full_name || user.email, daysLeft)
+        if (usagePercent >= 80) {
+          const email = upgradeReminderEmail(config, user.full_name || user.email, usagePercent)
           const result = await sendEmail({
             to: user.email,
             subject: email.subject,
@@ -97,44 +60,78 @@ export async function GET(request: NextRequest) {
           if (result.success) {
             await supabase
               .from('profiles')
-              .update({ 
-                trial_reminder_days_sent: [...sentDays, reminderDay]
-              })
+              .update({ upgrade_reminder_sent: true })
               .eq('id', user.id)
-            results.trialExpiring++
+            results.upgradeReminders++
           } else {
-            results.errors.push(`Trial expiring failed for ${user.email}: ${result.error}`)
+            results.errors.push(`Upgrade reminder failed for ${user.email}: ${result.error}`)
           }
-          break // Only send one reminder per run
         }
       }
-    }
 
-    // ============ 3. TRIAL ENDED ============
-    const { data: expiredUsers } = await supabase
-      .from('profiles')
-      .select('id, email, full_name, trial_ends_at, trial_ended_email_sent')
-      .is('subscription_status', null)
-      .lt('trial_ends_at', now.toISOString())
-      .eq('trial_ended_email_sent', false)
+      const { data: trialUsers } = await supabase
+        .from('profiles')
+        .select('id, email, full_name, trial_ends_at, trial_reminder_days_sent')
+        .is('subscription_status', null)
+        .not('trial_ends_at', 'is', null)
+        .gt('trial_ends_at', now.toISOString())
 
-    for (const user of expiredUsers || []) {
-      const email = trialEndedEmail(config, user.full_name || user.email)
-      const result = await sendEmail({
-        to: user.email,
-        subject: email.subject,
-        html: email.html,
-        text: email.text,
-      })
+      for (const user of trialUsers || []) {
+        const trialEnd = new Date(user.trial_ends_at)
+        const daysLeft = Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        const sentDays = user.trial_reminder_days_sent || []
 
-      if (result.success) {
-        await supabase
-          .from('profiles')
-          .update({ trial_ended_email_sent: true })
-          .eq('id', user.id)
-        results.trialEnded++
-      } else {
-        results.errors.push(`Trial ended failed for ${user.email}: ${result.error}`)
+        for (const reminderDay of [7, 3, 1]) {
+          if (daysLeft <= reminderDay && !sentDays.includes(reminderDay)) {
+            const email = trialExpiringEmail(config, user.full_name || user.email, daysLeft)
+            const result = await sendEmail({
+              to: user.email,
+              subject: email.subject,
+              html: email.html,
+              text: email.text,
+            })
+
+            if (result.success) {
+              await supabase
+                .from('profiles')
+                .update({
+                  trial_reminder_days_sent: [...sentDays, reminderDay]
+                })
+                .eq('id', user.id)
+              results.trialExpiring++
+            } else {
+              results.errors.push(`Trial expiring failed for ${user.email}: ${result.error}`)
+            }
+            break
+          }
+        }
+      }
+
+      const { data: expiredUsers } = await supabase
+        .from('profiles')
+        .select('id, email, full_name, trial_ends_at, trial_ended_email_sent')
+        .is('subscription_status', null)
+        .lt('trial_ends_at', now.toISOString())
+        .eq('trial_ended_email_sent', false)
+
+      for (const user of expiredUsers || []) {
+        const email = trialEndedEmail(config, user.full_name || user.email)
+        const result = await sendEmail({
+          to: user.email,
+          subject: email.subject,
+          html: email.html,
+          text: email.text,
+        })
+
+        if (result.success) {
+          await supabase
+            .from('profiles')
+            .update({ trial_ended_email_sent: true })
+            .eq('id', user.id)
+          results.trialEnded++
+        } else {
+          results.errors.push(`Trial ended failed for ${user.email}: ${result.error}`)
+        }
       }
     }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DetectionResult from '@/components/DetectionResult'
 import PlagiarismResult from '@/components/PlagiarismResult'
@@ -31,13 +31,31 @@ interface PlagiarismResponse {
   scans_remaining?: number
 }
 
+interface PendingPlagiarismResponse {
+  status: 'pending'
+  provider: 'copyleaks'
+  job_id: string
+  provider_job_id?: string
+}
+
 interface CombinedDetectionResponse {
   mode: 'both'
   ai: DetectionResponse | null
-  plagiarism: PlagiarismResponse | null
+  plagiarism: PlagiarismResponse | PendingPlagiarismResponse | null
   partial?: boolean
+  async?: boolean
   errors?: Partial<Record<'ai' | 'plagiarism', string>>
   scans_remaining?: number
+}
+
+interface DetectionJobResponse {
+  id: string
+  status: 'queued' | 'processing' | 'completed' | 'error'
+  provider: 'copyleaks'
+  capability: 'plagiarism'
+  error: string | null
+  result: unknown
+  completed_at: string | null
 }
 
 function CombinedLoadingPanels({ aiLabel, plagiarismLabel, loadingText }: { aiLabel: string; plagiarismLabel: string; loadingText: string }) {
@@ -56,6 +74,64 @@ function CombinedLoadingPanels({ aiLabel, plagiarismLabel, loadingText }: { aiLa
       ))}
     </div>
   )
+}
+
+function isPendingPlagiarismResponse(value: unknown): value is PendingPlagiarismResponse {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Partial<PendingPlagiarismResponse>
+  return candidate.status === 'pending' && candidate.provider === 'copyleaks' && typeof candidate.job_id === 'string'
+}
+
+function normalizeSimilarityRatio(value: unknown) {
+  const numberValue = typeof value === 'number' ? value : Number(value)
+  if (!Number.isFinite(numberValue)) return 0
+  return numberValue > 1 ? numberValue / 100 : numberValue
+}
+
+function normalizePlagiarismResult(value: unknown): PlagiarismResponse | null {
+  if (!value || typeof value !== 'object') return null
+  const payload = value as Record<string, unknown>
+  const rawSources = Array.isArray(payload.plagiarized_content)
+    ? payload.plagiarized_content
+    : Array.isArray(payload.sources)
+    ? payload.sources
+    : Array.isArray(payload.matches)
+    ? payload.matches
+    : []
+
+  return {
+    plagiarism_detected: Boolean(payload.plagiarism_detected),
+    percent_plagiarized: Number(payload.percent_plagiarized ?? 0),
+    plagiarized_content: rawSources.map((source) => {
+      const item = source as Record<string, unknown>
+      const sourceUrl = item.source_url ?? item.url ?? ''
+      const matchedText = item.matched_text ?? item.text ?? item.introduction ?? ''
+      return {
+        source_url: String(sourceUrl || ''),
+        matched_text: String(matchedText || ''),
+        similarity_score: normalizeSimilarityRatio(item.similarity_score ?? item.similarity ?? item.similarity_percentage),
+      }
+    }),
+  }
+}
+
+function getBuyCreditsLabel(htmlLang: string) {
+  if (htmlLang === 'es') return 'Comprar créditos →'
+  if (htmlLang === 'pt') return 'Comprar créditos →'
+  return 'Acheter des crédits →'
+}
+
+function getCreditsAddedLabel(count: number, singular: string, plural: string, htmlLang: string) {
+  const amount = `${count} ${count === 1 ? singular : plural}`
+  if (htmlLang === 'es') return { strong: `${amount} añadidos.`, detail: 'Tus créditos están listos para usar.' }
+  if (htmlLang === 'pt') return { strong: `${amount} adicionados.`, detail: 'Seus créditos estão prontos para usar.' }
+  return { strong: `${amount} ajoutés.`, detail: 'Vos crédits sont prêts à utiliser.' }
+}
+
+function getModeCreditLine(htmlLang: string, labels: { modeAI: string; modePlagiarism: string; modeBoth: string }) {
+  const credit = htmlLang === 'es' ? 'crédito' : htmlLang === 'pt' ? 'crédito' : 'crédit'
+  const credits = htmlLang === 'es' ? 'créditos' : htmlLang === 'pt' ? 'créditos' : 'crédits'
+  return `${labels.modeAI}: 1 ${credit} · ${labels.modePlagiarism}: 2 ${credits} · ${labels.modeBoth}: 3 ${credits}`
 }
 
 declare function gtag(...args: unknown[]): void
@@ -90,6 +166,7 @@ export default function DashboardPage() {
   const config = useConfig()
   const s = config.strings.dashboard
   const p = config.strings.plagiarism
+  const buyCreditsLabel = getBuyCreditsLabel(config.htmlLang)
   const [text, setText] = useState('')
   const [mode, setMode] = useState<DetectionMode>('ai')
   const [loading, setLoading] = useState(false)
@@ -103,12 +180,21 @@ export default function DashboardPage() {
   const [showCreditsBanner, setShowCreditsBanner] = useState<number | null>(null)
   const [credits, setCredits] = useState<number | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [pendingPlagiarismJobId, setPendingPlagiarismJobId] = useState<string | null>(null)
+  const pollRunRef = useRef(0)
+  const creditBalanceLabel = (count: number) => `${count} ${count === 1 ? s.upgradeCreditSingular : s.upgradeCreditPlural}`
 
   useEffect(() => {
     if (!localStorage.getItem('auditelle_onboarded')) {
       setShowOnboarding(true)
     }
     loadCredits()
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      pollRunRef.current += 1
+    }
   }, [])
 
   async function loadCredits() {
@@ -145,6 +231,47 @@ export default function DashboardPage() {
     setResultText('')
     setError('')
     setPartialWarning('')
+    setPendingPlagiarismJobId(null)
+    pollRunRef.current += 1
+  }
+
+  async function pollPlagiarismJob(jobId: string, runId: number, accessToken: string) {
+    setPendingPlagiarismJobId(jobId)
+
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+      if (pollRunRef.current !== runId) return
+
+      await new Promise((resolve) => setTimeout(resolve, attempt < 6 ? 2500 : 5000))
+      if (pollRunRef.current !== runId) return
+
+      const response = await fetch(`/api/detect/jobs/${encodeURIComponent(jobId)}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+      const data = (await response.json()) as DetectionJobResponse | { error?: string }
+      if (!response.ok) {
+        throw new Error('Erro ao consultar análise de similaridade')
+      }
+
+      const job = data as DetectionJobResponse
+      if (job.status === 'completed') {
+        const normalized = normalizePlagiarismResult(job.result)
+        if (!normalized) {
+          throw new Error(config.strings.errors.analysisError)
+        }
+        setPlagResult(normalized)
+        setPendingPlagiarismJobId(null)
+        return
+      }
+
+      if (job.status === 'error') {
+        throw new Error(job.error || config.strings.errors.analysisError)
+      }
+    }
+
+    throw new Error('A análise de similaridade ainda está em andamento. Tente atualizar em alguns minutos.')
   }
 
   const handleAnalyze = async () => {
@@ -159,6 +286,9 @@ export default function DashboardPage() {
     setAiResult(null)
     setPlagResult(null)
     setResultText('')
+    setPendingPlagiarismJobId(null)
+    const pollRunId = pollRunRef.current + 1
+    pollRunRef.current = pollRunId
 
     try {
       const trimmedText = text.trim()
@@ -185,13 +315,33 @@ export default function DashboardPage() {
       if (data.mode === 'both') {
         const combined = data as CombinedDetectionResponse
         setAiResult(combined.ai)
-        setPlagResult(combined.plagiarism)
+        if (isPendingPlagiarismResponse(combined.plagiarism)) {
+          if (!session?.access_token) throw new Error(config.strings.errors.unauthorized)
+          void pollPlagiarismJob(combined.plagiarism.job_id, pollRunId, session.access_token).catch((err: unknown) => {
+            if (pollRunRef.current !== pollRunId) return
+            const message = err instanceof Error ? err.message : config.strings.errors.internalError
+            setError(message)
+            setPendingPlagiarismJobId(null)
+          })
+        } else {
+          setPlagResult(normalizePlagiarismResult(combined.plagiarism))
+        }
         if (combined.partial) {
           const details = Object.values(combined.errors ?? {}).filter(Boolean).join(' ')
           setPartialWarning(details || config.strings.errors.analysisError)
         }
       } else if (mode === 'plagiarism') {
-        setPlagResult(data)
+        if (isPendingPlagiarismResponse(data)) {
+          if (!session?.access_token) throw new Error(config.strings.errors.unauthorized)
+          void pollPlagiarismJob(data.job_id, pollRunId, session.access_token).catch((err: unknown) => {
+            if (pollRunRef.current !== pollRunId) return
+            const message = err instanceof Error ? err.message : config.strings.errors.internalError
+            setError(message)
+            setPendingPlagiarismJobId(null)
+          })
+        } else {
+          setPlagResult(normalizePlagiarismResult(data))
+        }
       } else {
         setAiResult(data)
       }
@@ -232,7 +382,14 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 rounded-xl mb-6">
           <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
           <span>
-            <strong>{showCreditsBanner} analyse{showCreditsBanner > 1 ? 's' : ''} ajoutée{showCreditsBanner > 1 ? 's' : ''} !</strong> Vos crédits sont prêts à utiliser.
+            {(() => {
+              const label = getCreditsAddedLabel(showCreditsBanner, s.upgradeCreditSingular, s.upgradeCreditPlural, config.htmlLang)
+              return (
+                <>
+                  <strong>{label.strong}</strong> {label.detail}
+                </>
+              )
+            })()}
           </span>
         </div>
       )}
@@ -251,8 +408,8 @@ export default function DashboardPage() {
               : 'bg-white border-gray-200 text-gray-500'
           }`}>
             <Coins className="w-4 h-4" />
-            <span className="font-semibold">{credits}</span> crédit{credits !== 1 ? 's' : ''}
-            {credits <= 0 && <span className="ml-1 font-semibold">— Acheter →</span>}
+            <span className="font-semibold">{creditBalanceLabel(credits)}</span>
+            {credits <= 0 && <span className="ml-1 font-semibold">— {buyCreditsLabel}</span>}
           </a>
         ) : scansRemaining !== null && (
           <div className={`text-sm px-4 py-2 rounded-lg border ${
@@ -276,6 +433,11 @@ export default function DashboardPage() {
       {/* Mode toggle */}
       <div className="mb-4">
         <DetectionModeToggle mode={mode} onModeChange={handleModeChange} disabled={loading} />
+        {config.features.plagiarismDetection && (
+          <p className="mt-2 text-xs text-gray-500">
+            {getModeCreditLine(config.htmlLang, p)}
+          </p>
+        )}
       </div>
 
       {showOnboarding && (
@@ -344,7 +506,7 @@ export default function DashboardPage() {
                 href="/dashboard/upgrade"
                 className="inline-flex items-center gap-2 bg-[var(--accent)] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[var(--accent-hover)] transition"
               >
-                {credits !== null ? 'Acheter des crédits →' : s.limitUpgradeCta}
+                {credits !== null ? buyCreditsLabel : s.limitUpgradeCta}
               </a>
               {credits === null && <p className="text-xs text-red-400 mt-1">{s.limitUpgradePromo}</p>}
             </div>
@@ -360,6 +522,20 @@ export default function DashboardPage() {
 
       {loading && mode === 'both' && (
         <CombinedLoadingPanels aiLabel={p.modeAI} plagiarismLabel={p.modePlagiarism} loadingText={s.analyzing} />
+      )}
+
+      {pendingPlagiarismJobId && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 mb-6">
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-5 w-5 animate-spin text-amber-600" />
+            <div>
+              <p className="text-sm font-semibold text-[var(--navy)]">{p.modePlagiarism}</p>
+              <p className="text-xs text-amber-800">
+                Análise de similaridade em andamento. Resultados podem levar alguns minutos.
+              </p>
+            </div>
+          </div>
+        </div>
       )}
 
       {(aiResult || plagResult) && (

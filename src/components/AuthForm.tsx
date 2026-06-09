@@ -3,11 +3,25 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
+import { readStoredAttribution } from '@/lib/attribution'
 
 declare function gtag(...args: unknown[]): void
 
 interface AuthFormProps {
   mode: 'login' | 'signup' | 'reset'
+}
+
+interface PlanDisplay {
+  id: string
+  name: string
+  priceLabel: string
+  description: string
+  cta?: string
+}
+
+function formatPlanPrice(price: string, period?: string) {
+  if (!period) return price
+  return period.startsWith('/') ? `${price}${period}` : `${price}/${period}`
 }
 
 async function redirectToCheckout(token: string, plan: string) {
@@ -18,7 +32,10 @@ async function redirectToCheckout(token: string, plan: string) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ plan }),
+      body: JSON.stringify({
+        plan,
+        attribution: readStoredAttribution(),
+      }),
     })
     const data = await response.json()
     if (data.url) {
@@ -34,6 +51,7 @@ async function redirectToCheckout(token: string, plan: string) {
 export default function AuthForm({ mode }: AuthFormProps) {
   const config = useConfig()
   const s = config.strings.auth
+  const isSpanish = config.htmlLang === 'es'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
@@ -56,7 +74,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback${window.location.search}`,
         },
       })
       if (error) throw error
@@ -81,9 +99,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
         if (error) throw error
         const params = new URLSearchParams(window.location.search)
         const plan = params.get('plan')
+        const next = params.get('next')
         if (plan && data.session?.access_token) {
           const redirected = await redirectToCheckout(data.session.access_token, plan)
           if (redirected) return
+        }
+        if (next === 'credits') {
+          window.location.href = '/dashboard/upgrade'
+          return
         }
         window.location.href = '/dashboard'
       } else if (mode === 'signup') {
@@ -100,10 +123,16 @@ export default function AuthForm({ mode }: AuthFormProps) {
           })
         }
         if (data.session) {
+          const params = new URLSearchParams(window.location.search)
+          const next = params.get('next')
           if (planParam && planParam !== 'free') {
             setSuccess(s.accountCreatedRedirect)
             const redirected = await redirectToCheckout(data.session.access_token, planParam)
             if (redirected) return
+          }
+          if (next === 'credits') {
+            window.location.href = '/dashboard/upgrade'
+            return
           }
           // Redirect to homepage if there's a pending analysis from HeroDemo
           const hasPending = typeof window !== 'undefined' && sessionStorage.getItem('pendingAnalysisText')
@@ -126,17 +155,40 @@ export default function AuthForm({ mode }: AuthFormProps) {
     }
   }
 
-  // Build plan labels from upgrade plans config
-  const planLabels: Record<string, string> = {}
-  for (const plan of config.plans.upgrade) {
-    planLabels[plan.id] = `${plan.name} \u2014 ${plan.price}${plan.period}`
-  }
-  // Also add homepage plans that have href with ?plan=
+  const homepagePlanMap: Record<string, PlanDisplay> = {}
   for (const plan of config.plans.homepage) {
     const match = plan.href.match(/plan=(\w+)/)
-    if (match && !planLabels[match[1]]) {
-      planLabels[match[1]] = `${plan.name} \u2014 ${plan.price}${plan.period ? '/' + plan.period : ''}`
+    if (match) {
+      homepagePlanMap[match[1]] = {
+        id: match[1],
+        name: plan.name,
+        priceLabel: formatPlanPrice(plan.price, plan.period),
+        description: plan.description,
+        cta: plan.cta,
+      }
     }
+  }
+
+  const upgradePlanMap: Record<string, PlanDisplay> = {}
+  for (const plan of config.plans.upgrade) {
+    upgradePlanMap[plan.id] = {
+      id: plan.id,
+      name: plan.name,
+      priceLabel: formatPlanPrice(plan.price, plan.period),
+      description: plan.description,
+    }
+  }
+
+  const selectedPlan = planParam
+    ? homepagePlanMap[planParam] || upgradePlanMap[planParam] || null
+    : null
+
+  const planLabels: Record<string, string> = {}
+  for (const [id, plan] of Object.entries(upgradePlanMap)) {
+    planLabels[id] = `${plan.name} \u2014 ${plan.priceLabel}`
+  }
+  for (const [id, plan] of Object.entries(homepagePlanMap)) {
+    planLabels[id] = `${plan.name} \u2014 ${plan.priceLabel}`
   }
 
   const titles = {
@@ -155,6 +207,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
     reset: s.resetSubtitle,
   }
 
+  const submitLabel = mode === 'signup'
+    ? (selectedPlan ? (isSpanish ? 'Crear cuenta y continuar' : 'Criar conta e continuar') : titles[mode])
+    : mode === 'login'
+      ? (selectedPlan ? (isSpanish ? 'Entrar y continuar' : 'Entrar e continuar') : titles[mode])
+      : titles[mode]
+
   return (
     <div className="min-h-screen bg-[var(--bg-light)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
@@ -167,6 +225,30 @@ export default function AuthForm({ mode }: AuthFormProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="card space-y-5">
+          {selectedPlan && mode !== 'reset' && (
+            <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 text-left">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
+                Plano selecionado
+              </p>
+              <div className="mt-2 flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-semibold text-[var(--navy)]">{selectedPlan.name}</p>
+                  <p className="mt-1 text-sm text-gray-600">{selectedPlan.description}</p>
+                </div>
+                <p className="shrink-0 text-sm font-semibold text-[var(--navy)]">{selectedPlan.priceLabel}</p>
+              </div>
+              <p className="mt-3 text-sm text-gray-600">
+                {mode === 'signup'
+                  ? (isSpanish
+                      ? 'Creas tu cuenta ahora y sigues directamente al checkout de este plan.'
+                      : 'Você cria sua conta agora e segue direto para o checkout deste plano.')
+                  : (isSpanish
+                      ? 'Inicia sesión en tu cuenta para seguir directamente al checkout de este plan.'
+                      : 'Entre na sua conta para seguir direto para o checkout deste plano.')}
+              </p>
+            </div>
+          )}
+
           {error && (
             <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>
           )}
@@ -250,7 +332,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? s.loading : titles[mode]}
+            {loading ? s.loading : submitLabel}
           </button>
 
           <div className="text-center text-sm text-gray-500 space-y-2">

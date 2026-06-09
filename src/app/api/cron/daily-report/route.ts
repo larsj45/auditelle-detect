@@ -92,6 +92,7 @@ export async function GET(request: NextRequest) {
     'auditelle-fr': 'Auditelle',
     'novalearn-uk': 'NovaLearn',
     'veritexto-es': 'VeriTexto ES',
+    'veritexto-br': 'VeriTexto BR',
     'veritexto-pt': 'VeriTexto PT',
     'klartext-se': 'TextVakt',
   }

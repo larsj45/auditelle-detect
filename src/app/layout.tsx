@@ -1,14 +1,23 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import { getResellerConfig } from '@/lib/config'
 import { ConfigProvider } from '@/components/ConfigProvider'
+import { AttributionTracker } from '@/components/AttributionTracker'
 import { CookieConsent } from '@/components/CookieConsent'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const config = await getResellerConfig()
+const languageMap: Record<string, string> = {
+  fr: 'French',
+  en: 'English',
+  pt: 'Portuguese',
+  es: 'Spanish',
+  sv: 'Swedish',
+}
 
 export const metadata: Metadata = {
   title: config.seo.title,
@@ -46,7 +55,9 @@ const jsonLd = {
       description: config.seo.description,
       offers: {
         '@type': 'AggregateOffer',
-        lowPrice: '0',
+        lowPrice: config.creditPacks?.length
+          ? (Math.min(...config.creditPacks.map((pack) => pack.totalPriceMinor)) / 100).toFixed(2)
+          : '0',
         highPrice: '499',
         priceCurrency: config.currency,
         offerCount: config.plans.homepage.length,
@@ -55,15 +66,15 @@ const jsonLd = {
     },
     {
       '@type': 'Organization',
-      name: config.legalEntity,
+      name: config.name,
       url: `https://${config.domain}`,
-      logo: `https://${config.domain}/images/logo-color.png`,
+      logo: `https://${config.domain}${config.logoColor}`,
       sameAs: [],
       contactPoint: {
         '@type': 'ContactPoint',
         email: config.supportEmail,
         contactType: 'customer service',
-        availableLanguage: config.htmlLang === 'fr' ? 'French' : 'English',
+        availableLanguage: languageMap[config.htmlLang] || 'English',
       },
     },
     {
@@ -101,6 +112,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className} style={themeVars}>
         <ConfigProvider config={config}>
+          <Suspense fallback={null}>
+            <AttributionTracker />
+          </Suspense>
           {children}
           {config.googleAdsId && <CookieConsent />}
         </ConfigProvider>

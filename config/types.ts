@@ -31,6 +31,7 @@ export interface ResellerConfig {
   currency: string      // e.g. "EUR"
   currencySymbol: string // e.g. "€"
   timezone: string      // e.g. "Europe/Paris"
+  creditPricePerScanMinor: number // e.g. 50 = 0.50 in local currency
 
   // ── Legal ─────────────────────────────────────────────────────────────────
   legalEntity: string           // e.g. "Auditelle SASU"
@@ -49,6 +50,7 @@ export interface ResellerConfig {
     homepage: HomepagePlan[]
     upgrade: UpgradePlan[]
   }
+  creditPacks?: CreditPackOffer[]
 
   // ── Analytics (optional) ──────────────────────────────────────────────────
   googleAdsId?: string
@@ -83,7 +85,106 @@ export interface ResellerConfig {
 
   // ── UI Strings ────────────────────────────────────────────────────────────
   strings: ResellerStrings
+
+  // ── Institutional portal layer (optional) ────────────────────────────────
+  // See docs/institutional-blueprint.md. Presence of this block enables the
+  // institutional routes and landing for the reseller. Absence = self-serve only.
+  institutional?: InstitutionalConfig
 }
+
+// =============================================================================
+// Institutional portal types
+// =============================================================================
+// The institutional layer is a product surface parallel to self-serve,
+// targeting universities, school networks, and procurement-led buyers.
+// Terminology (locked by docs/institutional-blueprint.md §1):
+//   reseller    = market-facing brand (this config file)
+//   institution = a university/school under a reseller
+//   portal      = the authenticated product surface for one institution
+//   workspace   = the branded institutional product as a whole per reseller
+// =============================================================================
+
+export interface InstitutionalConfig {
+  enabled: boolean            // gate the whole institutional surface for this reseller
+  basePath: string            // e.g. "/portal-integridade"
+  label: string               // e.g. "Portal de Integridade Acadêmica"
+
+  // Localized route segments under basePath/[institutionSlug]/...
+  routes: InstitutionalRouteMap
+
+  // Reseller-level institutional landing copy (public, contact-led)
+  landing: InstitutionalLandingCopy
+
+  // Commercial model for institutional deals
+  commercial: InstitutionalCommercial
+
+  // Institutions registered under this reseller
+  institutions: Institution[]
+}
+
+export interface InstitutionalRouteMap {
+  history: string             // e.g. "historico" | "historial" | "historique"
+  classes: string             // e.g. "turmas"    | "clases"    | "classes"
+  users: string               // e.g. "usuarios"  | "usuarios"  | "utilisateurs"
+  settings: string            // e.g. "configuracoes" | "configuracion" | "configuration"
+  help: string                // e.g. "ajuda"     | "ayuda"     | "aide"
+}
+
+export interface InstitutionalLandingCopy {
+  hero: {
+    title: string
+    subtitle: string
+    ctaPrimary: string        // e.g. "Falar com nosso time"
+    ctaSecondary?: string     // e.g. "Ver opção self-serve"
+  }
+  pitch: {
+    turnitinAlternative: string
+    migrationStory: string
+  }
+  features: Array<{
+    title: string
+    description: string
+    icon?: string             // lucide icon name
+  }>
+  portalPreview?: {
+    // Static visual preview (not an interactive demo — see blueprint §11.2)
+    imagePath: string
+    caption: string
+  }
+  contactBlock: {
+    title: string
+    body: string
+    cta: string
+  }
+}
+
+export interface InstitutionalCommercial {
+  contactEmail: string        // e.g. "institucional@veritexto.com.br"
+  pilotAvailable: boolean
+  pilotPaid: boolean          // blueprint rule: pilots should be paid SKUs
+  demoCalendarUrl?: string    // Cal.com / Calendly booking link
+  procurementNotes?: string   // free-form notes for procurement-led buyers
+}
+
+export interface Institution {
+  slug: string                // e.g. "fundatec" — stable URL identifier
+  name: string                // full legal name
+  shortName: string           // display name
+  primaryColor: string        // hex, used in portal theming
+  logoPath: string            // e.g. "/institutions/veritexto-br/fundatec.png"
+  lmsLabel?: string           // e.g. "Moodle Fundatec"
+  status: InstitutionStatus
+  startDate: string           // ISO date, e.g. "2026-04-22"
+
+  // Blueprint rule §11.1: internal pilots are NOT publicly listable until
+  // the institution explicitly approves public use of its name and logo.
+  publiclyListable: boolean
+
+  // Optional procurement / onboarding context, not rendered publicly
+  onboardingNotes?: string
+}
+
+export type InstitutionStatus = 'pilot' | 'active' | 'churned'
 
 // ── Plan types ──────────────────────────────────────────────────────────────
 
@@ -108,6 +209,16 @@ export interface UpgradePlan {
   features: string[]
   popular?: boolean
   badge?: string | null
+}
+
+export interface CreditPackOffer {
+  id: string
+  quantity: number
+  totalPriceMinor: number
+  label: string
+  description: string
+  popular?: boolean
+  icon?: string
 }
 
 // ── All user-facing strings ─────────────────────────────────────────────────
@@ -542,6 +653,7 @@ export interface ResellerStrings {
   errors: {
     unauthorized: string
     dailyLimitReached: string
+    noCredits: string
     rateLimitRetry: string
     textTooShort: string
     textTooLong: string
@@ -590,8 +702,6 @@ export const CREDIT_PACKS = [
   { id: '10', quantity: 10, price: 500, label: '10 analyses', display: '5 €' },
   { id: '50', quantity: 50, price: 2500, label: '50 analyses', display: '25 €' },
 ] as const
-
-export const PRICE_PER_SCAN_CENTS = 50 // €0.50
 
 // ── Valid plan IDs for checkout validation ──────────────────────────────────
 

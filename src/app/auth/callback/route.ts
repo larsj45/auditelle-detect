@@ -6,6 +6,7 @@ import { sendEmail, welcomeEmail } from '@/lib/email'
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const next = searchParams.get('next')
 
   if (code) {
     const supabase = createClient(
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
       // Send welcome email on first confirmation (fire-and-forget)
       sendWelcomeEmail(data.user.id, data.user.email).catch(console.error)
 
-      return NextResponse.redirect(`${origin}/dashboard`)
+      return NextResponse.redirect(`${origin}${next === 'credits' ? '/dashboard/upgrade' : '/dashboard'}`)
     }
   }
 

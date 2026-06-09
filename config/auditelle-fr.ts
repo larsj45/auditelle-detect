@@ -25,6 +25,7 @@ const config: ResellerConfig = {
   currency: 'EUR',
   currencySymbol: '\u20ac',
   timezone: 'Europe/Paris',
+  creditPricePerScanMinor: 50,
 
   // ── Legal ─────────────────────────────────────────────────────────────────
   legalEntity: 'Auditelle SASU',
@@ -696,6 +697,7 @@ const config: ResellerConfig = {
     errors: {
       unauthorized: 'Non autoris\u00e9',
       dailyLimitReached: "Limite quotidienne atteinte. Passez au plan sup\u00e9rieur pour plus d'analyses.",
+      noCredits: "Vous n'avez plus de crédits. Achetez des analyses pour continuer.",
       rateLimitRetry: 'Limite atteinte. R\u00e9essayez dans un instant.',
       textTooShort: 'Le texte doit contenir au moins 50 caract\u00e8res.',
       textTooLong: 'Le texte ne doit pas d\u00e9passer 50 000 caract\u00e8res.',

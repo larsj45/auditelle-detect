@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, History, User, LogOut, Menu, X } from 'lucide-react';
+import { Search, History, User, LogOut, Menu, X, BarChart3 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import { useConfig } from '@/components/ConfigProvider';
@@ -24,6 +24,9 @@ export default function DashboardLayout({
   const navItems = [
     { href: '/dashboard', label: s.detection, icon: Search },
     { href: '/dashboard/history', label: s.history, icon: History },
+    ...(['veritexto-pt', 'veritexto-br'].includes(config.id)
+      ? [{ href: '/dashboard/acquisition', label: 'Aquisição', icon: BarChart3 }]
+      : []),
     { href: '/dashboard/account', label: s.account, icon: User },
   ];
 
