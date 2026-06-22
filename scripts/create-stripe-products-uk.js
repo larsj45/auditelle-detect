@@ -6,16 +6,12 @@
  * Usage: STRIPE_SECRET_KEY=sk_live_xxx node scripts/create-stripe-products-uk.js
  */
 
-const Stripe = require('stripe');
-
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
 if (!STRIPE_KEY) {
   console.error('❌ Set STRIPE_SECRET_KEY environment variable');
   console.log('Usage: STRIPE_SECRET_KEY=sk_live_xxx node scripts/create-stripe-products-uk.js');
   process.exit(1);
 }
-
-const stripe = new Stripe(STRIPE_KEY);
 
 const products = [
   {
@@ -45,6 +41,9 @@ const products = [
 ];
 
 async function createProducts() {
+  const { default: Stripe } = await import('stripe');
+  const stripe = new Stripe(STRIPE_KEY);
+
   console.log('🚀 Creating NovaLearn UK Stripe products (GBP)...\n');
 
   const priceIds = {};

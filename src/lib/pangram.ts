@@ -1,5 +1,6 @@
 const PANGRAM_API_URL = 'https://text.api.pangramlabs.com/v3'
 const PANGRAM_PLAGIARISM_URL = 'https://plagiarism.api.pangram.com'
+const PANGRAM_MOCK_ENABLED = process.env.PANGRAM_MOCK_RESPONSES === '1'
 
 export interface PangramResult {
   ai_likelihood: number
@@ -71,7 +72,44 @@ interface PangramV3Response {
   }>
 }
 
+function mockAIResult(text: string): PangramResult {
+  const lowerText = text.toLowerCase()
+  const aiMarkers = ['as an ai', 'in conclusion', 'moreover', 'furthermore', 'delve', 'tapestry']
+  const markerHits = aiMarkers.filter(marker => lowerText.includes(marker)).length
+  const aiLikelihood = Math.min(0.92, 0.22 + markerHits * 0.16 + Math.min(text.length / 20000, 0.2))
+  const aiAssistedLikelihood = Math.min(0.35, aiLikelihood * 0.25)
+  const humanLikelihood = Math.max(0.03, 1 - aiLikelihood - aiAssistedLikelihood)
+
+  return {
+    ai_likelihood: aiLikelihood,
+    ai_assisted_likelihood: aiAssistedLikelihood,
+    human_likelihood: humanLikelihood,
+    headline: aiLikelihood >= 0.5 ? 'Mock result: possibly AI-generated' : 'Mock result: probably human-written',
+    prediction: aiLikelihood >= 0.5 ? 'AI-generated text' : 'Human-written text',
+    prediction_short: aiLikelihood >= 0.5 ? 'AI' : 'Human',
+    dashboard_link: undefined,
+    sentences: [{
+      text: text.slice(0, 240),
+      ai_likelihood: aiLikelihood,
+      label: aiLikelihood >= 0.5 ? 'ai' : 'human',
+      confidence: 'mock',
+    }],
+  }
+}
+
+function mockPlagiarismResult(): PlagiarismResult {
+  return {
+    plagiarism_detected: false,
+    percent_plagiarized: 0,
+    plagiarized_content: [],
+  }
+}
+
 export async function detectAI(text: string): Promise<PangramResult> {
+  if (PANGRAM_MOCK_ENABLED) {
+    return mockAIResult(text)
+  }
+
   const apiKey = process.env.PANGRAM_API_KEY
   if (!apiKey) {
     throw new Error('PANGRAM_API_KEY is not configured')
@@ -111,6 +149,10 @@ export async function detectAI(text: string): Promise<PangramResult> {
 }
 
 export async function detectPlagiarism(text: string): Promise<PlagiarismResult> {
+  if (PANGRAM_MOCK_ENABLED) {
+    return mockPlagiarismResult()
+  }
+
   const apiKey = process.env.PANGRAM_API_KEY
   if (!apiKey) {
     throw new Error('PANGRAM_API_KEY is not configured')

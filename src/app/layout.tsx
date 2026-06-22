@@ -1,12 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import { getResellerConfig } from '@/lib/config'
 import { ConfigProvider } from '@/components/ConfigProvider'
 import { CookieConsent } from '@/components/CookieConsent'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 const config = await getResellerConfig()
 
@@ -99,7 +96,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={inter.className} style={themeVars}>
+      <body style={themeVars}>
         <ConfigProvider config={config}>
           {children}
           {config.googleAdsId && <CookieConsent />}
