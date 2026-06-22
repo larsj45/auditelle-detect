@@ -20,7 +20,7 @@ export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
       }
       _supabase = createClient(getSupabaseUrl(), key)
     }
-    return (_supabase as any)[prop]
+    return _supabase[prop as keyof SupabaseClient]
   }
 })
 

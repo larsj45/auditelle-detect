@@ -7,9 +7,23 @@ declare function gtag(...args: unknown[]): void
 
 const CONSENT_KEY = 'cookie_consent'
 
+function updateConsent(state: 'granted' | 'denied') {
+  if (typeof gtag !== 'undefined') {
+    gtag('consent', 'update', {
+      ad_storage: state,
+      ad_user_data: state,
+      ad_personalization: state,
+      analytics_storage: state,
+    })
+  }
+}
+
 export function CookieConsent() {
   const config = useConfig()
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem(CONSENT_KEY) === null
+  })
 
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY)
@@ -18,22 +32,8 @@ export function CookieConsent() {
       updateConsent('granted')
     } else if (stored === 'denied') {
       // User already declined — keep denied (default)
-    } else {
-      // No decision yet — show banner
-      setVisible(true)
     }
   }, [])
-
-  function updateConsent(state: 'granted' | 'denied') {
-    if (typeof gtag !== 'undefined') {
-      gtag('consent', 'update', {
-        ad_storage: state,
-        ad_user_data: state,
-        ad_personalization: state,
-        analytics_storage: state,
-      })
-    }
-  }
 
   function handleAccept() {
     localStorage.setItem(CONSENT_KEY, 'granted')

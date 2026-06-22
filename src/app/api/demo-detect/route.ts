@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getResellerConfig } from '@/lib/config'
+import { detectAI, detectPlagiarism } from '@/lib/pangram'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,28 +53,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: errors.textTooShort }, { status: 400 })
     }
 
-    const pangramKey = process.env.PANGRAM_API_KEY
-    if (!pangramKey) {
-      return NextResponse.json({ error: errors.serviceUnavailable }, { status: 503 })
-    }
-
     // Route to plagiarism API
     if (mode === 'plagiarism') {
-      const plagRes = await fetch('https://plagiarism.api.pangram.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': pangramKey
-        },
-        body: JSON.stringify({ text: text.slice(0, 2000) })
-      })
-
-      if (!plagRes.ok) {
-        console.error('Pangram Plagiarism API error:', (await plagRes.text()).substring(0, 200))
-        return NextResponse.json({ error: errors.analysisError }, { status: 500 })
-      }
-
-      const plagData = await plagRes.json()
+      const plagData = await detectPlagiarism(text.slice(0, 2000))
 
       incrementRateLimit(ip)
 
@@ -94,25 +76,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Default: AI detection
-    const pangramRes = await fetch('https://text.api.pangramlabs.com/v3', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': pangramKey
-      },
-      body: JSON.stringify({ text: text.slice(0, 2000) })
-    })
-
-    if (!pangramRes.ok) {
-      console.error('Pangram API error:', (await pangramRes.text()).substring(0, 200))
-      return NextResponse.json({ error: errors.analysisError }, { status: 500 })
-    }
-
-    const pangramData = await pangramRes.json()
+    const pangramData = await detectAI(text.slice(0, 2000))
 
     incrementRateLimit(ip)
 
-    const aiScore = Math.round((pangramData.fraction_ai || 0) * 100)
+    const aiScore = Math.round((pangramData.ai_likelihood || 0) * 100)
     const heroStrings = config.strings.heroDemo
     const verdict = aiScore >= 80 ? heroStrings.veryLikelyAI : aiScore >= 50 ? heroStrings.possiblyAI : heroStrings.probablyHuman
     return NextResponse.json({

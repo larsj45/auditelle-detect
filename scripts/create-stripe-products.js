@@ -4,16 +4,12 @@
  * Usage: STRIPE_SECRET_KEY=sk_xxx node create-stripe-products.js
  */
 
-const Stripe = require('stripe');
-
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
 if (!STRIPE_KEY) {
   console.error('❌ Set STRIPE_SECRET_KEY environment variable');
   console.log('Usage: STRIPE_SECRET_KEY=sk_xxx node create-stripe-products.js');
   process.exit(1);
 }
-
-const stripe = new Stripe(STRIPE_KEY);
 
 const products = [
   {
@@ -40,6 +36,9 @@ const products = [
 ];
 
 async function createProducts() {
+  const { default: Stripe } = await import('stripe');
+  const stripe = new Stripe(STRIPE_KEY);
+
   console.log('🚀 Creating Auditelle Stripe products...\n');
   
   const results = {
