@@ -4,7 +4,6 @@ import { getResellerConfig } from '@/lib/config'
 import {
 
   sendEmail,
-  upgradeReminderEmail,
   trialExpiringEmail,
   trialEndedEmail
 } from '@/lib/email'
@@ -29,43 +28,16 @@ export async function GET(request: NextRequest) {
   )
 
   const results = {
-    upgradeReminders: 0,
     trialExpiring: 0,
     trialEnded: 0,
     errors: [] as string[]
   }
 
   try {
-    // ============ 1. UPGRADE REMINDERS (>80% usage) ============
-    const { data: highUsageUsers } = await supabase
-      .from('profiles')
-      .select('id, email, full_name, monthly_usage, monthly_limit, upgrade_reminder_sent')
-      .is('subscription_status', null) // Free users only
-      .eq('upgrade_reminder_sent', false)
-
-    for (const user of highUsageUsers || []) {
-      const usagePercent = Math.round((user.monthly_usage / user.monthly_limit) * 100)
-      
-      if (usagePercent >= 80) {
-        const email = upgradeReminderEmail(config, user.full_name || user.email, usagePercent)
-        const result = await sendEmail({
-          to: user.email,
-          subject: email.subject,
-          html: email.html,
-          text: email.text,
-        })
-
-        if (result.success) {
-          await supabase
-            .from('profiles')
-            .update({ upgrade_reminder_sent: true })
-            .eq('id', user.id)
-          results.upgradeReminders++
-        } else {
-          results.errors.push(`Upgrade reminder failed for ${user.email}: ${result.error}`)
-        }
-      }
-    }
+    // NOTE: The "UPGRADE REMINDERS (>80% usage)" block was removed (2026-06-23).
+    // It was obsolete under the pay-per-scan / credit model (all profiles have
+    // monthly_limit = 0), and divided monthly_usage by monthly_limit, producing
+    // Infinity and broken "Infinity%" emails.
 
     // ============ 2. TRIAL EXPIRING (7, 3, 1 days) ============
     const now = new Date()

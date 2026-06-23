@@ -205,57 +205,6 @@ ${textFooter(config)}`
   return { subject, html: emailWrapper(config, content), text }
 }
 
-export function upgradeReminderEmail(config: ResellerConfig, name: string, usagePercent: number) {
-  const safeName = escapeHtml(name.split(' ')[0] || 'there')
-  const s = config.strings.emails.upgradeReminder
-  const pct = String(usagePercent)
-
-  const subject = t(s.subject, { name: safeName, percent: pct })
-
-  const content = `
-      <h2 style="color: #1a1a2e; margin: 0 0 16px 0; font-size: 22px;">
-        ${s.title}
-      </h2>
-
-      <p style="color: #4b5563; line-height: 1.6; margin: 0 0 24px 0;">
-        ${t(s.body, { name: safeName, percent: `<strong>${pct}%</strong>` })}
-      </p>
-
-      <!-- Progress bar -->
-      <div style="background: #e5e7eb; border-radius: 9999px; height: 12px; margin: 24px 0;">
-        <div style="background: ${usagePercent >= 80 ? '#ef4444' : '#e85d04'}; width: ${usagePercent}%; height: 100%; border-radius: 9999px;"></div>
-      </div>
-
-      <div style="background: #fef3c7; border-radius: 12px; padding: 20px; margin: 24px 0;">
-        <h3 style="color: #92400e; margin: 0 0 12px 0; font-size: 16px;">${s.upgradeTitle}</h3>
-        <ul style="color: #78350f; margin: 0; padding-left: 20px; line-height: 1.8;">
-          ${s.upgradeFeatures.map(f => `<li><strong>${f}</strong></li>`).join('\n          ')}
-        </ul>
-        <p style="color: #78350f; margin: 16px 0 0 0; font-weight: 600;">
-          ${s.upgradePrice}
-        </p>
-      </div>
-
-      <a href="${ctaUrl(config, '/dashboard?upgrade=true')}" style="display: block; text-align: center; background: #e85d04; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; margin: 24px 0;">
-        ${s.ctaButton}
-      </a>`
-
-  const text = `${t(s.subject, { name: safeName, percent: pct })}
-
-${t(s.body, { name: safeName, percent: pct + '%' })}
-
-${s.upgradeTitle}
-${s.upgradeFeatures.map(f => `- ${f}`).join('\n')}
-
-${s.upgradePrice}
-
-${s.ctaButton}: ${ctaUrl(config, '/dashboard?upgrade=true')}
-
-${textFooter(config)}`
-
-  return { subject, html: emailWrapper(config, content), text }
-}
-
 export function limitReachedEmail(config: ResellerConfig, name: string) {
   const safeName = escapeHtml(name.split(' ')[0] || 'there')
   const s = config.strings.emails.limitReached
