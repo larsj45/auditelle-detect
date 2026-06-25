@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="Verify">
+  <!-- Placeholder textual logo (light/white version). Swap for real art when available. -->
+  <g fill="none" fill-rule="evenodd">
+    <path d="M6 9l7 18 7-18" stroke="#e85d04" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="28" y="28" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#ffffff">Verify</text>
+  </g>
+</svg>

@@ -52,10 +52,10 @@ export default async function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
-                <Link href="/signup" className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
+                <Link href="/etablissements" className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
                   {s.hero.ctaPrimary}
                 </Link>
-                <Link href="/#how-it-works" className="btn-secondary text-lg px-8 py-4 rounded-xl">
+                <Link href="/signup" className="btn-secondary text-lg px-8 py-4 rounded-xl">
                   {s.hero.ctaSecondary}
                 </Link>
               </div>

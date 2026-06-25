@@ -4,10 +4,13 @@ const config: ResellerConfig = {
   id: 'auditelle-fr',
 
   // ── Branding ──────────────────────────────────────────────────────────────
-  name: 'Auditelle',
+  // Customer-facing brand is "Verify". The legal entity (Auditelle SASU) and
+  // the domain (auditelle.fr) stay as-is — entity/domain ≠ displayed brand.
+  name: 'Verify',
   domain: 'auditelle.fr',
-  logoColor: '/images/logo-color.svg',
-  logoWhite: '/images/logo-white.svg',
+  // Textual placeholder logos (swap the SVGs in /public/brands/verify/ when art exists).
+  logoColor: '/brands/verify/logo-color.svg',
+  logoWhite: '/brands/verify/logo-white.svg',
 
   // ── Theme ───────────────────────────────────────────────────────────────
   theme: {
@@ -37,6 +40,18 @@ const config: ResellerConfig = {
   // ── Contact ───────────────────────────────────────────────────────────────
   supportEmail: 'contact@auditelle.fr',
   noReplyEmail: 'noreply@auditelle.fr',
+
+  // ── Institutional pilot ─────────────────────────────────────────────────────
+  // Free pilot granted once on signup to institutional emails (FR academic
+  // domains + allowlist). Decided by Lars 2026-06-24: 20 scans.
+  institutionalPilotCredits: 20,
+  // Target institutions (merged with the FR academic patterns in the lib).
+  institutionalEmailAllowlist: [
+    'universite-paris-saclay.fr',
+    'escp.eu',
+    'sciencespo.fr',
+    'unistra.fr',
+  ],
 
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
@@ -167,11 +182,11 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'Auditelle — La meilleure alternative à Turnitin pour l’IA et le plagiat',
-    description: 'Alternative moderne à Turnitin pour les enseignants : détection IA, plagiat, identification du modèle et rapports exportables. Précision 99,9%, support français, conformité RGPD.',
-    keywords: ['alternative Turnitin', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'intégrité académique', 'Auditelle'],
-    ogTitle: 'Auditelle — Alternative française à Turnitin',
-    ogDescription: 'Détection IA + plagiat avec rapports clairs, support français et précision vérifiée.',
+    title: 'Verify — Couche d’intégrité académique pour les établissements (IA + plagiat)',
+    description: 'Verify aide les établissements à passer de la charte à la mesure : détection IA multi-moteur, plagiat, rapport exportable. Données stockées dans l’UE (Supabase, Paris).',
+    keywords: ['intégrité académique', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'pilote établissement', 'Verify'],
+    ogTitle: 'Verify — La couche d’intégrité pour les établissements',
+    ogDescription: 'Détection IA multi-moteur + plagiat, rapport exportable, données stockées dans l’UE.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -193,17 +208,17 @@ const config: ResellerConfig = {
 
     // Hero
     hero: {
-      badge: 'Alternative moderne à Turnitin',
+      badge: 'La couche d’intégrité pour les établissements',
       title: 'La plateforme d’intégrité académique qui ',
       titleAccent: 'détecte IA et plagiat',
-      subtitle: "Auditelle réunit détection IA, plagiat, identification du modèle et rapports exportables dans une alternative française à Turnitin, plus simple à déployer et pensée pour les enseignants.",
+      subtitle: "Verify réunit détection IA, plagiat, identification du modèle et rapports exportables dans une couche d’intégrité française, plus simple à déployer et pensée pour les établissements.",
       trustBadges: [
-        'Alternative à Turnitin',
         'IA + plagiat',
-        'Essai gratuit',
+        'Multi-moteur',
+        'Données dans l’UE',
       ],
-      ctaPrimary: 'Essayer gratuitement \u2192',
-      ctaSecondary: 'Comment \u00e7a marche',
+      ctaPrimary: 'Démarrer le pilote gratuit \u2192',
+      ctaSecondary: 'Tester par moi-même',
     },
 
     // Trust bar
@@ -284,9 +299,9 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Auditelle, l’alternative française à Turnitin',
+      title: 'Verify, la couche d’intégrité française',
       subtitle: 'Comparez les principales solutions d’intégrité académique pour détecter IA et plagiat.',
-      competitors: ['Auditelle', 'GPTZero', 'Turnitin', 'Originality.ai'],
+      competitors: ['Verify', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'Pr\u00e9cision', values: ['99,9%', '~85%', '~80%', '~94%'] },
         { label: 'Taux de faux positifs', values: ['Quasi nul', '\u00c9lev\u00e9', 'Mod\u00e9r\u00e9', 'Mod\u00e9r\u00e9'] },
@@ -307,8 +322,8 @@ const config: ResellerConfig = {
 
     // CTA section
     cta: {
-      title: 'Besoin d’une alternative à Turnitin ?',
-      subtitle: "Essayez Auditelle pour vérifier l’IA et le plagiat dans un rapport clair, exportable et adapté aux établissements francophones.",
+      title: 'Prêt à passer de la charte à la mesure ?',
+      subtitle: "Essayez Verify pour vérifier l’IA et le plagiat dans un rapport clair, exportable et adapté aux établissements francophones.",
       button: 'Cr\u00e9er un compte gratuit \u2192',
     },
 
@@ -368,7 +383,7 @@ const config: ResellerConfig = {
       minCharsError: 'Veuillez entrer au moins 50 caract\u00e8res pour une analyse fiable.',
 
       // Onboarding
-      onboardingTitle: 'Bienvenue sur Auditelle ! 👋',
+      onboardingTitle: 'Bienvenue sur Verify ! 👋',
       onboardingBody: 'Collez un texte ci-dessous pour vérifier s\'il a été généré par IA — ou essayez avec un exemple.',
       onboardingCta: 'Essayer avec un exemple →',
       onboardingDismiss: 'Fermer',
@@ -411,7 +426,7 @@ const config: ResellerConfig = {
       upgradeChoose: 'Choisir {plan}',
       upgradeError: '\u00c9chec du paiement. Veuillez r\u00e9essayer.',
       upgradeCreditsTitle: 'Acheter des analyses',
-      upgradeCreditsSubtitle: 'Payez uniquement ce que vous utilisez. Idéal pour tester Auditelle ou corriger un lot ponctuel de copies.',
+      upgradeCreditsSubtitle: 'Payez uniquement ce que vous utilisez. Idéal pour tester Verify ou corriger un lot ponctuel de copies.',
       upgradeCurrentBalance: 'Solde actuel : {count}',
       upgradeCreditSingular: 'analyse',
       upgradeCreditPlural: 'analyses',
@@ -464,7 +479,7 @@ const config: ResellerConfig = {
       characterCount: '{count} / 5000 caractères',
       analyzeFree: 'Analyser gratuitement',
       loading: 'Analyse en cours...',
-      ctaTitle: 'Vous aimez Auditelle ?',
+      ctaTitle: 'Vous aimez Verify ?',
       ctaTitleLimit: 'Continuez avec un compte gratuit',
       ctaBody: "Créez un compte gratuit pour analyser jusqu'à 50 textes par mois, avec l'historique complet et l'intégration Moodle.",
       ctaButton: 'Créer un compte gratuit',
@@ -549,7 +564,7 @@ const config: ResellerConfig = {
       emailLabel: 'Email',
       companyName: 'Auditelle SASU',
       institutionCta: 'Universit\u00e9s & Institutions',
-      institutionDescription: "Vous souhaitez int\u00e9grer Auditelle dans votre \u00e9tablissement ? Contactez-nous pour un devis personnalis\u00e9 et une d\u00e9monstration.",
+      institutionDescription: "Vous souhaitez int\u00e9grer Verify dans votre \u00e9tablissement ? Contactez-nous pour un devis personnalis\u00e9 et une d\u00e9monstration.",
       formFullName: 'Nom complet *',
       formEmail: 'Email professionnel *',
       formOrganization: 'Organisation',
@@ -576,7 +591,7 @@ const config: ResellerConfig = {
 
     // Demo video page
     demoVideo: {
-      title: 'D\u00e9couvrez Auditelle en 5 minutes',
+      title: 'D\u00e9couvrez Verify en 5 minutes',
       subtitle: 'Voyez comment d\u00e9tecter les contenus g\u00e9n\u00e9r\u00e9s par IA avec 99,9% de pr\u00e9cision',
       videoPlaceholder: 'Vid\u00e9o de d\u00e9monstration',
       videoSoon: 'Bient\u00f4t disponible',
@@ -592,13 +607,13 @@ const config: ResellerConfig = {
 
     // Email templates
     emails: {
-      headerName: 'AUDITELLE',
+      headerName: 'VERIFY',
       legalFooter: '', // built at runtime from config
 
       welcome: {
-        subject: 'Bienvenue sur Auditelle, {name}! \ud83c\udf89',
+        subject: 'Bienvenue sur Verify, {name}! \ud83c\udf89',
         greeting: 'Bienvenue, {name}! \ud83d\udc4b',
-        intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Auditelle. Vous avez maintenant acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9, v\u00e9rifi\u00e9 par l'Universit\u00e9 du Maryland.",
+        intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Verify. Vous avez maintenant acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9, v\u00e9rifi\u00e9 par l'Universit\u00e9 du Maryland.",
         trialTitle: '\ud83c\udf81 Votre essai gratuit inclut :',
         trialFeatures: [
           '3 analyses par mois',
@@ -622,7 +637,7 @@ const config: ResellerConfig = {
 
       upgradeReminder: {
         subject: '{name}, vous avez utilis\u00e9 {percent}% de vos analyses \ud83d\udcca',
-        title: 'Vous utilisez bien Auditelle! \ud83c\udfaf',
+        title: 'Vous utilisez bien Verify! \ud83c\udfaf',
         body: '{name}, vous avez d\u00e9j\u00e0 utilis\u00e9 {percent}% de vos analyses gratuites ce mois-ci.',
         upgradeTitle: '\ud83d\ude80 Passez \u00e0 Pro pour :',
         upgradeFeatures: [
@@ -645,8 +660,8 @@ const config: ResellerConfig = {
           lastDay: 'Derni\u00e8re chance !',
           remaining: 'Plus que {days} jours',
         },
-        body: "{name}, votre essai gratuit Auditelle se termine dans {days} jours. Ne perdez pas l'acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9.",
-        bodyLastDay: "{name}, votre essai gratuit Auditelle se termine aujourd'hui. Ne perdez pas l'acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9.",
+        body: "{name}, votre essai gratuit Verify se termine dans {days} jours. Ne perdez pas l'acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9.",
+        bodyLastDay: "{name}, votre essai gratuit Verify se termine aujourd'hui. Ne perdez pas l'acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9.",
         countdown: {
           today: "AUJOURD'HUI",
           days: '{days} JOURS',
@@ -667,7 +682,7 @@ const config: ResellerConfig = {
       limitReached: {
         subject: '{name}, vous avez atteint votre limite 🔒',
         greeting: 'Bonjour {name},',
-        body: "Vous avez utilisé toutes vos analyses gratuites sur Auditelle ce mois-ci. Votre compteur se remet à zéro le mois prochain — mais si vous avez besoin d'analyser plus de textes maintenant, nous avons quelque chose pour vous.",
+        body: "Vous avez utilisé toutes vos analyses gratuites sur Verify ce mois-ci. Votre compteur se remet à zéro le mois prochain — mais si vous avez besoin d'analyser plus de textes maintenant, nous avons quelque chose pour vous.",
         offerTitle: '🎁 Offre exclusive — 30% de réduction',
         offerBody: "Passez au plan Starter (1 000 analyses/mois) ou Student (100 analyses/mois) avec 30% de réduction sur votre premier mois.",
         offerFeatures: [
@@ -684,7 +699,7 @@ const config: ResellerConfig = {
       trialEnded: {
         subject: "{name}, votre essai est termin\u00e9 \u2014 mais il n'est pas trop tard ! \ud83d\udd13",
         title: 'Vous nous manquez, {name} ! \ud83d\udc4b',
-        body: "Votre essai gratuit Auditelle est termin\u00e9. Mais ne vous inqui\u00e9tez pas \u2014 votre compte et votre historique sont toujours l\u00e0, et vous attendent.",
+        body: "Votre essai gratuit Verify est termin\u00e9. Mais ne vous inqui\u00e9tez pas \u2014 votre compte et votre historique sont toujours l\u00e0, et vous attendent.",
         offerTitle: '\ud83c\udf81 Offre sp\u00e9ciale :',
         offerBody: 'Passez \u00e0 Pro dans les prochaines 48 heures et b\u00e9n\u00e9ficiez de 50% de r\u00e9duction sur votre premier mois.',
         ctaButton: 'Profiter de -50% \u2192',
