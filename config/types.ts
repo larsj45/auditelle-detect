@@ -44,6 +44,12 @@ export interface ResellerConfig {
   supportEmail: string   // e.g. "contact@auditelle.fr"
   noReplyEmail: string   // e.g. "noreply@auditelle.fr"
 
+  // ── Institutional pilot (free-pilot LAND mechanic) ─────────────────────────
+  // Number of scan credits granted once, on signup, to an institutional email.
+  institutionalPilotCredits?: number   // e.g. 20
+  // Extra domains to treat as institutional, merged with the lib defaults.
+  institutionalEmailAllowlist?: string[]
+
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
     homepage: HomepagePlan[]

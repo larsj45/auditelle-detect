@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   trial_reminder_days_sent INTEGER[] DEFAULT '{}',
   trial_ended_email_sent BOOLEAN DEFAULT FALSE,
   welcome_email_sent BOOLEAN DEFAULT FALSE,
+  pilot_credits_granted BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
