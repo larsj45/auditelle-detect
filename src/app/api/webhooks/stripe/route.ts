@@ -50,20 +50,33 @@ export async function POST(request: NextRequest) {
       if (session.metadata?.type === 'credits' && userId) {
         const quantity = parseInt(session.metadata.quantity || '0', 10)
         if (quantity > 0) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('scan_credits')
-            .eq('id', userId)
-            .single()
-          const currentCredits = profile?.scan_credits || 0
-          await supabase
-            .from('profiles')
-            .update({
-              scan_credits: currentCredits + quantity,
-              stripe_customer_id: session.customer as string,
+          const { data: applied, error: creditError } = await supabase.rpc('apply_credit_purchase', {
+            p_user_id: userId,
+            p_quantity: quantity,
+            p_stripe_event_id: event.id,
+            p_checkout_session_id: session.id,
+            p_stripe_customer_id: typeof session.customer === 'string' ? session.customer : null,
+            p_amount_total: session.amount_total ?? null,
+            p_currency: session.currency ?? null,
+            p_metadata: session.metadata ?? {},
+          })
+
+          if (creditError) {
+            console.error('[Stripe Webhook] Failed to apply credit purchase:', {
+              eventId: event.id,
+              sessionId: session.id,
+              userId,
+              quantity,
+              error: creditError,
             })
-            .eq('id', userId)
-          console.log(`[Stripe Webhook] Added ${quantity} credits to user ${userId}`)
+            return NextResponse.json({ error: 'Failed to apply credit purchase' }, { status: 500 })
+          }
+
+          if (applied) {
+            console.log(`[Stripe Webhook] Added ${quantity} credits to user ${userId} for session ${session.id}`)
+          } else {
+            console.log(`[Stripe Webhook] Duplicate credit event ignored for session ${session.id}`)
+          }
         }
         break
       }
