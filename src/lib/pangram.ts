@@ -1,5 +1,8 @@
-const PANGRAM_API_URL = 'https://text.api.pangramlabs.com/v3'
+const PANGRAM_API_URL = 'https://text.external-api.pangram.com/task'
 const PANGRAM_PLAGIARISM_URL = 'https://plagiarism.api.pangram.com'
+const PANGRAM_MODEL = process.env.PANGRAM_MODEL?.trim() || 'pangram-4'
+const PANGRAM_POLL_INTERVAL_MS = 500
+const PANGRAM_TASK_TIMEOUT_MS = 30_000
 const PANGRAM_MOCK_ENABLED = process.env.PANGRAM_MOCK_RESPONSES === '1'
 
 export interface PangramResult {
@@ -15,6 +18,10 @@ export interface PangramResult {
     ai_likelihood: number
     label?: string
     confidence?: string
+    start_index?: number
+    end_index?: number
+    is_humanized?: boolean
+    humanizer_score?: number
   }>
 }
 
@@ -47,20 +54,22 @@ function normalizeRatio(value: unknown): number {
   return numberValue > 1 ? numberValue / 100 : numberValue
 }
 
-interface PangramV3Response {
-  text: string
-  version: string
-  headline: string
-  prediction: string
-  prediction_short: string
-  fraction_ai: number
-  fraction_ai_assisted: number
-  fraction_human: number
-  num_ai_segments: number
-  num_ai_assisted_segments: number
-  num_human_segments: number
+interface PangramTaskResponse {
+  task_id?: string
+  stage?: string
+  text?: string
+  version?: string
+  headline?: string
+  prediction?: string
+  prediction_short?: string
+  fraction_ai?: number
+  fraction_ai_assisted?: number
+  fraction_human?: number
+  num_ai_segments?: number
+  num_ai_assisted_segments?: number
+  num_human_segments?: number
   dashboard_link?: string
-  windows: Array<{
+  windows?: Array<{
     text: string
     label: string
     ai_assistance_score: number
@@ -69,7 +78,63 @@ interface PangramV3Response {
     end_index: number
     word_count: number
     token_length: number
+    is_humanized?: boolean
+    humanizer_score?: number
   }>
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function providerErrorDetail(response: Response): Promise<string> {
+  const detail = (await response.text()).replace(/\s+/g, ' ').trim()
+  return detail.slice(0, 500) || response.statusText || 'Unknown provider error'
+}
+
+async function assertPangramResponse(response: Response): Promise<void> {
+  if (!response.ok) {
+    const detail = await providerErrorDetail(response)
+    throw new Error(`Pangram API error: ${response.status} - ${detail}`)
+  }
+}
+
+function completedTaskResult(data: PangramTaskResponse): PangramResult {
+  const fractionAI = asFiniteNumber(data.fraction_ai)
+  const fractionAIAssisted = asFiniteNumber(data.fraction_ai_assisted)
+  const fractionHuman = asFiniteNumber(data.fraction_human)
+
+  if (
+    data.stage !== 'STAGE_SUCCESS' ||
+    fractionAI === null ||
+    fractionAIAssisted === null ||
+    fractionHuman === null ||
+    typeof data.headline !== 'string'
+  ) {
+    throw new Error('Pangram API error: invalid completed task response')
+  }
+
+  return {
+    ai_likelihood: normalizeRatio(fractionAI),
+    ai_assisted_likelihood: normalizeRatio(fractionAIAssisted),
+    human_likelihood: normalizeRatio(fractionHuman),
+    headline: data.headline,
+    prediction: data.prediction,
+    prediction_short: data.prediction_short,
+    dashboard_link: data.dashboard_link,
+    sentences: data.windows?.map(window => ({
+      text: window.text,
+      ai_likelihood: normalizeRatio(window.ai_assistance_score),
+      label: window.label,
+      confidence: window.confidence,
+      start_index: window.start_index,
+      end_index: window.end_index,
+      is_humanized: window.is_humanized,
+      humanizer_score: window.humanizer_score === undefined
+        ? undefined
+        : normalizeRatio(window.humanizer_score),
+    })),
+  }
 }
 
 function mockAIResult(text: string): PangramResult {
@@ -121,31 +186,50 @@ export async function detectAI(text: string): Promise<PangramResult> {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
     },
-    body: JSON.stringify({ text, public_dashboard_link: true }),
+    body: JSON.stringify({
+      text,
+      model: PANGRAM_MODEL,
+      public_dashboard_link: true,
+    }),
   })
 
-  if (!response.ok) {
-    const err = await response.text()
-    throw new Error(`Pangram API error: ${response.status} - ${err}`)
+  await assertPangramResponse(response)
+
+  const task: PangramTaskResponse = await response.json()
+  if (!task.task_id) {
+    throw new Error('Pangram API error: task creation returned no task_id')
   }
 
-  const data: PangramV3Response = await response.json()
+  const deadline = Date.now() + PANGRAM_TASK_TIMEOUT_MS
+  const taskUrl = `${PANGRAM_API_URL}/${encodeURIComponent(task.task_id)}`
 
-  return {
-    ai_likelihood: data.fraction_ai,
-    ai_assisted_likelihood: data.fraction_ai_assisted,
-    human_likelihood: data.fraction_human,
-    headline: data.headline,
-    prediction: data.prediction,
-    prediction_short: data.prediction_short,
-    dashboard_link: data.dashboard_link,
-    sentences: data.windows?.map(w => ({
-      text: w.text,
-      ai_likelihood: w.ai_assistance_score,
-      label: w.label,
-      confidence: w.confidence,
-    })),
+  while (Date.now() < deadline) {
+    const pollResponse = await fetch(taskUrl, {
+      headers: {
+        'x-api-key': apiKey,
+      },
+      cache: 'no-store',
+    })
+
+    await assertPangramResponse(pollResponse)
+    const data: PangramTaskResponse = await pollResponse.json()
+
+    if (data.stage === 'STAGE_SUCCESS') {
+      return completedTaskResult(data)
+    }
+
+    if (data.stage === 'STAGE_FAILED') {
+      const detail = [data.headline, data.prediction]
+        .filter((value): value is string => typeof value === 'string' && value.length > 0)
+        .join(' - ')
+        .slice(0, 500)
+      throw new Error(`Pangram API error: task failed${detail ? ` - ${detail}` : ''}`)
+    }
+
+    await sleep(PANGRAM_POLL_INTERVAL_MS)
   }
+
+  throw new Error(`Pangram API error: task timed out after ${PANGRAM_TASK_TIMEOUT_MS}ms`)
 }
 
 export async function detectPlagiarism(text: string): Promise<PlagiarismResult> {
@@ -168,8 +252,8 @@ export async function detectPlagiarism(text: string): Promise<PlagiarismResult> 
   })
 
   if (!response.ok) {
-    const err = await response.text()
-    throw new Error(`Pangram Plagiarism API error: ${response.status} - ${err}`)
+    const detail = await providerErrorDetail(response)
+    throw new Error(`Pangram Plagiarism API error: ${response.status} - ${detail}`)
   }
 
   const data = await response.json()
