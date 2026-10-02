@@ -200,6 +200,8 @@ const config: ResellerConfig = {
     demoPage: true,
     heroDemo: true,
     plagiarismDetection: true,
+    // Confidential student/manuscript documents: no public report link.
+    pangramPublicDashboardLink: false,
   },
 
   // ── SEO ───────────────────────────────────────────────────────────────────

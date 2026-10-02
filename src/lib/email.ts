@@ -14,9 +14,10 @@ export interface EmailParams {
   subject: string
   html: string
   text?: string
+  replyTo?: string
 }
 
-export async function sendEmail({ to, subject, html, text }: EmailParams) {
+export async function sendEmail({ to, subject, html, text, replyTo }: EmailParams) {
   const config = await getResellerConfig()
   const fromEmail = `${config.name} <${config.noReplyEmail}>`
 
@@ -33,6 +34,7 @@ export async function sendEmail({ to, subject, html, text }: EmailParams) {
       subject,
       html,
       text,
+      ...(replyTo ? { replyTo } : {}),
     })
 
     if (error) {

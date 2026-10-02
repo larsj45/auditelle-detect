@@ -83,6 +83,8 @@ export interface ResellerConfig {
     demoPage: boolean
     heroDemo: boolean
     plagiarismDetection: boolean
+    // Request a public Pangram report link per scan. Defaults to true.
+    pangramPublicDashboardLink?: boolean
   }
 
   // ── SEO / Meta ────────────────────────────────────────────────────────────
