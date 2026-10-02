@@ -26,7 +26,7 @@ interface EditorialDemoRequestDependencies {
   resellerId: string
   supportEmail: string
   clientKey: string
-  takeRateLimitSlot: (clientKey: string) => boolean
+  takeRateLimitSlot: (clientKey: string) => boolean | Promise<boolean>
   sendEmail: (params: EditorialEmailParams) => Promise<EditorialEmailResult>
 }
 
@@ -253,7 +253,7 @@ export async function handleEditorialDemoRequest(
     return { status: 200, body: { success: true } }
   }
 
-  if (!dependencies.takeRateLimitSlot(dependencies.clientKey)) {
+  if (!(await dependencies.takeRateLimitSlot(dependencies.clientKey))) {
     return {
       status: 429,
       body: { success: false, errorCode: 'rate_limited' },

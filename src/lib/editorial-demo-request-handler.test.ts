@@ -23,7 +23,7 @@ function dependencies(
     resellerId: string
     supportEmail: string
     clientKey: string
-    takeRateLimitSlot: (clientKey: string) => boolean
+    takeRateLimitSlot: (clientKey: string) => boolean | Promise<boolean>
     sendEmail: (params: EditorialEmailParams) => Promise<{ success: boolean }>
   }> = {}
 ) {
@@ -130,6 +130,26 @@ test('returns rate_limited before sending email', async () => {
     status: 429,
     body: { success: false, errorCode: 'rate_limited' },
   })
+})
+
+test('awaits an async durable rate limiter before sending email', async () => {
+  let sendCount = 0
+  const result = await handleEditorialDemoRequest(
+    validRequest,
+    dependencies({
+      takeRateLimitSlot: async () => false,
+      sendEmail: async () => {
+        sendCount += 1
+        return { success: true }
+      },
+    })
+  )
+
+  assert.deepEqual(result, {
+    status: 429,
+    body: { success: false, errorCode: 'rate_limited' },
+  })
+  assert.equal(sendCount, 0)
 })
 
 test('fails the request when the internal notification cannot be delivered', async () => {

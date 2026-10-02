@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkRateLimit } from '@vercel/firewall'
 import { getResellerConfig } from '@/lib/config'
 import { sendEmail } from '@/lib/email'
 import { handleEditorialDemoRequest } from '@/lib/editorial-demo-request-handler'
@@ -9,6 +10,9 @@ const rateLimit = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT = 5
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000
 const MAX_RATE_LIMIT_ENTRIES = 1_000
+// Durable limit shared across instances. The rule with this ID must exist in
+// the Vercel Firewall (Rate limit, @vercel/firewall condition) of the project.
+const FIREWALL_RATE_LIMIT_ID = 'editorial-demo-request'
 
 function getClientIp(request: NextRequest) {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
@@ -40,6 +44,21 @@ function takeRateLimitSlot(clientKey: string) {
   if (current.count >= RATE_LIMIT) return false
   current.count += 1
   return true
+}
+
+async function takeDurableRateLimitSlot(request: NextRequest, clientKey: string) {
+  // The in-memory map is per instance only; it stays as a cheap first layer.
+  if (!takeRateLimitSlot(clientKey)) return false
+  if (!process.env.VERCEL) return true
+
+  try {
+    const { rateLimited, error } = await checkRateLimit(FIREWALL_RATE_LIMIT_ID, { request })
+    if (error) console.error('[editorial-demo-request] firewall rate limit unavailable:', error)
+    return !rateLimited
+  } catch (err) {
+    console.error('[editorial-demo-request] firewall rate limit check failed:', err)
+    return true
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -83,7 +102,7 @@ export async function POST(request: NextRequest) {
     resellerId: config.id,
     supportEmail: config.supportEmail,
     clientKey: getClientIp(request),
-    takeRateLimitSlot,
+    takeRateLimitSlot: (clientKey) => takeDurableRateLimitSlot(request, clientKey),
     sendEmail,
   })
 
