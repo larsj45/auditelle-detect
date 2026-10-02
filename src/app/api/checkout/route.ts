@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, VALID_PLAN_IDS } from '@/lib/config'
+import { isWaiverMissing, waiverMetadata } from '@/lib/checkout-waiver'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,11 +22,16 @@ export async function POST(request: NextRequest) {
     const token = match[1]
 
     let plan = 'pro'
+    let body: unknown = null
     try {
-      const body = await request.json()
-      plan = body.plan || 'pro'
+      body = await request.json()
+      plan = (body as { plan?: string }).plan || 'pro'
     } catch {
       // Default to pro if no body
+    }
+
+    if (isWaiverMissing(config.checkoutWaiver, body)) {
+      return NextResponse.json({ error: config.checkoutWaiver!.required, step: 'withdrawal_waiver' }, { status: 400 })
     }
 
     // Security fix: validate plan against whitelist
@@ -104,7 +110,7 @@ export async function POST(request: NextRequest) {
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?canceled=true`,
         locale: 'auto',
-        metadata: { supabase_user_id: user.id, plan, brand: config.id },
+        metadata: { supabase_user_id: user.id, plan, brand: config.id, ...waiverMetadata(config.checkoutWaiver) },
         allow_promotion_codes: true,
       })
 

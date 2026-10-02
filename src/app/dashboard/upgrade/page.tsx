@@ -97,6 +97,9 @@ export default function UpgradePage() {
   const plans = config.plans.upgrade
   const [loading, setLoading] = useState<string | null>(null)
   const [credits, setCredits] = useState<number | null>(null)
+  const waiver = config.checkoutWaiver
+  const [waiverAccepted, setWaiverAccepted] = useState(false)
+  const [waiverError, setWaiverError] = useState(false)
   const perAnalysisPrice = formatCurrency(PRICE_PER_ANALYSIS_MINOR, config.currency, config.locale)
 
   useEffect(() => {
@@ -117,7 +120,16 @@ export default function UpgradePage() {
     } catch { /* ignore */ }
   }
 
+  // Blocks checkout until the withdrawal waiver is ticked (brands that require it)
+  function ensureWaiver() {
+    if (!waiver || waiverAccepted) return true
+    setWaiverError(true)
+    document.getElementById('withdrawal-waiver')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    return false
+  }
+
   async function handleBuyCredits(quantity: number) {
+    if (!ensureWaiver()) return
     setLoading(`credits-${quantity}`)
     try {
       const { supabase } = await import('@/lib/supabase')
@@ -142,7 +154,7 @@ export default function UpgradePage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ quantity }),
+        body: JSON.stringify({ quantity, withdrawalWaiverAccepted: waiverAccepted }),
       })
 
       const data = await response.json()
@@ -164,6 +176,7 @@ export default function UpgradePage() {
       return
     }
 
+    if (!ensureWaiver()) return
     setLoading(planId)
     try {
       const { supabase } = await import('@/lib/supabase')
@@ -186,7 +199,7 @@ export default function UpgradePage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ plan: planId }),
+        body: JSON.stringify({ plan: planId, withdrawalWaiverAccepted: waiverAccepted }),
       })
 
       const data = await response.json()
@@ -246,6 +259,32 @@ export default function UpgradePage() {
             )}
           </span>
         </div>
+      )}
+
+      {/* Withdrawal-right waiver (consumer law), required before any payment */}
+      {waiver && (
+        <label
+          id="withdrawal-waiver"
+          className={`flex items-start gap-3 rounded-xl border px-5 py-4 mb-8 cursor-pointer ${
+            waiverError && !waiverAccepted ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={waiverAccepted}
+            onChange={(e) => {
+              setWaiverAccepted(e.target.checked)
+              if (e.target.checked) setWaiverError(false)
+            }}
+            className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
+          />
+          <span className="text-sm text-gray-700">
+            {waiver.label}
+            {waiverError && !waiverAccepted && (
+              <span className="block mt-1 font-medium text-red-600">{waiver.required}</span>
+            )}
+          </span>
+        </label>
       )}
 
       {/* Credit packs */}

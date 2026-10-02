@@ -64,6 +64,15 @@ export interface ResellerConfig {
     ctaPilot: string
   }
 
+  // ── Checkout ──────────────────────────────────────────────────────────────
+  // When set, paid checkouts require the consumer withdrawal-right waiver
+  // checkbox (FR: art. L221-28, 13°, Code de la consommation).
+  checkoutWaiver?: {
+    label: string
+    required: string
+    version: string
+  }
+
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
     homepage: HomepagePlan[]

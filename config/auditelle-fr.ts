@@ -75,6 +75,14 @@ const config: ResellerConfig = {
     'unistra.fr',
   ],
 
+  // ── Checkout ──────────────────────────────────────────────────────────────
+  // Text pending Forseti review (handoff 2026-10-02). Bump `version` on edit.
+  checkoutWaiver: {
+    label: 'Je demande l’accès immédiat au service dès le paiement et je reconnais perdre mon droit de rétractation de 14 jours dès que l’exécution a commencé (article L221-28, 13°, du Code de la consommation).',
+    required: 'Veuillez cocher la case relative au droit de rétractation pour continuer.',
+    version: '2026-10-02',
+  },
+
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
     homepage: [
