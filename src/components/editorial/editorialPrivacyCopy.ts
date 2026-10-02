@@ -55,7 +55,7 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       {
         heading: 'Destinataires',
         paragraphs: [
-          "Vos données ne sont jamais vendues. Elles sont traitées par nos prestataires techniques : Vercel (hébergement du site), Resend (envoi des emails) et Google Workspace (notre messagerie).",
+          "Vos données ne sont jamais vendues. Elles sont traitées par nos prestataires techniques : Vercel (hébergement du site), Resend (envoi des emails), Google Workspace (notre messagerie) et Plausible (statistiques de visite sans cookies).",
           "Certains de ces prestataires peuvent traiter des données hors de l'Union européenne. Ces transferts reposent alors sur les clauses contractuelles types de la Commission européenne ou sur le cadre de protection des données UE-États-Unis.",
         ],
       },
@@ -118,7 +118,7 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       {
         heading: 'Mottagare',
         paragraphs: [
-          'Dina uppgifter säljs aldrig. De behandlas av våra tekniska leverantörer: Vercel (drift av webbplatsen), Resend (utskick av e-post) och Google Workspace (vår e-post).',
+          'Dina uppgifter säljs aldrig. De behandlas av våra tekniska leverantörer: Vercel (drift av webbplatsen), Resend (utskick av e-post), Google Workspace (vår e-post) och Plausible (besöksstatistik utan cookies).',
           'Vissa av dessa leverantörer kan behandla uppgifter utanför EU/EES. Sådana överföringar sker i så fall med stöd av EU-kommissionens standardavtalsklausuler eller ramverket för dataskydd mellan EU och USA.',
         ],
       },

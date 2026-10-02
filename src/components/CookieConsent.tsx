@@ -23,18 +23,18 @@ function updateConsent(state: 'granted' | 'denied') {
 export function CookieConsent() {
   const config = useConfig()
   const pathname = usePathname()
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return localStorage.getItem(CONSENT_KEY) === null
-  })
+  // Starts hidden on both server and client so the first client render matches
+  // the server HTML (reading localStorage during render caused React #418).
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY)
     if (stored === 'granted') {
       // User already accepted — update consent
       updateConsent('granted')
-    } else if (stored === 'denied') {
-      // User already declined — keep denied (default)
+    } else if (stored === null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reads browser-only storage after hydration
+      setVisible(true)
     }
   }, [])
 
