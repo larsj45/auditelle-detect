@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { editorialCopy } from '../components/editorial/editorialCopy.ts'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://auditelle.fr'
@@ -53,6 +54,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    ...(['fr', 'sv'] as const).map((locale) => ({
+      url: `${baseUrl}${editorialCopy[locale].path}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}${editorialCopy.fr.path}`,
+          sv: `${baseUrl}${editorialCopy.sv.path}`,
+        },
+      },
+    })),
     {
       url: `${baseUrl}/demo-video`,
       lastModified: now,

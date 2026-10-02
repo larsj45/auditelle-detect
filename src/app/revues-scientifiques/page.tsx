@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { IBM_Plex_Mono, Newsreader, Public_Sans } from 'next/font/google'
 import { getResellerConfig } from '@/lib/config'
 import EditorialLanding from '@/components/editorial/EditorialLanding'
-import { getEditorialCopy } from '@/components/editorial/editorialCopy'
+import { editorialCopy, getEditorialCopy } from '@/components/editorial/editorialCopy'
 
 const content = getEditorialCopy('fr')
 
@@ -41,6 +41,10 @@ export async function generateMetadata(): Promise<Metadata> {
     description: content.metadata.description,
     alternates: {
       canonical: `https://${config.domain}${content.path}`,
+      languages: {
+        fr: `https://${config.domain}${editorialCopy.fr.path}`,
+        sv: `https://${config.domain}${editorialCopy.sv.path}`,
+      },
     },
     openGraph: {
       title: content.metadata.title,
@@ -55,9 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: content.metadata.title,
       description: content.metadata.description,
     },
-    // Pricing and provider terms are still being validated. Flip to index/follow
-    // when the public offer is commercially approved.
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   }
 }
 
