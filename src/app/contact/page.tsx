@@ -3,7 +3,7 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Mail, Building2, Send } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useConfig } from '@/components/ConfigProvider'
 
 export default function ContactPage() {
@@ -17,6 +17,16 @@ export default function ContactPage() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+
+  // Preselect the subject from ?subject= (matches an option value or label)
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get('subject')
+    if (!wanted) return
+    const match = s.subjectOptions.find((opt) => opt.value === wanted || opt.label === wanted)
+    // Reading the URL is only possible after hydration on this static page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match) setFormData((prev) => ({ ...prev, subject: match.label }))
+  }, [s.subjectOptions])
   const [sending, setSending] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
