@@ -17,11 +17,11 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Verify pour les établissements — La couche d’intégrité académique (pilote gratuit)',
   description:
-    "Verify aide les établissements à passer de la charte à la mesure : détection IA multi-moteur, plagiat et rapport exportable. Données stockées dans l'UE (Supabase, Paris). Pilote gratuit pour les équipes pédagogiques.",
+    "Verify aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l'UE (Supabase, Paris). Pilote gratuit pour les équipes pédagogiques.",
   openGraph: {
     title: 'Verify pour les établissements — Couche d’intégrité académique',
     description:
-      'De la charte à la mesure : détection IA multi-moteur, rapport exportable, données stockées dans l’UE. Démarrez un pilote gratuit.',
+      'De la charte à la mesure : détection IA et plagiat, rapport exportable, données hébergées dans l’UE. Démarrez un pilote gratuit.',
     type: 'website',
     locale: 'fr_FR',
   },
@@ -39,7 +39,7 @@ export default async function EtablissementsPage() {
     '@type': 'WebPage',
     name: `${config.name} pour les établissements`,
     description:
-      "Couche d'intégrité académique pour les établissements français : détection IA multi-moteur, plagiat, rapport exportable.",
+      "Couche d'intégrité académique pour les établissements français : détection IA Pangram, plagiat, rapport exportable.",
     url: 'https://auditelle.fr/etablissements',
   }
 
@@ -98,10 +98,10 @@ export default async function EtablissementsPage() {
 
           <div className="flex flex-wrap gap-6 mt-8 justify-center">
             {[
-              'Détection IA multi-moteur',
+              'Détection IA + plagiat',
               'Couche d’intégrité, pas un verdict',
               'Rapport exportable',
-              'Données stockées dans l’UE',
+              'Données hébergées dans l’UE',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-gray-600 font-medium">
                 <Check className="w-5 h-5 text-emerald-500 shrink-0" />
@@ -164,8 +164,8 @@ export default async function EtablissementsPage() {
             />
             <FeatureCard
               icon={<Cpu className="w-8 h-8" />}
-              title="Détection multi-moteur"
-              description="Plusieurs moteurs de détection, pas un seul point de vue. Vous obtenez un signal plus robuste et moins dépendant d'un fournisseur unique."
+              title="Détection IA + plagiat"
+              description="Un moteur de détection reconnu (Pangram Labs) et une recherche de plagiat dans le même rapport."
             />
             <FeatureCard
               icon={<Ruler className="w-8 h-8" />}
