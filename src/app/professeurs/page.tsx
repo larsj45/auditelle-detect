@@ -25,19 +25,19 @@ export default async function ProfesseursPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Auditelle pour Professeurs',
+    name: `${config.name} pour les enseignants`,
     description: 'Outil de detection IA pour enseignants et universites francaises',
     url: 'https://auditelle.fr/professeurs',
     mainEntity: {
       '@type': 'SoftwareApplication',
-      name: 'Auditelle',
+      name: config.name,
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
       offers: {
         '@type': 'Offer',
-        price: '0',
+        price: '0.50',
         priceCurrency: 'EUR',
-        description: 'Essai gratuit - 3 analyses par mois',
+        description: 'Paiement a l\'analyse, sans abonnement',
       },
     },
   }
@@ -106,7 +106,7 @@ export default async function ProfesseursPage() {
               href="/signup"
               className="btn-primary text-lg px-10 py-4 rounded-xl shadow-lg shadow-orange-500/25 inline-flex items-center gap-2"
             >
-              Creer un compte gratuit
+              Creer un compte
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
@@ -133,13 +133,8 @@ export default async function ProfesseursPage() {
           <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed">
             Depuis novembre 2022, les enseignants font face a un defi sans precedent :
             comment distinguer un travail etudiant authentique d&apos;un texte genere par IA ?
-            Les outils existants manquent de precision et generent trop de faux positifs.
+            Un score seul ne suffit pas : il faut un signal clair, et une lecture humaine avant toute decision.
           </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <StatCard number="72%" label="des etudiants utilisent ChatGPT pour leurs travaux" source="Enquete DGESIP 2025" />
-            <StatCard number="40%" label="de faux positifs avec les detecteurs classiques" source="Etude U. Maryland" />
-          </div>
         </div>
       </section>
 
@@ -224,7 +219,7 @@ export default async function ProfesseursPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Pourquoi les enseignants choisissent Auditelle
+              Pourquoi les enseignants choisissent {config.name}
             </h2>
             <p className="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">
               Comparez avec les alternatives disponibles sur le marche francais.
@@ -236,7 +231,7 @@ export default async function ProfesseursPage() {
                 <tr>
                   <th className="py-4 px-4 text-sm font-semibold text-gray-500"></th>
                   <th className="py-4 px-4 text-sm font-bold text-center text-[var(--accent)] bg-orange-50 rounded-t-xl">
-                    Auditelle
+                    {config.name}
                   </th>
                   <th className="py-4 px-4 text-sm font-bold text-center text-[var(--navy)]">
                     Turnitin AI
@@ -397,7 +392,7 @@ export default async function ProfesseursPage() {
 
           <div className="space-y-6">
             <FaqItem
-              question="Auditelle est-il fiable pour prendre des decisions academiques ?"
+              question={`${config.name} est-il fiable pour prendre des decisions academiques ?`}
               answer="Le score est un signal, pas une preuve. Le moteur Pangram Labs a ete evalue de facon independante (University of Maryland), mais aucune decision academique ne doit reposer sur le seul score : combinez-le toujours avec un entretien et votre jugement pedagogique."
             />
             <FaqItem
@@ -406,7 +401,7 @@ export default async function ProfesseursPage() {
             />
             <FaqItem
               question="Quels modeles d'IA sont detectes ?"
-              answer="Auditelle detecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modeles de langage actuels, y compris les textes paraphrases par des outils de reformulation."
+              answer={`${config.name} detecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modeles de langage actuels, y compris les textes paraphrases par des outils de reformulation.`}
             />
             <FaqItem
               question="Puis-je integrer Verify dans notre LMS (Moodle, Canvas) ?"
@@ -414,7 +409,7 @@ export default async function ProfesseursPage() {
             />
             <FaqItem
               question="L'analyse fonctionne-t-elle en francais ?"
-              answer="Oui. Auditelle detecte le contenu IA dans de nombreuses langues, dont le francais, l'anglais, l'espagnol, l'allemand et le portugais."
+              answer={`Oui. ${config.name} detecte le contenu IA dans de nombreuses langues, dont le francais, l'anglais, l'espagnol, l'allemand et le portugais.`}
             />
           </div>
         </div>
@@ -427,7 +422,7 @@ export default async function ProfesseursPage() {
             Protegez l&apos;integrite de vos evaluations
           </h2>
           <p className="text-gray-300 mt-4 text-lg">
-            Rejoignez des centaines d&apos;enseignants qui utilisent Auditelle pour verifier les travaux etudiants. Essai gratuit, sans engagement.
+            Creez un compte et payez uniquement les analyses que vous lancez, sans abonnement ni engagement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
@@ -438,7 +433,7 @@ export default async function ProfesseursPage() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/contact?subject=Demonstration%20Auditelle"
+              href="/contact?subject=D%C3%A9monstration"
               className="btn-secondary text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               Demander une demo
@@ -467,16 +462,6 @@ export default async function ProfesseursPage() {
 }
 
 /* ── Local components ────────────────────────────────────────────────── */
-
-function StatCard({ number, label, source }: { number: string; label: string; source: string }) {
-  return (
-    <div className="card text-center p-8">
-      <p className="text-4xl font-bold text-[var(--accent)]">{number}</p>
-      <p className="text-gray-600 mt-2 font-medium">{label}</p>
-      <p className="text-xs text-gray-400 mt-2">{source}</p>
-    </div>
-  )
-}
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (

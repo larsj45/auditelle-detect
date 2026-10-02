@@ -29,15 +29,31 @@ export default function ContactPage() {
   }, [s.subjectOptions])
   const [sending, setSending] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSending(true)
 
-    const subject = encodeURIComponent(formData.subject || `Contact via ${config.domain}`)
-    const body = encodeURIComponent(
-      `Nom: ${formData.name}\nOrganisation: ${formData.organization}\nEmail: ${formData.email}\n\n${formData.message}`
-    )
-    window.location.href = `mailto:${config.supportEmail}?subject=${subject}&body=${body}`
+    const website = new FormData(e.currentTarget).get('website')
+    let delivered = false
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, website }),
+      })
+      delivered = res.ok
+    } catch {
+      delivered = false
+    }
+
+    // Fallback: hand the message to the visitor's mail client so no lead is lost
+    if (!delivered) {
+      const subject = encodeURIComponent(formData.subject || `Contact via ${config.domain}`)
+      const body = encodeURIComponent(
+        `Nom: ${formData.name}\nOrganisation: ${formData.organization}\nEmail: ${formData.email}\n\n${formData.message}`
+      )
+      window.location.href = `mailto:${config.supportEmail}?subject=${subject}&body=${body}`
+    }
 
     setSending(false)
     setSubmitted(true)
@@ -177,6 +193,16 @@ export default function ContactPage() {
                     placeholder={s.messagePlaceholder}
                   />
                 </div>
+
+                {/* Honeypot: hidden from people, filled by bots */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                />
 
                 <button
                   type="submit"

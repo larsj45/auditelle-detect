@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
 
     if (mode === 'both') {
       const [aiResult, plagResult] = await Promise.allSettled([
-        detectAI(trimmedText),
+        detectAI(trimmedText, { publicDashboardLink: config.features.pangramPublicDashboardLink }),
         detectPlagiarism(trimmedText),
       ])
 
@@ -258,7 +258,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Default: AI detection
-    const result = await detectAI(trimmedText)
+    const result = await detectAI(trimmedText, { publicDashboardLink: config.features.pangramPublicDashboardLink })
     const remaining = await recordUsage()
     if (remaining === null) {
       return NextResponse.json({ error: errors.rateLimitRetry, scans_remaining: 0 }, { status: 429 })
