@@ -1217,6 +1217,13 @@
   font-size: 10px;
 }
 
+.formActions a,
+.footerMeta a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .formActions button:disabled {
   cursor: wait;
   opacity: 0.68;

@@ -25,6 +25,7 @@ export interface EditorialCopy {
   htmlLang: string
   openGraphLocale: string
   path: string
+  privacyNoticePath: string
   metadata: {
     title: string
     description: string
@@ -103,6 +104,7 @@ export interface EditorialCopy {
   }
   footer: {
     legal: string
+    privacyLink: string
   }
   reportPreview: {
     ariaLabel: string
@@ -168,6 +170,7 @@ export interface EditorialCopy {
     contextPlaceholder: string
     honeypot: string
     reassurance: string
+    privacyNotice: { lead: string; link: string }
     submitting: string
     submit: string
     successTitle: string
@@ -182,6 +185,7 @@ export const editorialCopy = {
     htmlLang: 'fr',
     openGraphLocale: 'fr_FR',
     path: '/revues-scientifiques',
+    privacyNoticePath: '/revues-scientifiques/confidentialite',
     metadata: {
       title: 'Auditelle Éditorial | Intégrité pour les revues scientifiques',
       description:
@@ -396,6 +400,7 @@ export const editorialCopy = {
     },
     footer: {
       legal: 'Auditelle SASU · Paris · SIREN 945117000',
+      privacyLink: 'Données personnelles',
     },
     reportPreview: {
       ariaLabel: 'Aperçu du rapport Auditelle',
@@ -506,6 +511,10 @@ export const editorialCopy = {
         'Décrivez votre processus éditorial et les contrôles recherchés.',
       honeypot: 'Site web',
       reassurance: 'Aucun rendez-vous requis. Nous répondons par email.',
+      privacyNotice: {
+        lead: 'Traitement des données de ce formulaire :',
+        link: 'politique de confidentialité',
+      },
       submitting: 'Envoi en cours…',
       submit: 'Envoyer la demande',
       successTitle: 'Demande reçue.',
@@ -526,6 +535,7 @@ export const editorialCopy = {
     htmlLang: 'sv',
     openGraphLocale: 'sv_SE',
     path: '/vetenskapliga-tidskrifter',
+    privacyNoticePath: '/vetenskapliga-tidskrifter/integritet',
     metadata: {
       title: 'Verify Editorial | Integritet för vetenskapliga tidskrifter',
       description:
@@ -740,6 +750,7 @@ export const editorialCopy = {
     },
     footer: {
       legal: 'Auditelle SASU · Paris · SIREN 945117000',
+      privacyLink: 'Personuppgifter',
     },
     reportPreview: {
       ariaLabel: 'Förhandsvisning av Verify-rapport',
@@ -850,6 +861,10 @@ export const editorialCopy = {
         'Beskriv ert redaktionella arbetsflöde och vilka granskningar ni vill utvärdera.',
       honeypot: 'Webbplats',
       reassurance: 'Inget möte krävs. Vi svarar via e-post.',
+      privacyNotice: {
+        lead: 'Så behandlar vi uppgifterna i formuläret:',
+        link: 'integritetspolicy',
+      },
       submitting: 'Skickar…',
       submit: 'Begär demokonto',
       successTitle: 'Din begäran har tagits emot.',

@@ -396,7 +396,10 @@ export default function EditorialLanding({
             <span className={styles.brandName}>{content.brand.name}</span>
             <span className={styles.brandProduct}>{content.brand.product}</span>
           </div>
-          <div className={styles.footerMeta}>{content.footer.legal}</div>
+          <div className={styles.footerMeta}>
+            {content.footer.legal} ·{' '}
+            <a href={content.privacyNoticePath}>{content.footer.privacyLink}</a>
+          </div>
           <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
         </div>
       </footer>
@@ -797,7 +800,13 @@ function ContactForm({
       </div>
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <div className={styles.formActions}>
-        <p>{form.reassurance}</p>
+        <p>
+          {form.reassurance}{' '}
+          {form.privacyNotice.lead}{' '}
+          <a href={content.privacyNoticePath} target="_blank" rel="noopener">
+            {form.privacyNotice.link}
+          </a>
+        </p>
         <button
           className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonLarge}`}
           type="submit"
