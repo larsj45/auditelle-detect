@@ -15,13 +15,13 @@ import {
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Verify pour les établissements — La couche d’intégrité académique (pilote gratuit)',
+  title: 'Verify pour les établissements — La couche d’intégrité académique (pilote de 30 jours)',
   description:
-    "Verify aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l'UE (Supabase, Paris). Pilote gratuit pour les équipes pédagogiques.",
+    "Verify aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l'UE (Supabase, Paris). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
   openGraph: {
     title: 'Verify pour les établissements — Couche d’intégrité académique',
     description:
-      'De la charte à la mesure : détection IA et plagiat, rapport exportable, données hébergées dans l’UE. Démarrez un pilote gratuit.',
+      'De la charte à la mesure : détection IA et plagiat, rapport exportable, données hébergées dans l’UE. Demandez un diagnostic gratuit.',
     type: 'website',
     locale: 'fr_FR',
   },
@@ -32,7 +32,8 @@ export const metadata: Metadata = {
 
 export default async function EtablissementsPage() {
   const config = await getResellerConfig()
-  const pilotCredits = config.institutionalPilotCredits ?? 20
+  const pilot = config.institutionalPilot
+  const ctaDiagnostic = pilot?.ctaDiagnostic ?? 'Demander un diagnostic gratuit'
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -63,16 +64,16 @@ export default async function EtablissementsPage() {
             </Link>
             <div className="flex items-center gap-3">
               <Link
-                href="/contact?subject=Demande%20de%20d%C3%A9mo%20%C3%A9tablissement"
+                href="/contact?subject=D%C3%A9monstration"
                 className="hidden sm:inline text-sm font-medium text-gray-700 hover:text-navy transition-colors"
               >
                 Demander une démo
               </Link>
               <Link
-                href="/signup"
+                href="/contact?subject=Diagnostic"
                 className="bg-accent text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent-hover transition-colors"
               >
-                Démarrer le pilote gratuit
+                {ctaDiagnostic}
               </Link>
             </div>
           </div>
@@ -112,23 +113,16 @@ export default async function EtablissementsPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
-              href="/signup"
+              href="/contact?subject=Diagnostic"
               className="btn-primary text-lg px-10 py-4 rounded-xl shadow-lg shadow-orange-500/25 inline-flex items-center gap-2"
             >
-              Démarrer le pilote gratuit
+              {ctaDiagnostic}
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link
-              href="/contact?subject=Demande%20de%20d%C3%A9mo%20%C3%A9tablissement"
-              className="btn-secondary text-lg px-8 py-4 rounded-xl"
-            >
-              Demander une démo
-            </Link>
+            <a href="#pilote" className="btn-secondary text-lg px-8 py-4 rounded-xl">
+              {pilot?.ctaPilot ?? 'Voir le pilote'}
+            </a>
           </div>
-
-          <p className="text-sm text-gray-400 mt-4">
-            Pilote gratuit de {pilotCredits} analyses avec votre email institutionnel &middot; sans carte bancaire
-          </p>
         </div>
       </section>
 
@@ -215,47 +209,75 @@ export default async function EtablissementsPage() {
         </div>
       </section>
 
-      {/* ── Comment se déroule un pilote ─────────────────────────────────── */}
-      <section className="py-24 px-4 bg-[var(--bg-light)]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Comment se déroule le pilote
-            </h2>
-            <p className="text-gray-500 mt-4 text-lg">
-              Gratuit, sans engagement, prêt en quelques minutes.
-            </p>
-          </div>
+      {/* ── Pilote payant ─────────────────────────────────────────────────── */}
+      {pilot && (
+        <section id="pilote" className="py-24 px-4 bg-[var(--bg-light)] scroll-mt-20">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
+                Comment se déroule le pilote
+              </h2>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <StepCard
-              number="1"
-              title="Créez un compte avec votre email institutionnel"
-              description={`Avec une adresse de votre établissement, vous recevez automatiquement un pilote de ${pilotCredits} analyses.`}
-            />
-            <StepCard
-              number="2"
-              title="Analysez vos travaux"
-              description="Collez un texte ou uploadez un fichier. Obtenez un score d'intégrité, l'identification du modèle et l'analyse par section."
-            />
-            <StepCard
-              number="3"
-              title="Partagez les résultats"
-              description="Exportez le rapport, évaluez la valeur pour vos équipes, puis échangeons sur un déploiement à l'échelle de l'établissement."
-            />
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <StepCard
+                number="1"
+                title={pilot.diagnosticTitle}
+                description={pilot.diagnosticDescription}
+              />
+              <StepCard
+                number="2"
+                title={`Pilote de ${pilot.duration} (${pilot.price})`}
+                description="Vos équipes analysent leurs travaux réels avec Verify, accompagnées par notre protocole de lecture des signaux."
+              />
+              <StepCard
+                number="3"
+                title="Décision de déploiement"
+                description="Le bilan final vous donne les éléments pour décider, en connaissance de cause, d'un déploiement à l'échelle de l'établissement."
+              />
+            </div>
 
-          <div className="text-center mt-14">
-            <Link
-              href="/signup"
-              className="btn-primary text-lg px-10 py-4 inline-flex items-center gap-2"
-            >
-              Démarrer le pilote gratuit
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+            <div className="card mt-14 max-w-3xl mx-auto">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6">
+                <h3 className="text-2xl font-bold text-[var(--navy)]">{pilot.title}</h3>
+                <div className="sm:text-right">
+                  <p className="text-3xl font-bold text-[var(--navy)]">{pilot.price}</p>
+                  <p className="text-sm text-gray-500">{pilot.priceNote}</p>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {pilot.includes.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-gray-700">
+                    <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm font-semibold text-gray-500 mt-6 mb-2">Non inclus</p>
+              <ul className="space-y-1">
+                {pilot.excludes.map((item) => (
+                  <li key={item} className="text-sm text-gray-500">{item}</li>
+                ))}
+              </ul>
+              <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                <Link
+                  href="/contact?subject=Diagnostic"
+                  className="btn-primary px-8 py-3 inline-flex items-center justify-center gap-2"
+                >
+                  {pilot.ctaDiagnostic}
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/contact?subject=Pilote"
+                  className="btn-secondary px-8 py-3 inline-flex items-center justify-center"
+                >
+                  Commander le pilote
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── Final CTA ────────────────────────────────────────────────────── */}
       <section className="gradient-hero py-20 px-4">
@@ -264,19 +286,19 @@ export default async function EtablissementsPage() {
             Rendez votre charte mesurable
           </h2>
           <p className="text-gray-300 mt-4 text-lg">
-            Démarrez un pilote gratuit avec vos équipes, ou demandez une démo adaptée à
+            Commencez par un diagnostic gratuit de 20 minutes, ou demandez une démo adaptée à
             votre établissement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
-              href="/signup"
+              href="/contact?subject=Diagnostic"
               className="btn-primary text-lg px-10 py-4 inline-flex items-center gap-2"
             >
-              Démarrer le pilote gratuit
+              {ctaDiagnostic}
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/contact?subject=Demande%20de%20d%C3%A9mo%20%C3%A9tablissement"
+              href="/contact?subject=D%C3%A9monstration"
               className="btn-secondary text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               Demander une démo

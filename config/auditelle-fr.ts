@@ -42,9 +42,31 @@ const config: ResellerConfig = {
   noReplyEmail: 'noreply@auditelle.fr',
 
   // ── Institutional pilot ─────────────────────────────────────────────────────
-  // Free pilot granted once on signup to institutional emails (FR academic
-  // domains + allowlist). Decided by Lars 2026-06-24: 20 scans.
-  institutionalPilotCredits: 20,
+  // 2026-10-01 (Lars): free pilot replaced by a free 20-min diagnostic and a
+  // paid 30-day pilot, invoiced. 0 disables the signup credit grant.
+  institutionalPilotCredits: 0,
+  institutionalPilot: {
+    title: 'Pilote d’intégrité académique, 30 jours',
+    price: '1 500 € HT',
+    priceNote: 'Réglé à la commande, sur facture',
+    duration: '30 jours',
+    includes: [
+      '5 utilisateurs de votre établissement',
+      'Jusqu’à 100 unités d’analyse (1 unité = jusqu’à 1 000 mots ; chaque réanalyse compte)',
+      'Onboarding de 60 minutes',
+      'Protocole de lecture des signaux et de prévention des faux positifs',
+      'Bilan final avec recommandation de politique et de déploiement',
+    ],
+    excludes: [
+      'SSO, intégration LMS, marque blanche, SLA',
+      'Avis disciplinaire',
+      'Aucune facturation automatique au-delà des 100 unités',
+    ],
+    diagnosticTitle: 'Diagnostic gratuit',
+    diagnosticDescription: 'Un échange de 20 minutes pour comprendre votre charte, vos volumes et vos contraintes, et vérifier qu’un pilote a du sens.',
+    ctaDiagnostic: 'Demander un diagnostic gratuit',
+    ctaPilot: 'Voir le pilote',
+  },
   // Target institutions (merged with the FR academic patterns in the lib).
   institutionalEmailAllowlist: [
     'universite-paris-saclay.fr',
@@ -217,7 +239,7 @@ const config: ResellerConfig = {
         'Un signal, pas un verdict',
         'Données hébergées dans l’UE',
       ],
-      ctaPrimary: 'Démarrer le pilote gratuit \u2192',
+      ctaPrimary: 'Découvrir le pilote établissement \u2192',
       ctaSecondary: 'Tester par moi-même',
     },
 
@@ -578,6 +600,8 @@ const config: ResellerConfig = {
       messagePlaceholder: 'D\u00e9crivez votre besoin...',
       selectSubject: 'S\u00e9lectionnez un sujet',
       subjectOptions: [
+        { value: 'Diagnostic', label: 'Diagnostic gratuit \u00e9tablissement (20 min)' },
+        { value: 'Pilote', label: 'Pilote 30 jours (1 500 \u20ac HT)' },
         { value: 'D\u00e9monstration', label: 'Demande de d\u00e9monstration' },
         { value: 'Devis', label: 'Devis universit\u00e9 / institution' },
         { value: 'Support', label: 'Support technique' },
