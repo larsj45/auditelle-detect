@@ -5,7 +5,7 @@ import { getResellerConfig } from '@/lib/config'
 import EditorialLanding from '@/components/editorial/EditorialLanding'
 import { getEditorialCopy } from '@/components/editorial/editorialCopy'
 
-const content = getEditorialCopy('fr')
+const content = getEditorialCopy('sv')
 
 const editorialSerif = Newsreader({
   subsets: ['latin'],
@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (config.id !== 'auditelle-fr') {
     return {
-      title: 'Page introuvable',
+      title: 'Sidan kunde inte hittas',
       robots: { index: false, follow: false },
     }
   }
@@ -55,13 +55,11 @@ export async function generateMetadata(): Promise<Metadata> {
       title: content.metadata.title,
       description: content.metadata.description,
     },
-    // Pricing and provider terms are still being validated. Flip to index/follow
-    // when the public offer is commercially approved.
     robots: { index: false, follow: false },
   }
 }
 
-export default async function RevuesScientifiquesPage() {
+export default async function VetenskapligaTidskrifterPage() {
   const config = await getResellerConfig()
 
   if (config.id !== 'auditelle-fr') {

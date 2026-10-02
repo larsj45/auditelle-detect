@@ -18,9 +18,55 @@ const iconMap: Record<string, React.ReactNode> = {
 export default async function Home() {
   const config = await getResellerConfig()
   const s = config.strings
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'SoftwareApplication',
+        name: config.name,
+        url: `https://${config.domain}`,
+        applicationCategory: 'EducationalApplication',
+        operatingSystem: 'Web',
+        description: config.seo.description,
+        offers: {
+          '@type': 'AggregateOffer',
+          lowPrice: '0',
+          highPrice: '499',
+          priceCurrency: config.currency,
+          offerCount: config.plans.homepage.length,
+        },
+        featureList:
+          'AI Detection, Plagiarism Detection, Model Identification, Section Analysis, GDPR Compliant',
+      },
+      {
+        '@type': 'Organization',
+        name: config.legalEntity,
+        url: `https://${config.domain}`,
+        logo: `https://${config.domain}/images/logo-color.png`,
+        sameAs: [],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          email: config.supportEmail,
+          contactType: 'customer service',
+          availableLanguage: config.htmlLang === 'fr' ? 'French' : 'English',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        url: `https://${config.domain}`,
+        name: config.name,
+        description: config.seo.description,
+        inLanguage: config.htmlLang,
+      },
+    ],
+  }
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       {/* Hero */}

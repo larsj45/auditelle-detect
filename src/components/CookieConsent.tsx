@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { useConfig } from '@/components/ConfigProvider'
+import { getCookieConsentCopy } from '@/components/cookieConsentCopy'
 
 declare function gtag(...args: unknown[]): void
 
@@ -20,6 +22,7 @@ function updateConsent(state: 'granted' | 'denied') {
 
 export function CookieConsent() {
   const config = useConfig()
+  const pathname = usePathname()
   const [visible, setVisible] = useState(() => {
     if (typeof window === 'undefined') return false
     return localStorage.getItem(CONSENT_KEY) === null
@@ -49,7 +52,7 @@ export function CookieConsent() {
 
   if (!visible) return null
 
-  const s = config.strings.cookieConsent
+  const s = getCookieConsentCopy(pathname, config.strings.cookieConsent)
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[9999] p-4 sm:p-6">
