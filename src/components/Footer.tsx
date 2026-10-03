@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useConfig } from '@/components/ConfigProvider';
+import ManageCookiesLink from '@/components/ManageCookiesLink';
 
 export default function Footer() {
   const config = useConfig();
@@ -74,6 +75,7 @@ export default function Footer() {
         <div className="border-t border-gray-700 mt-10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
             &copy; {new Date().getFullYear()} {config.name}. {s.footer.copyright}
+            <ManageCookiesLink className="ml-4 text-gray-500 hover:text-white transition-colors" />
           </p>
           <p className="text-xs text-gray-600">
             {s.footer.poweredBy}{' '}
