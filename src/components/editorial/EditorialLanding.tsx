@@ -15,6 +15,7 @@ import type {
   EditorialErrorCode,
   EditorialPlanId,
 } from './editorialCopy'
+import { OPEN_COOKIE_CONSENT_EVENT } from '@/components/CookieConsent'
 import styles from './EditorialLanding.module.css'
 
 type ModalName = 'report' | 'contact' | null
@@ -398,7 +399,14 @@ export default function EditorialLanding({
           </div>
           <div className={styles.footerMeta}>
             {content.footer.legal} ·{' '}
-            <a href={content.privacyNoticePath}>{content.footer.privacyLink}</a>
+            <a href={content.privacyNoticePath}>{content.footer.privacyLink}</a> ·{' '}
+            <button
+              type="button"
+              className={styles.footerLinkButton}
+              onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_CONSENT_EVENT))}
+            >
+              {content.footer.manageCookies}
+            </button>
           </div>
           <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
         </div>

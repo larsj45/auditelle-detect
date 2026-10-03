@@ -105,6 +105,7 @@ export interface EditorialCopy {
   footer: {
     legal: string
     privacyLink: string
+    manageCookies: string
   }
   reportPreview: {
     ariaLabel: string
@@ -401,6 +402,7 @@ export const editorialCopy = {
     footer: {
       legal: 'Auditelle SASU · Paris · SIREN 945117000',
       privacyLink: 'Données personnelles',
+      manageCookies: 'Gérer les cookies',
     },
     reportPreview: {
       ariaLabel: 'Aperçu du rapport Auditelle',
@@ -751,6 +753,7 @@ export const editorialCopy = {
     footer: {
       legal: 'Auditelle SASU · Paris · SIREN 945117000',
       privacyLink: 'Personuppgifter',
+      manageCookies: 'Hantera cookies',
     },
     reportPreview: {
       ariaLabel: 'Förhandsvisning av Verify-rapport',

@@ -76,7 +76,7 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       {
         heading: 'Cookies',
         paragraphs: [
-          "Les cookies de mesure d'audience et de mesure publicitaire ne sont activés que si vous les acceptez dans le bandeau cookies. Pour modifier votre choix, effacez les données de ce site dans votre navigateur.",
+          "Les cookies de mesure d'audience et de mesure publicitaire ne sont activés que si vous les acceptez dans le bandeau cookies. Vous pouvez modifier votre choix à tout moment via le lien « Gérer les cookies » en bas de la page Auditelle Éditorial.",
         ],
       },
     ],
@@ -139,7 +139,7 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       {
         heading: 'Cookies',
         paragraphs: [
-          'Cookies för besöksstatistik och annonsmätning används bara om du godkänner dem i cookiebannern. Du kan ändra ditt val genom att radera webbplatsens data i din webbläsare.',
+          'Cookies för besöksstatistik och annonsmätning används bara om du godkänner dem i cookiebannern. Du kan när som helst ändra ditt val via länken ”Hantera cookies” längst ned på sidan för Verify Editorial.',
         ],
       },
     ],

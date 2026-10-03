@@ -1218,10 +1218,19 @@
 }
 
 .formActions a,
-.footerMeta a {
+.footerMeta a,
+.footerLinkButton {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.footerLinkButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
 }
 
 .formActions button:disabled {
