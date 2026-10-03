@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { useEffect, useState } from 'react'
-import { CreditCard, User } from 'lucide-react'
+import { CreditCard, Trash2, User } from 'lucide-react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
 
@@ -13,6 +13,10 @@ export default function AccountPage() {
   const [user, setUser] = useState<{ email: string; full_name: string; plan: string; scan_credits: number } | null>(null)
   const [loading, setLoading] = useState(true)
   const [portalLoading, setPortalLoading] = useState(false)
+  const del = config.strings.accountDeletion
+  const [confirmEmail, setConfirmEmail] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   useEffect(() => {
     loadUser()
@@ -65,6 +69,39 @@ export default function AccountPage() {
       console.error('Failed to open billing portal')
     } finally {
       setPortalLoading(false)
+    }
+  }
+
+  async function deleteAccount() {
+    if (!del) return
+    setDeleting(true)
+    setDeleteError(null)
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) {
+        window.location.href = '/login'
+        return
+      }
+      const response = await fetch('/api/account/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ confirmEmail }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        setDeleteError(data.error || del.error)
+        return
+      }
+      await supabase.auth.signOut()
+      window.location.href = '/'
+    } catch {
+      setDeleteError(del.error)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -142,6 +179,41 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
+
+      {del && (
+        <div className="card border border-red-200">
+          <div className="flex items-center gap-3 mb-4">
+            <Trash2 className="w-5 h-5 text-red-600" />
+            <h2 className="text-lg font-semibold text-red-700">{del.title}</h2>
+          </div>
+          <p className="text-sm text-gray-600 mb-3">{del.description}</p>
+          <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 mb-5">
+            {del.consequences.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <label className="block text-sm text-gray-700 mb-2" htmlFor="confirm-email">
+            {del.confirmLabel}
+          </label>
+          <input
+            id="confirm-email"
+            type="email"
+            autoComplete="off"
+            value={confirmEmail}
+            onChange={(e) => setConfirmEmail(e.target.value)}
+            placeholder={user?.email}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-red-400 focus:border-transparent"
+          />
+          {deleteError && <p className="text-sm text-red-600 mb-4">{deleteError}</p>}
+          <button
+            onClick={deleteAccount}
+            disabled={deleting || confirmEmail.trim().toLowerCase() !== (user?.email || '').toLowerCase()}
+            className="w-full py-3 rounded-xl font-semibold text-white bg-red-600 hover:bg-red-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {deleting ? del.deleting : del.button}
+          </button>
+        </div>
+      )}
     </div>
   )
 }

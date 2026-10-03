@@ -570,6 +570,24 @@ const config: ResellerConfig = {
     },
 
     // Cookie consent
+    accountDeletion: {
+      title: 'Supprimer mon compte',
+      description: 'La suppression est définitive et ne peut pas être annulée.',
+      consequences: [
+        'Votre compte, votre profil et l’historique de vos analyses (textes et résultats) sont supprimés.',
+        'Votre abonnement en cours est résilié immédiatement, sans remboursement de la période entamée.',
+        'Les crédits d’analyse restants sont perdus.',
+        'Nos factures et données de paiement sont conservées pour nos obligations comptables.',
+      ],
+      confirmLabel: 'Pour confirmer, saisissez l’adresse email de votre compte',
+      button: 'Supprimer définitivement mon compte',
+      deleting: 'Suppression en cours...',
+      emailMismatch: 'L’adresse saisie ne correspond pas à celle du compte.',
+      error: 'La suppression n’a pas pu aboutir. Réessayez ou écrivez-nous à contact@auditelle.fr.',
+      emailSubject: 'Votre compte Verify a été supprimé',
+      emailBody: 'Bonjour,\n\nVotre compte Verify et l’historique de vos analyses ont été supprimés à votre demande. Tout abonnement en cours a été résilié.\n\nNos factures restent conservées pour nos obligations comptables.\n\nSi vous n’êtes pas à l’origine de cette demande, répondez à cet email.\n\nL’équipe Verify',
+    },
+
     cookieConsent: {
       message: 'Ce site utilise des cookies pour mesurer les performances publicitaires et am\u00e9liorer votre exp\u00e9rience. Aucune donn\u00e9e personnelle n\u2019est vendue.',
       accept: 'Accepter',
