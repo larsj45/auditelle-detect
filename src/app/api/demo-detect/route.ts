@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     if (mode === 'both') {
       const [aiResult, plagResult] = await Promise.allSettled([
-        detectAI(text.slice(0, 2000)),
+        detectAI(text.slice(0, 2000), { publicDashboardLink: config.features.pangramPublicDashboardLink }),
         detectPlagiarism(text.slice(0, 2000)),
       ])
 
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Default: AI detection
-    const pangramData = await detectAI(text.slice(0, 2000))
+    const pangramData = await detectAI(text.slice(0, 2000), { publicDashboardLink: config.features.pangramPublicDashboardLink })
 
     incrementRateLimit(ip)
 

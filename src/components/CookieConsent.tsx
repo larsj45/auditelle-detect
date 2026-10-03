@@ -8,6 +8,7 @@ import { getCookieConsentCopy } from '@/components/cookieConsentCopy'
 declare function gtag(...args: unknown[]): void
 
 const CONSENT_KEY = 'cookie_consent'
+export const OPEN_COOKIE_CONSENT_EVENT = 'cookie-consent:open'
 
 function updateConsent(state: 'granted' | 'denied') {
   if (typeof gtag !== 'undefined') {
@@ -36,6 +37,13 @@ export function CookieConsent() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- reads browser-only storage after hydration
       setVisible(true)
     }
+  }, [])
+
+  // Reopen the banner from the footer "manage cookies" link
+  useEffect(() => {
+    const open = () => setVisible(true)
+    window.addEventListener(OPEN_COOKIE_CONSENT_EVENT, open)
+    return () => window.removeEventListener(OPEN_COOKIE_CONSENT_EVENT, open)
   }, [])
 
   function handleAccept() {

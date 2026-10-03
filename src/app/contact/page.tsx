@@ -3,7 +3,7 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Mail, Building2, Send } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useConfig } from '@/components/ConfigProvider'
 
 export default function ContactPage() {
@@ -17,17 +17,43 @@ export default function ContactPage() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+
+  // Preselect the subject from ?subject= (matches an option value or label)
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get('subject')
+    if (!wanted) return
+    const match = s.subjectOptions.find((opt) => opt.value === wanted || opt.label === wanted)
+    // Reading the URL is only possible after hydration on this static page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match) setFormData((prev) => ({ ...prev, subject: match.label }))
+  }, [s.subjectOptions])
   const [sending, setSending] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSending(true)
 
-    const subject = encodeURIComponent(formData.subject || `Contact via ${config.domain}`)
-    const body = encodeURIComponent(
-      `Nom: ${formData.name}\nOrganisation: ${formData.organization}\nEmail: ${formData.email}\n\n${formData.message}`
-    )
-    window.location.href = `mailto:${config.supportEmail}?subject=${subject}&body=${body}`
+    const website = new FormData(e.currentTarget).get('website')
+    let delivered = false
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, website }),
+      })
+      delivered = res.ok
+    } catch {
+      delivered = false
+    }
+
+    // Fallback: hand the message to the visitor's mail client so no lead is lost
+    if (!delivered) {
+      const subject = encodeURIComponent(formData.subject || `Contact via ${config.domain}`)
+      const body = encodeURIComponent(
+        `Nom: ${formData.name}\nOrganisation: ${formData.organization}\nEmail: ${formData.email}\n\n${formData.message}`
+      )
+      window.location.href = `mailto:${config.supportEmail}?subject=${subject}&body=${body}`
+    }
 
     setSending(false)
     setSubmitted(true)
@@ -167,6 +193,16 @@ export default function ContactPage() {
                     placeholder={s.messagePlaceholder}
                   />
                 </div>
+
+                {/* Honeypot: hidden from people, filled by bots */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                />
 
                 <button
                   type="submit"

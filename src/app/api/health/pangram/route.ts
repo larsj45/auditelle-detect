@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   let statusCode: number | undefined
 
   try {
-    await detectAI('This is a health check test.')
+    await detectAI('This is a health check test.', { publicDashboardLink: false })
     const latency_ms = Date.now() - start
 
     return NextResponse.json({ status: 'ok', latency_ms })

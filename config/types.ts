@@ -49,6 +49,29 @@ export interface ResellerConfig {
   institutionalPilotCredits?: number   // e.g. 20
   // Extra domains to treat as institutional, merged with the lib defaults.
   institutionalEmailAllowlist?: string[]
+  // Paid institutional pilot offer shown on /etablissements (sold by invoice,
+  // no online checkout). When absent, the page falls back to the free pilot.
+  institutionalPilot?: {
+    title: string
+    price: string
+    priceNote: string
+    duration: string
+    includes: string[]
+    excludes: string[]
+    diagnosticTitle: string
+    diagnosticDescription: string
+    ctaDiagnostic: string
+    ctaPilot: string
+  }
+
+  // ── Checkout ──────────────────────────────────────────────────────────────
+  // When set, paid checkouts require the consumer withdrawal-right waiver
+  // checkbox (FR: art. L221-28, 13°, Code de la consommation).
+  checkoutWaiver?: {
+    label: string
+    required: string
+    version: string
+  }
 
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
@@ -69,6 +92,8 @@ export interface ResellerConfig {
     demoPage: boolean
     heroDemo: boolean
     plagiarismDetection: boolean
+    // Request a public Pangram report link per scan. Defaults to true.
+    pangramPublicDashboardLink?: boolean
   }
 
   // ── SEO / Meta ────────────────────────────────────────────────────────────
@@ -414,6 +439,7 @@ export interface ResellerStrings {
     message: string
     accept: string
     decline: string
+    manage?: string   // footer link that reopens the banner
   }
 
   // File upload

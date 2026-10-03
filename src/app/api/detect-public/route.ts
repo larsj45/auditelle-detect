@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     if (mode === 'both') {
       const [aiResult, plagResult] = await Promise.allSettled([
-        detectAI(text.trim()),
+        detectAI(text.trim(), { publicDashboardLink: config.features.pangramPublicDashboardLink }),
         detectPlagiarism(text.trim()),
       ])
 
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const result = await detectAI(text.trim())
+    const result = await detectAI(text.trim(), { publicDashboardLink: config.features.pangramPublicDashboardLink })
     const currentUsage = ipUsage.get(ip)!
     currentUsage.count += 1
     ipUsage.set(ip, currentUsage)

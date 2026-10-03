@@ -29,7 +29,7 @@ export default async function PartenairesPage() {
             <span className="text-[var(--accent)]">{config.name}</span>
           </h1>
           <p className="text-xl text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed">
-            Recommandez la solution de d&eacute;tection IA la plus fiable du march&eacute; &agrave; vos
+            Recommandez une solution fran&ccedil;aise d&apos;int&eacute;grit&eacute; acad&eacute;mique &agrave; vos
             membres et gagnez une commission r&eacute;currente sur chaque abonnement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
@@ -154,8 +154,8 @@ export default async function PartenairesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <BenefitCard
               icon={<ShieldCheck className="w-8 h-8" />}
-              title="99,9 % de pr&eacute;cision"
-              description="Technologie de pointe avec un taux de faux positifs quasi nul. Vos membres peuvent se fier aux r&eacute;sultats."
+              title="Moteur Pangram Labs"
+              description="Une technologie de d&eacute;tection &eacute;valu&eacute;e de fa&ccedil;on ind&eacute;pendante, avec un score pr&eacute;sent&eacute; comme un signal et non comme un verdict."
             />
             <BenefitCard
               icon={<Globe className="w-8 h-8" />}

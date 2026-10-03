@@ -170,7 +170,14 @@ function mockPlagiarismResult(): PlagiarismResult {
   }
 }
 
-export async function detectAI(text: string): Promise<PangramResult> {
+export interface DetectAIOptions {
+  // Ask Pangram for a shareable public report link. Off for brands that
+  // handle confidential documents; defaults to on for backward compatibility.
+  publicDashboardLink?: boolean
+}
+
+export async function detectAI(text: string, options: DetectAIOptions = {}): Promise<PangramResult> {
+  const publicDashboardLink = options.publicDashboardLink ?? true
   if (PANGRAM_MOCK_ENABLED) {
     return mockAIResult(text)
   }
@@ -189,7 +196,7 @@ export async function detectAI(text: string): Promise<PangramResult> {
     body: JSON.stringify({
       text,
       model: PANGRAM_MODEL,
-      public_dashboard_link: true,
+      public_dashboard_link: publicDashboardLink,
     }),
   })
 

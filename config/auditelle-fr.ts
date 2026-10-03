@@ -42,9 +42,31 @@ const config: ResellerConfig = {
   noReplyEmail: 'noreply@auditelle.fr',
 
   // ── Institutional pilot ─────────────────────────────────────────────────────
-  // Free pilot granted once on signup to institutional emails (FR academic
-  // domains + allowlist). Decided by Lars 2026-06-24: 20 scans.
-  institutionalPilotCredits: 20,
+  // 2026-10-01 (Lars): free pilot replaced by a free 20-min diagnostic and a
+  // paid 30-day pilot, invoiced. 0 disables the signup credit grant.
+  institutionalPilotCredits: 0,
+  institutionalPilot: {
+    title: 'Pilote d’intégrité académique, 30 jours',
+    price: '1 500 € HT',
+    priceNote: 'Réglé à la commande, sur facture',
+    duration: '30 jours',
+    includes: [
+      '5 utilisateurs de votre établissement',
+      'Jusqu’à 100 unités d’analyse (1 unité = jusqu’à 1 000 mots ; chaque réanalyse compte)',
+      'Onboarding de 60 minutes',
+      'Protocole de lecture des signaux et de prévention des faux positifs',
+      'Bilan final avec recommandation de politique et de déploiement',
+    ],
+    excludes: [
+      'SSO, intégration LMS, marque blanche, SLA',
+      'Avis disciplinaire',
+      'Aucune facturation automatique au-delà des 100 unités',
+    ],
+    diagnosticTitle: 'Diagnostic gratuit',
+    diagnosticDescription: 'Un échange de 20 minutes pour comprendre votre charte, vos volumes et vos contraintes, et vérifier qu’un pilote a du sens.',
+    ctaDiagnostic: 'Demander un diagnostic gratuit',
+    ctaPilot: 'Voir le pilote',
+  },
   // Target institutions (merged with the FR academic patterns in the lib).
   institutionalEmailAllowlist: [
     'universite-paris-saclay.fr',
@@ -52,6 +74,14 @@ const config: ResellerConfig = {
     'sciencespo.fr',
     'unistra.fr',
   ],
+
+  // ── Checkout ──────────────────────────────────────────────────────────────
+  // Text pending Forseti review (handoff 2026-10-02). Bump `version` on edit.
+  checkoutWaiver: {
+    label: 'Je demande l’accès immédiat au service dès le paiement et je reconnais perdre mon droit de rétractation de 14 jours dès que l’exécution a commencé (article L221-28, 13°, du Code de la consommation).',
+    required: 'Veuillez cocher la case relative au droit de rétractation pour continuer.',
+    version: '2026-10-02',
+  },
 
   // ── Pricing ───────────────────────────────────────────────────────────────
   plans: {
@@ -63,7 +93,7 @@ const config: ResellerConfig = {
         features: [
           '0,50 € par analyse',
           'Aucun engagement',
-          'Score IA 99,9% précis',
+          'Score IA et probabilité par section',
           'Identification du modèle',
           'Les crédits n\'expirent jamais',
         ],
@@ -95,8 +125,8 @@ const config: ResellerConfig = {
         features: [
           '10 000 analyses par mois',
           'Multi-utilisateurs',
-          'API illimitée',
-          'Intégration LMS',
+          'Rapports exportables (PDF/CSV)',
+          'Onboarding des équipes',
           'Support prioritaire',
         ],
         cta: 'Choisir Université',
@@ -108,11 +138,11 @@ const config: ResellerConfig = {
         period: 'mois',
         description: 'Pour établissements entiers',
         features: [
-          'Analyses illimitées',
+          'Volume sur devis',
           'Tous les professeurs',
-          'White-label API',
+          'Protocole d’intégrité sur mesure',
           'Account manager dédié',
-          'SLA 99,9%',
+          'Revue humaine des cas sensibles',
         ],
         cta: 'Choisir Enterprise',
         href: '/signup?plan=enterprise',
@@ -141,8 +171,8 @@ const config: ResellerConfig = {
         features: [
           '10 000 analyses par mois',
           'Multi-utilisateurs',
-          'API illimitée',
-          'Intégration LMS',
+          'Rapports exportables (PDF/CSV)',
+          'Onboarding des équipes',
           'Support prioritaire',
           'Rapports personnalisés',
         ],
@@ -154,10 +184,10 @@ const config: ResellerConfig = {
         period: '/mois',
         description: 'Pour établissements entiers',
         features: [
-          'Analyses illimitées',
-          'White-label API',
+          'Volume sur devis',
+          'Protocole d’intégrité sur mesure',
           'Account manager dédié',
-          'SLA 99,9%',
+          'Revue humaine des cas sensibles',
           'Fonctionnalités sur mesure',
           'Facturation personnalisée',
         ],
@@ -178,15 +208,17 @@ const config: ResellerConfig = {
     demoPage: true,
     heroDemo: true,
     plagiarismDetection: true,
+    // Confidential student/manuscript documents: no public report link.
+    pangramPublicDashboardLink: false,
   },
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
     title: 'Verify — Couche d’intégrité académique pour les établissements (IA + plagiat)',
-    description: 'Verify aide les établissements à passer de la charte à la mesure : détection IA multi-moteur, plagiat, rapport exportable. Données stockées dans l’UE (Supabase, Paris).',
+    description: 'Verify aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l’UE (Supabase, Paris).',
     keywords: ['intégrité académique', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'pilote établissement', 'Verify'],
     ogTitle: 'Verify — La couche d’intégrité pour les établissements',
-    ogDescription: 'Détection IA multi-moteur + plagiat, rapport exportable, données stockées dans l’UE.',
+    ogDescription: 'Détection IA + plagiat, rapport exportable, données hébergées dans l’UE.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -214,23 +246,23 @@ const config: ResellerConfig = {
       subtitle: "Verify réunit détection IA, plagiat, identification du modèle et rapports exportables dans une couche d’intégrité française, plus simple à déployer et pensée pour les établissements.",
       trustBadges: [
         'IA + plagiat',
-        'Multi-moteur',
-        'Données dans l’UE',
+        'Un signal, pas un verdict',
+        'Données hébergées dans l’UE',
       ],
-      ctaPrimary: 'Démarrer le pilote gratuit \u2192',
+      ctaPrimary: 'Découvrir le pilote établissement \u2192',
       ctaSecondary: 'Tester par moi-même',
     },
 
     // Trust bar
     trustBar: {
-      label: 'Reconnue par les experts',
-      names: ['University of Maryland', 'Chicago Booth', 'Stony Brook University', 'SOC2 Type 2'],
+      label: 'Technologie de détection : Pangram Labs',
+      names: ['Pangram Labs', 'Étude indépendante University of Maryland'],
     },
 
     // Features
     features: {
       title: 'Technologie de d\u00e9tection avanc\u00e9e',
-      subtitle: "Une pr\u00e9cision de 99,9% l\u00e0 o\u00f9 les autres \u00e9chouent. D\u00e9velopp\u00e9e par des chercheurs de Stanford, Tesla et Google.",
+      subtitle: "Motoris\u00e9e par Pangram Labs, dont le d\u00e9tecteur a \u00e9t\u00e9 \u00e9valu\u00e9 de fa\u00e7on ind\u00e9pendante (University of Maryland). Verify ajoute la lecture humaine, le protocole et le rapport.",
       items: [
         {
           icon: 'Brain',
@@ -254,8 +286,8 @@ const config: ResellerConfig = {
         },
         {
           icon: 'Zap',
-          title: 'Faux positifs quasi nuls',
-          description: 'V\u00e9rifi\u00e9e ind\u00e9pendamment pour son taux de faux positifs le plus bas du march\u00e9. Fiable \u00e0 100%.',
+          title: 'Un signal, pas un verdict',
+          description: 'Le score indique une probabilit\u00e9, pas une preuve. Nous recommandons toujours une seconde lecture humaine avant toute d\u00e9cision.',
         },
         {
           icon: 'Globe',
@@ -277,7 +309,7 @@ const config: ResellerConfig = {
 
     // Testimonials
     testimonials: {
-      title: 'Ce que disent les experts',
+      title: 'Ce qu’ils disent du moteur Pangram',
       items: [
         {
           quote: "Parmi les d\u00e9tecteurs automatiques, ce syst\u00e8me surpasse significativement tous les autres.",
@@ -303,11 +335,9 @@ const config: ResellerConfig = {
       subtitle: 'Comparez les principales solutions d’intégrité académique pour détecter IA et plagiat.',
       competitors: ['Verify', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
-        { label: 'Pr\u00e9cision', values: ['99,9%', '~85%', '~80%', '~94%'] },
-        { label: 'Taux de faux positifs', values: ['Quasi nul', '\u00c9lev\u00e9', 'Mod\u00e9r\u00e9', 'Mod\u00e9r\u00e9'] },
         { label: 'IA + plagiat dans le même rapport', values: [true, false, true, true] },
         { label: 'Support fran\u00e7ais', values: [true, false, false, false] },
-        { label: 'Prix (\u00e0 partir de)', values: ['Gratuit', '$9.99/mois', 'Sur devis', '$14.95/mois'] },
+        { label: 'Prix (\u00e0 partir de)', values: ['0,50 €/analyse', '$9.99/mois', 'Sur devis', '$14.95/mois'] },
         { label: 'Analyse par section', values: [true, false, false, true] },
         { label: 'Identification du mod\u00e8le', values: [true, true, false, false] },
       ],
@@ -317,7 +347,7 @@ const config: ResellerConfig = {
     pricing: {
       title: 'Tarification transparente et comp\u00e9titive',
       subtitle: 'Technologie Pangram Labs. Service fran\u00e7ais. Commencez gratuitement, \u00e9voluez selon vos besoins.',
-      footer: 'Technologie Pangram \u2022 99,9% de pr\u00e9cision \u2022 Conforme RGPD \u2022 Support fran\u00e7ais \u2022 SIREN 945117000',
+      footer: 'Technologie Pangram \u2022 Donn\u00e9es h\u00e9berg\u00e9es dans l\u2019UE \u2022 Support fran\u00e7ais \u2022 SIREN 945117000',
     },
 
     // CTA section
@@ -412,12 +442,12 @@ const config: ResellerConfig = {
       scansPerDay: {
         free: '5 analyses par jour',
         pro: '100 analyses par jour',
-        default: 'Analyses illimit\u00e9es',
+        default: 'Selon votre plan',
       },
 
       // Upgrade
       upgradeTitle: 'Choisir votre plan',
-      upgradeSubtitle: 'Tous les plans incluent une pr\u00e9cision de d\u00e9tection IA de 99,9%.',
+      upgradeSubtitle: 'Tous les plans incluent la d\u00e9tection IA Pangram et l\u2019identification du mod\u00e8le.',
       upgradeBack: 'Retour au compte',
       upgradePopular: 'POPULAIRE',
       upgradeFooter: 'Tous les plans sont factur\u00e9s mensuellement. Annulation possible \u00e0 tout moment. Paiement s\u00e9curis\u00e9 par Stripe.',
@@ -481,10 +511,10 @@ const config: ResellerConfig = {
       loading: 'Analyse en cours...',
       ctaTitle: 'Vous aimez Verify ?',
       ctaTitleLimit: 'Continuez avec un compte gratuit',
-      ctaBody: "Créez un compte gratuit pour analyser jusqu'à 50 textes par mois, avec l'historique complet et l'intégration Moodle.",
+      ctaBody: "Créez un compte gratuit, puis payez à l'analyse (0,50 €), avec l'historique complet de vos rapports.",
       ctaButton: 'Créer un compte gratuit',
-      featureAccuracyTitle: '99,9% de précision',
-      featureAccuracyBody: "Technologie validée par l'Université du Maryland",
+      featureAccuracyTitle: 'Moteur Pangram',
+      featureAccuracyBody: 'Évalué de façon indépendante (University of Maryland)',
       featureSectionTitle: 'Analyse par section',
       featureSectionBody: 'Identifie précisément quelles parties sont générées par IA',
       featureModelTitle: 'Détection du modèle',
@@ -544,6 +574,7 @@ const config: ResellerConfig = {
       message: 'Ce site utilise des cookies pour mesurer les performances publicitaires et am\u00e9liorer votre exp\u00e9rience. Aucune donn\u00e9e personnelle n\u2019est vendue.',
       accept: 'Accepter',
       decline: 'Refuser',
+      manage: 'G\u00e9rer les cookies',
     },
 
     // File upload
@@ -580,9 +611,10 @@ const config: ResellerConfig = {
       messagePlaceholder: 'D\u00e9crivez votre besoin...',
       selectSubject: 'S\u00e9lectionnez un sujet',
       subjectOptions: [
+        { value: 'Diagnostic', label: 'Diagnostic gratuit \u00e9tablissement (20 min)' },
+        { value: 'Pilote', label: 'Pilote 30 jours (1 500 \u20ac HT)' },
         { value: 'D\u00e9monstration', label: 'Demande de d\u00e9monstration' },
         { value: 'Devis', label: 'Devis universit\u00e9 / institution' },
-        { value: 'LMS', label: 'Int\u00e9gration LMS' },
         { value: 'Support', label: 'Support technique' },
         { value: 'Partenariat', label: 'Partenariat' },
         { value: 'Autre', label: 'Autre' },
@@ -592,15 +624,15 @@ const config: ResellerConfig = {
     // Demo video page
     demoVideo: {
       title: 'D\u00e9couvrez Verify en 5 minutes',
-      subtitle: 'Voyez comment d\u00e9tecter les contenus g\u00e9n\u00e9r\u00e9s par IA avec 99,9% de pr\u00e9cision',
+      subtitle: 'Voyez comment Verify d\u00e9tecte les contenus g\u00e9n\u00e9r\u00e9s par IA',
       videoPlaceholder: 'Vid\u00e9o de d\u00e9monstration',
       videoSoon: 'Bient\u00f4t disponible',
       readyCta: 'Pr\u00eat \u00e0 essayer ?',
-      readySubtitle: "Cr\u00e9ez votre compte gratuit et analysez jusqu'\u00e0 10 textes par mois",
+      readySubtitle: "Cr\u00e9ez votre compte gratuit et payez uniquement les analyses que vous lancez",
       readyButton: "Commencer l'essai gratuit \u2192",
       featureCards: [
-        { emoji: '\ud83c\udfaf', title: '99,9% de pr\u00e9cision', description: "Valid\u00e9e par l'Universit\u00e9 du Maryland" },
-        { emoji: '\u26a1', title: 'Int\u00e9gration Moodle', description: 'Installation en moins de 10 minutes' },
+        { emoji: '\ud83c\udfaf', title: 'Moteur Pangram', description: '\u00c9valu\u00e9 de fa\u00e7on ind\u00e9pendante (University of Maryland)' },
+        { emoji: '\u26a1', title: 'Rapport exportable', description: 'Un rapport clair \u00e0 partager avec l\u2019\u00e9quipe p\u00e9dagogique' },
         { emoji: '\ud83c\uddeb\ud83c\uddf7', title: '100% Fran\u00e7ais', description: 'RGPD, support et facturation FR' },
       ],
     },
@@ -613,11 +645,11 @@ const config: ResellerConfig = {
       welcome: {
         subject: 'Bienvenue sur Verify, {name}! \ud83c\udf89',
         greeting: 'Bienvenue, {name}! \ud83d\udc4b',
-        intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Verify. Vous avez maintenant acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9, v\u00e9rifi\u00e9 par l'Universit\u00e9 du Maryland.",
+        intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Verify. Vous avez maintenant acc\u00e8s \u00e0 la d\u00e9tection IA Pangram, \u00e9valu\u00e9e de fa\u00e7on ind\u00e9pendante.",
         trialTitle: '\ud83c\udf81 Votre essai gratuit inclut :',
         trialFeatures: [
-          '3 analyses par mois',
-          'Pr\u00e9cision de 99,9%',
+          'Paiement \u00e0 l\u2019analyse, sans abonnement',
+          'D\u00e9tection IA Pangram',
           'Identification du mod\u00e8le IA',
           'Historique de 7 jours',
         ],
@@ -642,7 +674,6 @@ const config: ResellerConfig = {
         upgradeTitle: '\ud83d\ude80 Passez \u00e0 Pro pour :',
         upgradeFeatures: [
           '1,000 analyses/mois (au lieu de 50)',
-          'Acc\u00e8s API',
           'Export PDF/CSV',
           'Support prioritaire',
         ],
@@ -660,8 +691,8 @@ const config: ResellerConfig = {
           lastDay: 'Derni\u00e8re chance !',
           remaining: 'Plus que {days} jours',
         },
-        body: "{name}, votre essai gratuit Verify se termine dans {days} jours. Ne perdez pas l'acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9.",
-        bodyLastDay: "{name}, votre essai gratuit Verify se termine aujourd'hui. Ne perdez pas l'acc\u00e8s au d\u00e9tecteur IA le plus pr\u00e9cis du march\u00e9.",
+        body: "{name}, votre essai gratuit Verify se termine dans {days} jours. Ne perdez pas l'acc\u00e8s \u00e0 la d\u00e9tection IA Pangram.",
+        bodyLastDay: "{name}, votre essai gratuit Verify se termine aujourd'hui. Ne perdez pas l'acc\u00e8s \u00e0 la d\u00e9tection IA Pangram.",
         countdown: {
           today: "AUJOURD'HUI",
           days: '{days} JOURS',
@@ -671,7 +702,6 @@ const config: ResellerConfig = {
         keepFeatures: [
           '1,000 analyses/mois',
           'Historique complet',
-          'Acc\u00e8s API',
           'Export PDF/CSV',
           'Support prioritaire',
         ],
@@ -735,11 +765,11 @@ const config: ResellerConfig = {
       },
       university: {
         name: 'Université',
-        features: ['10 000 analyses/mois', 'Multi-utilisateurs', 'API illimitée', 'Intégration LMS', 'Support prioritaire'],
+        features: ['10 000 analyses/mois', 'Multi-utilisateurs', 'Rapports exportables (PDF/CSV)', 'Onboarding des équipes', 'Support prioritaire'],
       },
       enterprise: {
         name: 'Enterprise',
-        features: ['Analyses illimitées', 'White-label API', 'Account manager dédié', 'SLA 99,9%'],
+        features: ['Volume sur devis', 'Protocole d’intégrité sur mesure', 'Account manager dédié', 'Revue humaine des cas sensibles'],
       },
     },
   },

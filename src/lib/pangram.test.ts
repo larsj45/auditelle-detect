@@ -90,6 +90,22 @@ test('detectAI creates and polls a Pangram 4 task', async () => {
   })
 })
 
+test('detectAI omits the public report link when disabled', async () => {
+  process.env.PANGRAM_API_KEY = 'test-api-key'
+  let createBody: Record<string, unknown> | undefined
+
+  globalThis.fetch = async (_input, init) => {
+    if (!createBody) {
+      createBody = JSON.parse(init?.body as string)
+      return Response.json({ task_id: 'private-task' })
+    }
+    return Response.json({ stage: 'STAGE_FAILED', headline: 'stop after create' })
+  }
+
+  await assert.rejects(detectAI('Confidential manuscript', { publicDashboardLink: false }))
+  assert.equal(createBody?.public_dashboard_link, false)
+})
+
 test('detectAI reports a failed async task without polling forever', async () => {
   process.env.PANGRAM_API_KEY = 'test-api-key'
   let requestCount = 0

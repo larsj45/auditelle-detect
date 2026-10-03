@@ -1,16 +1,17 @@
 import Link from 'next/link'
+import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
 import { Shield, Brain, FileSearch, BarChart3, Zap, GraduationCap, Check, X, Clock, Users, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Auditelle pour Professeurs — Detectez le contenu IA dans les travaux etudiants',
+  title: 'Verify pour les enseignants — Détectez le contenu IA dans les travaux étudiants',
   description:
-    'Outil de detection IA concu pour les enseignants. Verifiez les copies en quelques secondes avec 99,98% de precision. Conforme RGPD. Support francais.',
+    'Outil de détection IA pour les enseignants, motorisé par Pangram Labs. Vérifiez les copies en quelques secondes. Données hébergées dans l’UE. Support français.',
   openGraph: {
-    title: 'Auditelle pour Professeurs — Detectez le contenu IA',
+    title: 'Verify pour les enseignants — Détectez le contenu IA',
     description:
-      'Verifiez les travaux etudiants en quelques secondes. 99,98% de precision. Conforme RGPD.',
+      'Vérifiez les travaux étudiants en quelques secondes. Un signal, pas un verdict.',
     type: 'website',
     locale: 'fr_FR',
   },
@@ -25,19 +26,19 @@ export default async function ProfesseursPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Auditelle pour Professeurs',
+    name: `${config.name} pour les enseignants`,
     description: 'Outil de detection IA pour enseignants et universites francaises',
     url: 'https://auditelle.fr/professeurs',
     mainEntity: {
       '@type': 'SoftwareApplication',
-      name: 'Auditelle',
+      name: config.name,
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
       offers: {
         '@type': 'Offer',
-        price: '0',
+        price: '0.50',
         priceCurrency: 'EUR',
-        description: 'Essai gratuit - 3 analyses par mois',
+        description: 'Paiement a l\'analyse, sans abonnement',
       },
     },
   }
@@ -83,15 +84,15 @@ export default async function ProfesseursPage() {
           </h1>
           <p className="text-xl text-gray-600 mt-6 max-w-3xl mx-auto leading-relaxed">
             Verifiez les copies, memoires et rapports en quelques secondes.
-            99,98% de precision. Taux de faux positifs quasi nul.
-            Conforme RGPD.
+            Un signal a interpreter, pas un verdict.
+            Donnees hebergees dans l&apos;UE.
           </p>
 
           <div className="flex flex-wrap gap-6 mt-8 justify-center">
             {[
-              '99,98% de precision verifiee',
-              'Faux positifs quasi nuls',
-              'Conforme RGPD',
+              'Moteur Pangram Labs',
+              'Un signal, pas un verdict',
+              'Donnees hebergees dans l\'UE',
               'Support francais',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-gray-600 font-medium">
@@ -106,7 +107,7 @@ export default async function ProfesseursPage() {
               href="/signup"
               className="btn-primary text-lg px-10 py-4 rounded-xl shadow-lg shadow-orange-500/25 inline-flex items-center gap-2"
             >
-              Creer un compte gratuit
+              Creer un compte
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
@@ -133,14 +134,8 @@ export default async function ProfesseursPage() {
           <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed">
             Depuis novembre 2022, les enseignants font face a un defi sans precedent :
             comment distinguer un travail etudiant authentique d&apos;un texte genere par IA ?
-            Les outils existants manquent de precision et generent trop de faux positifs.
+            Un score seul ne suffit pas : il faut un signal clair, et une lecture humaine avant toute decision.
           </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <StatCard number="72%" label="des etudiants utilisent ChatGPT pour leurs travaux" source="Enquete DGESIP 2025" />
-            <StatCard number="40%" label="de faux positifs avec les detecteurs classiques" source="Etude U. Maryland" />
-            <StatCard number="99,98%" label="de precision avec Auditelle" source="Verifie independamment" />
-          </div>
         </div>
       </section>
 
@@ -176,8 +171,8 @@ export default async function ProfesseursPage() {
             />
             <FeatureCard
               icon={<Zap className="w-8 h-8" />}
-              title="Faux positifs quasi nuls"
-              description="Ne punissez jamais un etudiant innocent. Notre taux de faux positifs est le plus bas du marche, verifie independamment."
+              title="Un signal, pas un verdict"
+              description="Ne punissez jamais un etudiant sur la seule base d'un score. Verify vous aide a ouvrir la discussion, pas a la conclure."
             />
             <FeatureCard
               icon={<Clock className="w-8 h-8" />}
@@ -209,7 +204,7 @@ export default async function ProfesseursPage() {
             <StepCard
               number="2"
               title="Lancez l'analyse"
-              description="Notre moteur analyse chaque phrase avec la technologie Pangram Labs, la plus precise du marche."
+              description="Notre moteur analyse chaque phrase avec la technologie Pangram Labs, evaluee de facon independante."
             />
             <StepCard
               number="3"
@@ -225,7 +220,7 @@ export default async function ProfesseursPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Pourquoi les enseignants choisissent Auditelle
+              Pourquoi les enseignants choisissent {config.name}
             </h2>
             <p className="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">
               Comparez avec les alternatives disponibles sur le marche francais.
@@ -237,7 +232,7 @@ export default async function ProfesseursPage() {
                 <tr>
                   <th className="py-4 px-4 text-sm font-semibold text-gray-500"></th>
                   <th className="py-4 px-4 text-sm font-bold text-center text-[var(--accent)] bg-orange-50 rounded-t-xl">
-                    Auditelle
+                    {config.name}
                   </th>
                   <th className="py-4 px-4 text-sm font-bold text-center text-[var(--navy)]">
                     Turnitin AI
@@ -251,14 +246,12 @@ export default async function ProfesseursPage() {
                 </tr>
               </thead>
               <tbody>
-                <ComparisonRow label="Precision IA" values={['99,98%', '~80%', '~85%', '~75%']} />
-                <ComparisonRow label="Faux positifs" values={['Quasi nul', 'Modere', 'Eleve', 'Eleve']} />
                 <ComparisonRow label="Support en francais" values={[true, false, false, true]} />
                 <ComparisonRow label="Identification du modele" values={[true, false, true, false]} />
                 <ComparisonRow label="Analyse par section" values={[true, false, false, false]} />
                 <ComparisonRow label="Conforme RGPD" values={[true, true, false, true]} />
                 <ComparisonRow label="Essai gratuit" values={[true, false, true, false]} />
-                <ComparisonRow label="Prix (a partir de)" values={['Gratuit', 'Sur devis', '$9.99/mois', 'Sur devis']} />
+                <ComparisonRow label="Prix (a partir de)" values={['0,50 €/analyse', 'Sur devis', '$9.99/mois', 'Sur devis']} />
               </tbody>
             </table>
           </div>
@@ -292,24 +285,6 @@ export default async function ProfesseursPage() {
             />
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 mt-16 pt-12 border-t border-gray-100">
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[var(--navy)]">500+</p>
-              <p className="text-sm text-gray-500 mt-1">Enseignants inscrits</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[var(--navy)]">50 000+</p>
-              <p className="text-sm text-gray-500 mt-1">Analyses realisees</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[var(--navy)]">99,98%</p>
-              <p className="text-sm text-gray-500 mt-1">Precision verifiee</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[var(--navy)]">SOC2</p>
-              <p className="text-sm text-gray-500 mt-1">Type 2 certifie</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -361,15 +336,15 @@ export default async function ProfesseursPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <PricingCard
-              name="Gratuit"
-              price="0"
+              name="A l'analyse"
+              price="0,50"
               features={[
-                '3 analyses par mois',
-                'Score IA 99,98% precis',
+                '0,50 € par analyse',
+                'Aucun engagement',
                 'Identification du modele',
-                'Historique 7 jours',
+                'Les credits n\'expirent jamais',
               ]}
-              cta="Commencer gratuitement"
+              cta="Creer un compte"
               href="/signup"
             />
             <PricingCard
@@ -394,7 +369,7 @@ export default async function ProfesseursPage() {
               features={[
                 '10 000 analyses par mois',
                 'Multi-utilisateurs',
-                'API & integration LMS',
+                'Rapports exportables (PDF/CSV)',
                 'Support prioritaire',
                 'Rapports personnalises',
               ]}
@@ -418,24 +393,24 @@ export default async function ProfesseursPage() {
 
           <div className="space-y-6">
             <FaqItem
-              question="Auditelle est-il fiable pour prendre des decisions academiques ?"
-              answer="Oui. Notre technologie est verifiee independamment par l'Universite du Maryland et atteint 99,98% de precision avec un taux de faux positifs quasi nul. Nous recommandons toutefois de toujours combiner le resultat avec votre jugement pedagogique."
+              question={`${config.name} est-il fiable pour prendre des decisions academiques ?`}
+              answer="Le score est un signal, pas une preuve. Le moteur Pangram Labs a ete evalue de facon independante (University of Maryland), mais aucune decision academique ne doit reposer sur le seul score : combinez-le toujours avec un entretien et votre jugement pedagogique."
             />
             <FaqItem
               question="Les donnees de mes etudiants sont-elles protegees ?"
-              answer="Absolument. Auditelle est conforme RGPD. Les textes analyses ne sont pas stockes sur nos serveurs apres l'analyse. Aucune donnee n'est partagee avec des tiers. Hebergement europeen."
+              answer="Les comptes et l'historique des analyses sont heberges dans l'Union europeenne (Paris). L'analyse elle-meme est effectuee par notre fournisseur de detection, Pangram Labs. Contactez-nous pour le detail des sous-traitants et de la duree de conservation."
             />
             <FaqItem
               question="Quels modeles d'IA sont detectes ?"
-              answer="Auditelle detecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modeles de langage actuels, y compris les textes paraphrases par des outils de reformulation."
+              answer={`${config.name} detecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modeles de langage actuels, y compris les textes paraphrases par des outils de reformulation.`}
             />
             <FaqItem
-              question="Puis-je integrer Auditelle dans notre LMS (Moodle, Canvas) ?"
-              answer="Oui, avec le plan Universite ou Enterprise. Nous proposons une API et des integrations LMS sur mesure. Contactez-nous pour une demonstration."
+              question="Puis-je integrer Verify dans notre LMS (Moodle, Canvas) ?"
+              answer="Pas encore. Nous etudions les integrations LMS avec nos premiers etablissements pilotes."
             />
             <FaqItem
               question="L'analyse fonctionne-t-elle en francais ?"
-              answer="Oui. Auditelle detecte le contenu IA dans de nombreuses langues, dont le francais, l'anglais, l'espagnol, l'allemand et le portugais, avec la meme precision."
+              answer={`Oui. ${config.name} detecte le contenu IA dans de nombreuses langues, dont le francais, l'anglais, l'espagnol, l'allemand et le portugais.`}
             />
           </div>
         </div>
@@ -448,7 +423,7 @@ export default async function ProfesseursPage() {
             Protegez l&apos;integrite de vos evaluations
           </h2>
           <p className="text-gray-300 mt-4 text-lg">
-            Rejoignez des centaines d&apos;enseignants qui utilisent Auditelle pour verifier les travaux etudiants. Essai gratuit, sans engagement.
+            Creez un compte et payez uniquement les analyses que vous lancez, sans abonnement ni engagement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
@@ -459,7 +434,7 @@ export default async function ProfesseursPage() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/contact?subject=Demonstration%20Auditelle"
+              href="/contact?subject=D%C3%A9monstration"
               className="btn-secondary text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               Demander une demo
@@ -480,6 +455,7 @@ export default async function ProfesseursPage() {
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
             <a href={`mailto:${config.supportEmail}`} className="hover:text-white transition-colors">{config.supportEmail}</a>
+            <ManageCookiesLink className="hover:text-white transition-colors" />
           </div>
         </div>
       </footer>
@@ -488,16 +464,6 @@ export default async function ProfesseursPage() {
 }
 
 /* ── Local components ────────────────────────────────────────────────── */
-
-function StatCard({ number, label, source }: { number: string; label: string; source: string }) {
-  return (
-    <div className="card text-center p-8">
-      <p className="text-4xl font-bold text-[var(--accent)]">{number}</p>
-      <p className="text-gray-600 mt-2 font-medium">{label}</p>
-      <p className="text-xs text-gray-400 mt-2">{source}</p>
-    </div>
-  )
-}
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
