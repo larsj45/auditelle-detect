@@ -574,6 +574,7 @@ const config: ResellerConfig = {
       message: 'Ce site utilise des cookies pour mesurer les performances publicitaires et am\u00e9liorer votre exp\u00e9rience. Aucune donn\u00e9e personnelle n\u2019est vendue.',
       accept: 'Accepter',
       decline: 'Refuser',
+      manage: 'G\u00e9rer les cookies',
     },
 
     // File upload

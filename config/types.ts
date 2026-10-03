@@ -439,6 +439,7 @@ export interface ResellerStrings {
     message: string
     accept: string
     decline: string
+    manage?: string   // footer link that reopens the banner
   }
 
   // File upload

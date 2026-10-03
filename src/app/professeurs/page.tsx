@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
 import { Shield, Brain, FileSearch, BarChart3, Zap, GraduationCap, Check, X, Clock, Users, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -454,6 +455,7 @@ export default async function ProfesseursPage() {
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
             <a href={`mailto:${config.supportEmail}`} className="hover:text-white transition-colors">{config.supportEmail}</a>
+            <ManageCookiesLink className="hover:text-white transition-colors" />
           </div>
         </div>
       </footer>
