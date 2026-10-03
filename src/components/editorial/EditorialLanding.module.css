@@ -1233,6 +1233,11 @@
   cursor: pointer;
 }
 
+.formActions button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .formActions button:disabled {
   cursor: wait;
   opacity: 0.68;
