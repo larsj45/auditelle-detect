@@ -81,6 +81,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
         if (error) throw error
         const params = new URLSearchParams(window.location.search)
         const plan = params.get('plan')
+        if (plan && config.checkoutWaiver) {
+          // Payment needs the withdrawal waiver, collected on the upgrade page
+          window.location.href = '/dashboard/upgrade'
+          return
+        }
         if (plan && data.session?.access_token) {
           const redirected = await redirectToCheckout(data.session.access_token, plan)
           if (redirected) return
@@ -100,6 +105,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
           })
         }
         if (data.session) {
+          if (planParam && planParam !== 'free' && config.checkoutWaiver) {
+            window.location.href = '/dashboard/upgrade'
+            return
+          }
           if (planParam && planParam !== 'free') {
             setSuccess(s.accountCreatedRedirect)
             const redirected = await redirectToCheckout(data.session.access_token, planParam)

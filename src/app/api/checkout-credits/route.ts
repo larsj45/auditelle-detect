@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig, CREDIT_PACKS, PRICE_PER_SCAN_CENTS } from '@/lib/config'
+import { isWaiverMissing, waiverMetadata } from '@/lib/checkout-waiver'
 import type { ResellerConfig } from '@/lib/config'
 
 export const dynamic = 'force-dynamic'
@@ -43,11 +44,16 @@ export async function POST(request: NextRequest) {
     const token = match[1]
 
     let quantity = 10
+    let body: unknown = null
     try {
-      const body = await request.json()
-      quantity = Number(body.quantity) || 10
+      body = await request.json()
+      quantity = Number((body as { quantity?: unknown }).quantity) || 10
     } catch {
       // default 10
+    }
+
+    if (isWaiverMissing(config.checkoutWaiver, body)) {
+      return NextResponse.json({ error: config.checkoutWaiver!.required, step: 'withdrawal_waiver' }, { status: 400 })
     }
 
     // Validate quantity against packs
@@ -116,6 +122,7 @@ export async function POST(request: NextRequest) {
         quantity: String(pack.quantity),
         supabase_user_id: user.id,
         brand: config.id,
+        ...waiverMetadata(config.checkoutWaiver),
       },
     })
 
