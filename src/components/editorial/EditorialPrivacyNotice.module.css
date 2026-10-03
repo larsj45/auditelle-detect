@@ -1,0 +1,53 @@
+.page {
+  min-height: 100vh;
+  background: #f6f3ec;
+  color: #10201b;
+  font-family: var(--font-editorial-sans), system-ui, sans-serif;
+}
+
+.main {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 56px 20px 72px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.back {
+  color: #4f5b57;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.main h1 {
+  margin: 28px 0 8px;
+  font-family: var(--font-editorial-serif), Georgia, serif;
+  font-size: clamp(30px, 6vw, 42px);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.updated {
+  margin: 0 0 32px;
+  color: #697274;
+  font-size: 13px;
+}
+
+.main h2 {
+  margin: 32px 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.main p {
+  margin: 0 0 12px;
+}
+
+.footer {
+  padding: 24px 20px;
+  border-top: 1px solid rgba(16, 32, 27, 0.12);
+  color: #697274;
+  font-size: 12px;
+  text-align: center;
+}

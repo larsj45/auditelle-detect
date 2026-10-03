@@ -14,12 +14,13 @@ export interface EmailParams {
   subject: string
   html: string
   text?: string
+  fromName?: string
   replyTo?: string
 }
 
-export async function sendEmail({ to, subject, html, text, replyTo }: EmailParams) {
+export async function sendEmail({ to, subject, html, text, fromName, replyTo }: EmailParams) {
   const config = await getResellerConfig()
-  const fromEmail = `${config.name} <${config.noReplyEmail}>`
+  const fromEmail = `${fromName || config.name} <${config.noReplyEmail}>`
 
   const resend = getResend()
   if (!resend) {

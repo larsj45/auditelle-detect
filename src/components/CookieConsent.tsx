@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { useConfig } from '@/components/ConfigProvider'
+import { getCookieConsentCopy } from '@/components/cookieConsentCopy'
 
 declare function gtag(...args: unknown[]): void
 
@@ -21,18 +23,19 @@ function updateConsent(state: 'granted' | 'denied') {
 
 export function CookieConsent() {
   const config = useConfig()
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return localStorage.getItem(CONSENT_KEY) === null
-  })
+  const pathname = usePathname()
+  // Starts hidden on both server and client so the first client render matches
+  // the server HTML (reading localStorage during render caused React #418).
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY)
     if (stored === 'granted') {
       // User already accepted — update consent
       updateConsent('granted')
-    } else if (stored === 'denied') {
-      // User already declined — keep denied (default)
+    } else if (stored === null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reads browser-only storage after hydration
+      setVisible(true)
     }
   }, [])
 
@@ -57,7 +60,7 @@ export function CookieConsent() {
 
   if (!visible) return null
 
-  const s = config.strings.cookieConsent
+  const s = getCookieConsentCopy(pathname, config.strings.cookieConsent)
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[9999] p-4 sm:p-6">
