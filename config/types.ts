@@ -435,6 +435,20 @@ export interface ResellerStrings {
   }
 
   // Cookie consent banner
+  // Self-service account deletion on /dashboard/account. Absent = no button.
+  accountDeletion?: {
+    title: string
+    description: string
+    consequences: string[]
+    confirmLabel: string      // "type your email to confirm"
+    button: string
+    deleting: string
+    emailMismatch: string
+    error: string
+    emailSubject: string
+    emailBody: string
+  }
+
   cookieConsent: {
     message: string
     accept: string
