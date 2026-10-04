@@ -5,11 +5,11 @@ import { Shield, Brain, FileSearch, BarChart3, Zap, GraduationCap, Check, X, Clo
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Verify pour les enseignants — Détectez le contenu IA dans les travaux étudiants',
+  title: 'Lettrine pour les enseignants — Détectez le contenu IA dans les travaux étudiants',
   description:
     'Outil de détection IA pour les enseignants, motorisé par Pangram Labs. Vérifiez les copies en quelques secondes. Données hébergées dans l’UE. Support français.',
   openGraph: {
-    title: 'Verify pour les enseignants — Détectez le contenu IA',
+    title: 'Lettrine pour les enseignants — Détectez le contenu IA',
     description:
       'Vérifiez les travaux étudiants en quelques secondes. Un signal, pas un verdict.',
     type: 'website',
@@ -172,7 +172,7 @@ export default async function ProfesseursPage() {
             <FeatureCard
               icon={<Zap className="w-8 h-8" />}
               title="Un signal, pas un verdict"
-              description="Ne punissez jamais un etudiant sur la seule base d'un score. Verify vous aide a ouvrir la discussion, pas a la conclure."
+              description="Ne punissez jamais un etudiant sur la seule base d'un score. Lettrine vous aide a ouvrir la discussion, pas a la conclure."
             />
             <FeatureCard
               icon={<Clock className="w-8 h-8" />}
@@ -405,7 +405,7 @@ export default async function ProfesseursPage() {
               answer={`${config.name} detecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modeles de langage actuels, y compris les textes paraphrases par des outils de reformulation.`}
             />
             <FaqItem
-              question="Puis-je integrer Verify dans notre LMS (Moodle, Canvas) ?"
+              question="Puis-je integrer Lettrine dans notre LMS (Moodle, Canvas) ?"
               answer="Pas encore. Nous etudions les integrations LMS avec nos premiers etablissements pilotes."
             />
             <FaqItem

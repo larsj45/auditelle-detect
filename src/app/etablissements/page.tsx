@@ -16,11 +16,11 @@ import {
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Verify pour les établissements — La couche d’intégrité académique (pilote de 30 jours)',
+  title: 'Lettrine pour les établissements — La couche d’intégrité académique (pilote de 30 jours)',
   description:
-    "Verify aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l'UE (Supabase, Paris). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
+    "Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l'UE (Supabase, Paris). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
   openGraph: {
-    title: 'Verify pour les établissements — Couche d’intégrité académique',
+    title: 'Lettrine pour les établissements — Couche d’intégrité académique',
     description:
       'De la charte à la mesure : détection IA et plagiat, rapport exportable, données hébergées dans l’UE. Demandez un diagnostic gratuit.',
     type: 'website',
@@ -229,7 +229,7 @@ export default async function EtablissementsPage() {
               <StepCard
                 number="2"
                 title={`Pilote de ${pilot.duration} (${pilot.price})`}
-                description="Vos équipes analysent leurs travaux réels avec Verify, accompagnées par notre protocole de lecture des signaux."
+                description="Vos équipes analysent leurs travaux réels avec Lettrine, accompagnées par notre protocole de lecture des signaux."
               />
               <StepCard
                 number="3"
