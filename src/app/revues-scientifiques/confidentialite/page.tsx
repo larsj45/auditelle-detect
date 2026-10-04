@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getResellerConfig } from '@/lib/config'
+import { EDITORIAL_ORIGIN } from '@/lib/editorial-host'
 import EditorialPrivacyNotice from '@/components/editorial/EditorialPrivacyNotice'
 import { getEditorialCopy } from '@/components/editorial/editorialCopy'
 import { editorialFontVariables } from '@/components/editorial/editorialFonts'
@@ -22,8 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: content.metadata.title,
     description: content.metadata.description,
+    // The root layout carries the education product's keywords.
+    keywords: null,
     alternates: {
-      canonical: `https://${config.domain}${content.path}`,
+      canonical: `${EDITORIAL_ORIGIN}${content.path}`,
     },
     robots: { index: false, follow: true },
   }

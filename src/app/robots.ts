@@ -1,6 +1,11 @@
 import type { MetadataRoute } from 'next'
+import { headers } from 'next/headers'
+import { EDITORIAL_ORIGIN, LEGACY_ORIGIN, hostKind } from '@/lib/editorial-host'
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const host = (await headers()).get('host')
+  const origin = hostKind(host) === 'editorial' ? EDITORIAL_ORIGIN : LEGACY_ORIGIN
+
   return {
     rules: [
       {
@@ -9,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/', '/auth/', '/sso/', '/reset-password/'],
       },
     ],
-    sitemap: 'https://auditelle.fr/sitemap.xml',
+    sitemap: `${origin}/sitemap.xml`,
   }
 }

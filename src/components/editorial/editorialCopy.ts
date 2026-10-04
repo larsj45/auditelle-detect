@@ -188,17 +188,17 @@ export const editorialCopy = {
     path: '/revues-scientifiques',
     privacyNoticePath: '/revues-scientifiques/confidentialite',
     metadata: {
-      title: 'Auditelle Éditorial | Intégrité pour les revues scientifiques',
+      title: 'Lettrine Éditorial | Intégrité pour les revues scientifiques',
       description:
-        "Auditelle Éditorial aide les revues scientifiques francophones à examiner les signaux liés à l'IA et à la similarité, puis à documenter la révision humaine.",
-      pageName: 'Auditelle Éditorial',
+        "Lettrine Éditorial aide les revues scientifiques francophones à examiner les signaux liés à l'IA et à la similarité, puis à documenter la révision humaine.",
+      pageName: 'Lettrine Éditorial',
       pageDescription:
         "Plateforme d'intégrité éditoriale pour les revues scientifiques francophones.",
     },
     brand: {
-      name: 'Auditelle',
+      name: 'Lettrine',
       product: 'Éditorial',
-      ariaLabel: 'Auditelle Éditorial, accueil',
+      ariaLabel: 'Lettrine Éditorial, accueil',
     },
     navigation: {
       ariaLabel: 'Navigation principale',
@@ -239,7 +239,7 @@ export const editorialCopy = {
       label: 'Un processus documenté',
       title: 'De la soumission à la décision éditoriale, sans rupture de contexte.',
       intro:
-        "Auditelle rassemble l'analyse, les passages à examiner et l'historique de la revue dans un espace de travail commun.",
+        "Lettrine rassemble l'analyse, les passages à examiner et l'historique de la revue dans un espace de travail commun.",
       steps: [
         {
           number: '01',
@@ -257,7 +257,7 @@ export const editorialCopy = {
           number: '03',
           title: 'Examiner',
           description:
-            'Le comité interprète les résultats dans le contexte scientifique. Auditelle ne rend pas de verdict.',
+            'Le comité interprète les résultats dans le contexte scientifique. Lettrine ne rend pas de verdict.',
         },
         {
           number: '04',
@@ -277,7 +277,7 @@ export const editorialCopy = {
       label: 'Confidentialité par conception',
       title: 'Les manuscrits méritent un cadre explicite.',
       intro:
-        "Auditelle est conçu pour documenter la conservation, les accès et les prestataires impliqués avant le déploiement d'une équipe éditoriale.",
+        "Lettrine est conçue pour documenter la conservation, les accès et les prestataires impliqués avant le déploiement d'une équipe éditoriale.",
       principles: [
         {
           number: '01',
@@ -363,9 +363,9 @@ export const editorialCopy = {
       title: "Ce qu'une équipe éditoriale doit savoir.",
       items: [
         {
-          question: 'Auditelle décide-t-il si un auteur a utilisé une IA ?',
+          question: 'Lettrine décide-t-elle si un auteur a utilisé une IA ?',
           answer:
-            "Non. Auditelle met en évidence des signaux et des passages à examiner. L'interprétation appartient toujours au comité éditorial, dans le contexte du manuscrit et de la politique de la revue.",
+            "Non. Lettrine met en évidence des signaux et des passages à examiner. L'interprétation appartient toujours au comité éditorial, dans le contexte du manuscrit et de la politique de la revue.",
         },
         {
           question: 'Que comprend un contrôle éditorial ?',
@@ -375,7 +375,7 @@ export const editorialCopy = {
         {
           question: 'Les manuscrits sont-ils utilisés pour entraîner des modèles ?',
           answer:
-            "Les conditions de traitement doivent être confirmées dans la documentation contractuelle de chaque prestataire activé. Auditelle les présente avant la mise en production de la revue.",
+            "Les conditions de traitement doivent être confirmées dans la documentation contractuelle de chaque prestataire activé. Lettrine les présente avant la mise en production de la revue.",
         },
         {
           question: "Peut-on ajouter des contrôles en cours d'année ?",
@@ -390,14 +390,14 @@ export const editorialCopy = {
         {
           question: 'Comment demander un compte démo ?',
           answer:
-            "Transmettez les informations de votre revue avec une adresse professionnelle. Auditelle vérifie l'éligibilité et répond par email. Si la demande est retenue, les instructions d'accès sont envoyées sans rendez-vous obligatoire.",
+            "Transmettez les informations de votre revue avec une adresse professionnelle. Lettrine vérifie l'éligibilité et répond par email. Si la demande est retenue, les instructions d'accès sont envoyées sans rendez-vous obligatoire.",
         },
       ],
     },
     closing: {
       title: 'Donnez à votre comité des signaux clairs, pas un verdict automatique.',
       description:
-        "Découvrez comment Auditelle Éditorial peut s'intégrer au flux de votre revue scientifique.",
+        "Découvrez comment Lettrine Éditorial peut s'intégrer au flux de votre revue scientifique.",
     },
     footer: {
       legal: 'Auditelle SASU · Paris · SIREN 945117000',
@@ -405,7 +405,7 @@ export const editorialCopy = {
       manageCookies: 'Gérer les cookies',
     },
     reportPreview: {
-      ariaLabel: 'Aperçu du rapport Auditelle',
+      ariaLabel: 'Aperçu du rapport Lettrine',
       id: 'RAPPORT-2026-0341',
       status: 'Analyse terminée',
       kicker: 'Manuscrit · 6 214 mots · Revue des humanités numériques',
@@ -423,7 +423,7 @@ export const editorialCopy = {
       exportLabel: 'Exporter le rapport PDF',
     },
     workspace: {
-      ariaLabel: "Aperçu de l'espace Auditelle Éditorial",
+      ariaLabel: "Aperçu de l'espace Lettrine Éditorial",
       brand: 'AUDITELLE / REVUE DÉMO',
       cycle: 'Cycle éditorial 2026',
       export: 'Exporter',
@@ -539,17 +539,17 @@ export const editorialCopy = {
     path: '/vetenskapliga-tidskrifter',
     privacyNoticePath: '/vetenskapliga-tidskrifter/integritet',
     metadata: {
-      title: 'Verify Editorial | Integritet för vetenskapliga tidskrifter',
+      title: 'Lettrine Editorial | Integritet för vetenskapliga tidskrifter',
       description:
-        'Verify Editorial hjälper vetenskapliga tidskrifter att identifiera tecken på AI-genererat innehåll och textlikhet och dokumentera den mänskliga bedömningen.',
-      pageName: 'Verify Editorial',
+        'Lettrine Editorial hjälper vetenskapliga tidskrifter att identifiera tecken på AI-genererat innehåll och textlikhet och dokumentera den mänskliga bedömningen.',
+      pageName: 'Lettrine Editorial',
       pageDescription:
         'En plattform för redaktionell integritet för vetenskapliga tidskrifter i Sverige.',
     },
     brand: {
-      name: 'Verify',
+      name: 'Lettrine',
       product: 'Editorial',
-      ariaLabel: 'Verify Editorial, startsida',
+      ariaLabel: 'Lettrine Editorial, startsida',
     },
     navigation: {
       ariaLabel: 'Huvudnavigering',
@@ -573,7 +573,7 @@ export const editorialCopy = {
       title: 'Redaktionell integritet för vetenskapliga tidskrifter.',
       lead:
         'Granska manuskript, identifiera tecken på AI-genererat innehåll och textlikhet och dokumentera den redaktionella bedömningen i en tydlig rapport. Granskningen görs alltid av en människa.',
-      offerCta: 'Upptäck Verify Editorial',
+      offerCta: 'Upptäck Lettrine Editorial',
       principlesAriaLabel: 'Produktprinciper',
       principles: ['Signaler, inte beslut', 'Åtkomst för flera redaktörer', 'Exporterbara rapporter'],
     },
@@ -590,7 +590,7 @@ export const editorialCopy = {
       label: 'En dokumenterad process',
       title: 'Från inskickat manuskript till redaktionellt beslut – med hela sammanhanget samlat.',
       intro:
-        'Verify samlar analysen, de avsnitt som behöver granskas och tidskriftens historik på ett och samma ställe.',
+        'Lettrine samlar analysen, de avsnitt som behöver granskas och tidskriftens historik på ett och samma ställe.',
       steps: [
         {
           number: '01',
@@ -608,7 +608,7 @@ export const editorialCopy = {
           number: '03',
           title: 'Granska',
           description:
-            'Redaktionen tolkar resultatet i sitt vetenskapliga sammanhang. Verify fattar inga egna beslut.',
+            'Redaktionen tolkar resultatet i sitt vetenskapliga sammanhang. Lettrine fattar inga egna beslut.',
         },
         {
           number: '04',
@@ -628,7 +628,7 @@ export const editorialCopy = {
       label: 'Inbyggd integritet',
       title: 'Manuskript kräver tydliga ramar.',
       intro:
-        'Verify är utformat för att dokumentera lagring, åtkomst och berörda leverantörer innan en redaktion börjar använda tjänsten.',
+        'Lettrine är utformat för att dokumentera lagring, åtkomst och berörda leverantörer innan en redaktion börjar använda tjänsten.',
       principles: [
         {
           number: '01',
@@ -714,9 +714,9 @@ export const editorialCopy = {
       title: 'Vad behöver en redaktion veta.',
       items: [
         {
-          question: 'Avgör Verify om en författare har använt AI?',
+          question: 'Avgör Lettrine om en författare har använt AI?',
           answer:
-            'Nej. Verify visar signaler och avsnitt som behöver granskas. Tolkningen görs alltid av redaktionen utifrån manuskriptets sammanhang och tidskriftens policy.',
+            'Nej. Lettrine visar signaler och avsnitt som behöver granskas. Tolkningen görs alltid av redaktionen utifrån manuskriptets sammanhang och tidskriftens policy.',
         },
         {
           question: 'Vad ingår i en redaktionell granskning?',
@@ -726,7 +726,7 @@ export const editorialCopy = {
         {
           question: 'Används manuskript för att träna modeller?',
           answer:
-            'Villkoren för databehandling måste bekräftas i dokumentationen för varje aktiverad leverantör. Verify redovisar dem innan tidskriften går i produktion.',
+            'Villkoren för databehandling måste bekräftas i dokumentationen för varje aktiverad leverantör. Lettrine redovisar dem innan tidskriften går i produktion.',
         },
         {
           question: 'Kan fler granskningar läggas till under året?',
@@ -741,14 +741,14 @@ export const editorialCopy = {
         {
           question: 'Hur begär vi ett demokonto?',
           answer:
-            'Skicka information om tidskriften från en arbetsrelaterad e-postadress. Verify bedömer om organisationen är relevant och svarar via e-post. Om begäran godkänns skickas åtkomstinstruktioner utan krav på möte.',
+            'Skicka information om tidskriften från en arbetsrelaterad e-postadress. Lettrine bedömer om organisationen är relevant och svarar via e-post. Om begäran godkänns skickas åtkomstinstruktioner utan krav på möte.',
         },
       ],
     },
     closing: {
       title: 'Ge redaktionen tydliga signaler, inte ett automatiskt beslut.',
       description:
-        'Se hur Verify Editorial kan passa in i arbetsflödet för en vetenskaplig tidskrift.',
+        'Se hur Lettrine Editorial kan passa in i arbetsflödet för en vetenskaplig tidskrift.',
     },
     footer: {
       legal: 'Auditelle SASU · Paris · SIREN 945117000',
@@ -756,7 +756,7 @@ export const editorialCopy = {
       manageCookies: 'Hantera cookies',
     },
     reportPreview: {
-      ariaLabel: 'Förhandsvisning av Verify-rapport',
+      ariaLabel: 'Förhandsvisning av Lettrine-rapport',
       id: 'RAPPORT-2026-0341',
       status: 'Analysen är klar',
       kicker: 'Manuskript · 6 214 ord · Tidskrift för digital humaniora',
@@ -774,7 +774,7 @@ export const editorialCopy = {
       exportLabel: 'Exportera PDF-rapport',
     },
     workspace: {
-      ariaLabel: 'Förhandsvisning av miljön i Verify Editorial',
+      ariaLabel: 'Förhandsvisning av miljön i Lettrine Editorial',
       brand: 'VERIFY / DEMOTIDSKRIFT',
       cycle: 'Redaktionell cykel 2026',
       export: 'Exportera',
