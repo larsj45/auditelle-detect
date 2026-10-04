@@ -4,15 +4,16 @@ const config: ResellerConfig = {
   id: 'auditelle-fr',
 
   // ── Branding ──────────────────────────────────────────────────────────────
-  // Customer-facing brand is "Verify". The legal entity (Auditelle SASU) and
+  // Customer-facing brand is "Lettrine" (was "Verify" until 2026-10-03, dropped
+  // after a VERIFY trademark conflict). The legal entity (Auditelle SASU) and
   // the domain (auditelle.fr) stay as-is — entity/domain ≠ displayed brand.
-  name: 'Verify',
+  name: 'Lettrine',
   domain: 'auditelle.fr',
   // Vercel redirects the apex to www (308), so canonical URLs use www.
   siteUrl: 'https://www.auditelle.fr',
-  // Textual placeholder logos (swap the SVGs in /public/brands/verify/ when art exists).
-  logoColor: '/brands/verify/logo-color.svg',
-  logoWhite: '/brands/verify/logo-white.svg',
+  // Textual placeholder logos (swap the SVGs in /public/brands/lettrine/ when art exists).
+  logoColor: '/brands/lettrine/logo-color.svg',
+  logoWhite: '/brands/lettrine/logo-white.svg',
 
   // ── Theme ───────────────────────────────────────────────────────────────
   theme: {
@@ -216,10 +217,10 @@ const config: ResellerConfig = {
 
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
-    title: 'Verify — Couche d’intégrité académique pour les établissements (IA + plagiat)',
-    description: 'Verify aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l’UE (Supabase, Paris).',
-    keywords: ['intégrité académique', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'pilote établissement', 'Verify'],
-    ogTitle: 'Verify — La couche d’intégrité pour les établissements',
+    title: 'Lettrine — Couche d’intégrité académique pour les établissements (IA + plagiat)',
+    description: 'Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l’UE (Supabase, Paris).',
+    keywords: ['intégrité académique', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'pilote établissement', 'Lettrine'],
+    ogTitle: 'Lettrine — La couche d’intégrité pour les établissements',
     ogDescription: 'Détection IA + plagiat, rapport exportable, données hébergées dans l’UE.',
   },
 
@@ -245,7 +246,7 @@ const config: ResellerConfig = {
       badge: 'La couche d’intégrité pour les établissements',
       title: 'La plateforme d’intégrité académique qui ',
       titleAccent: 'détecte IA et plagiat',
-      subtitle: "Verify réunit détection IA, plagiat, identification du modèle et rapports exportables dans une couche d’intégrité française, plus simple à déployer et pensée pour les établissements.",
+      subtitle: "Lettrine réunit détection IA, plagiat, identification du modèle et rapports exportables dans une couche d’intégrité française, plus simple à déployer et pensée pour les établissements.",
       trustBadges: [
         'IA + plagiat',
         'Un signal, pas un verdict',
@@ -264,7 +265,7 @@ const config: ResellerConfig = {
     // Features
     features: {
       title: 'Technologie de d\u00e9tection avanc\u00e9e',
-      subtitle: "Motoris\u00e9e par Pangram Labs, dont le d\u00e9tecteur a \u00e9t\u00e9 \u00e9valu\u00e9 de fa\u00e7on ind\u00e9pendante (University of Maryland). Verify ajoute la lecture humaine, le protocole et le rapport.",
+      subtitle: "Motoris\u00e9e par Pangram Labs, dont le d\u00e9tecteur a \u00e9t\u00e9 \u00e9valu\u00e9 de fa\u00e7on ind\u00e9pendante (University of Maryland). Lettrine ajoute la lecture humaine, le protocole et le rapport.",
       items: [
         {
           icon: 'Brain',
@@ -333,9 +334,9 @@ const config: ResellerConfig = {
 
     // Competitor comparison
     comparison: {
-      title: 'Verify, la couche d’intégrité française',
+      title: 'Lettrine, la couche d’intégrité française',
       subtitle: 'Comparez les principales solutions d’intégrité académique pour détecter IA et plagiat.',
-      competitors: ['Verify', 'GPTZero', 'Turnitin', 'Originality.ai'],
+      competitors: ['Lettrine', 'GPTZero', 'Turnitin', 'Originality.ai'],
       rows: [
         { label: 'IA + plagiat dans le même rapport', values: [true, false, true, true] },
         { label: 'Support fran\u00e7ais', values: [true, false, false, false] },
@@ -355,7 +356,7 @@ const config: ResellerConfig = {
     // CTA section
     cta: {
       title: 'Prêt à passer de la charte à la mesure ?',
-      subtitle: "Essayez Verify pour vérifier l’IA et le plagiat dans un rapport clair, exportable et adapté aux établissements francophones.",
+      subtitle: "Essayez Lettrine pour vérifier l’IA et le plagiat dans un rapport clair, exportable et adapté aux établissements francophones.",
       button: 'Cr\u00e9er un compte gratuit \u2192',
     },
 
@@ -415,7 +416,7 @@ const config: ResellerConfig = {
       minCharsError: 'Veuillez entrer au moins 50 caract\u00e8res pour une analyse fiable.',
 
       // Onboarding
-      onboardingTitle: 'Bienvenue sur Verify ! 👋',
+      onboardingTitle: 'Bienvenue sur Lettrine ! 👋',
       onboardingBody: 'Collez un texte ci-dessous pour vérifier s\'il a été généré par IA — ou essayez avec un exemple.',
       onboardingCta: 'Essayer avec un exemple →',
       onboardingDismiss: 'Fermer',
@@ -458,7 +459,7 @@ const config: ResellerConfig = {
       upgradeChoose: 'Choisir {plan}',
       upgradeError: '\u00c9chec du paiement. Veuillez r\u00e9essayer.',
       upgradeCreditsTitle: 'Acheter des analyses',
-      upgradeCreditsSubtitle: 'Payez uniquement ce que vous utilisez. Idéal pour tester Verify ou corriger un lot ponctuel de copies.',
+      upgradeCreditsSubtitle: 'Payez uniquement ce que vous utilisez. Idéal pour tester Lettrine ou corriger un lot ponctuel de copies.',
       upgradeCurrentBalance: 'Solde actuel : {count}',
       upgradeCreditSingular: 'analyse',
       upgradeCreditPlural: 'analyses',
@@ -511,7 +512,7 @@ const config: ResellerConfig = {
       characterCount: '{count} / 5000 caractères',
       analyzeFree: 'Analyser gratuitement',
       loading: 'Analyse en cours...',
-      ctaTitle: 'Vous aimez Verify ?',
+      ctaTitle: 'Vous aimez Lettrine ?',
       ctaTitleLimit: 'Continuez avec un compte gratuit',
       ctaBody: "Créez un compte gratuit, puis payez à l'analyse (0,50 €), avec l'historique complet de vos rapports.",
       ctaButton: 'Créer un compte gratuit',
@@ -586,8 +587,8 @@ const config: ResellerConfig = {
       deleting: 'Suppression en cours...',
       emailMismatch: 'L’adresse saisie ne correspond pas à celle du compte.',
       error: 'La suppression n’a pas pu aboutir. Réessayez ou écrivez-nous à contact@auditelle.fr.',
-      emailSubject: 'Votre compte Verify a été supprimé',
-      emailBody: 'Bonjour,\n\nVotre compte Verify et l’historique de vos analyses ont été supprimés à votre demande. Tout abonnement en cours a été résilié.\n\nNos factures restent conservées pour nos obligations comptables.\n\nSi vous n’êtes pas à l’origine de cette demande, répondez à cet email.\n\nL’équipe Verify',
+      emailSubject: 'Votre compte Lettrine a été supprimé',
+      emailBody: 'Bonjour,\n\nVotre compte Lettrine et l’historique de vos analyses ont été supprimés à votre demande. Tout abonnement en cours a été résilié.\n\nNos factures restent conservées pour nos obligations comptables.\n\nSi vous n’êtes pas à l’origine de cette demande, répondez à cet email.\n\nL’équipe Lettrine',
     },
 
     cookieConsent: {
@@ -615,7 +616,7 @@ const config: ResellerConfig = {
       emailLabel: 'Email',
       companyName: 'Auditelle SASU',
       institutionCta: 'Universit\u00e9s & Institutions',
-      institutionDescription: "Vous souhaitez int\u00e9grer Verify dans votre \u00e9tablissement ? Contactez-nous pour un devis personnalis\u00e9 et une d\u00e9monstration.",
+      institutionDescription: "Vous souhaitez int\u00e9grer Lettrine dans votre \u00e9tablissement ? Contactez-nous pour un devis personnalis\u00e9 et une d\u00e9monstration.",
       formFullName: 'Nom complet *',
       formEmail: 'Email professionnel *',
       formOrganization: 'Organisation',
@@ -643,8 +644,8 @@ const config: ResellerConfig = {
 
     // Demo video page
     demoVideo: {
-      title: 'D\u00e9couvrez Verify en 5 minutes',
-      subtitle: 'Voyez comment Verify d\u00e9tecte les contenus g\u00e9n\u00e9r\u00e9s par IA',
+      title: 'D\u00e9couvrez Lettrine en 5 minutes',
+      subtitle: 'Voyez comment Lettrine d\u00e9tecte les contenus g\u00e9n\u00e9r\u00e9s par IA',
       videoPlaceholder: 'Vid\u00e9o de d\u00e9monstration',
       videoSoon: 'Bient\u00f4t disponible',
       readyCta: 'Pr\u00eat \u00e0 essayer ?',
@@ -663,9 +664,9 @@ const config: ResellerConfig = {
       legalFooter: '', // built at runtime from config
 
       welcome: {
-        subject: 'Bienvenue sur Verify, {name}! \ud83c\udf89',
+        subject: 'Bienvenue sur Lettrine, {name}! \ud83c\udf89',
         greeting: 'Bienvenue, {name}! \ud83d\udc4b',
-        intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Verify. Vous avez maintenant acc\u00e8s \u00e0 la d\u00e9tection IA Pangram, \u00e9valu\u00e9e de fa\u00e7on ind\u00e9pendante.",
+        intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Lettrine. Vous avez maintenant acc\u00e8s \u00e0 la d\u00e9tection IA Pangram, \u00e9valu\u00e9e de fa\u00e7on ind\u00e9pendante.",
         trialTitle: '\ud83c\udf81 Votre essai gratuit inclut :',
         trialFeatures: [
           'Paiement \u00e0 l\u2019analyse, sans abonnement',
@@ -689,7 +690,7 @@ const config: ResellerConfig = {
 
       upgradeReminder: {
         subject: '{name}, vous avez utilis\u00e9 {percent}% de vos analyses \ud83d\udcca',
-        title: 'Vous utilisez bien Verify! \ud83c\udfaf',
+        title: 'Vous utilisez bien Lettrine! \ud83c\udfaf',
         body: '{name}, vous avez d\u00e9j\u00e0 utilis\u00e9 {percent}% de vos analyses gratuites ce mois-ci.',
         upgradeTitle: '\ud83d\ude80 Passez \u00e0 Pro pour :',
         upgradeFeatures: [
@@ -711,8 +712,8 @@ const config: ResellerConfig = {
           lastDay: 'Derni\u00e8re chance !',
           remaining: 'Plus que {days} jours',
         },
-        body: "{name}, votre essai gratuit Verify se termine dans {days} jours. Ne perdez pas l'acc\u00e8s \u00e0 la d\u00e9tection IA Pangram.",
-        bodyLastDay: "{name}, votre essai gratuit Verify se termine aujourd'hui. Ne perdez pas l'acc\u00e8s \u00e0 la d\u00e9tection IA Pangram.",
+        body: "{name}, votre essai gratuit Lettrine se termine dans {days} jours. Ne perdez pas l'acc\u00e8s \u00e0 la d\u00e9tection IA Pangram.",
+        bodyLastDay: "{name}, votre essai gratuit Lettrine se termine aujourd'hui. Ne perdez pas l'acc\u00e8s \u00e0 la d\u00e9tection IA Pangram.",
         countdown: {
           today: "AUJOURD'HUI",
           days: '{days} JOURS',
@@ -732,7 +733,7 @@ const config: ResellerConfig = {
       limitReached: {
         subject: '{name}, vous avez atteint votre limite 🔒',
         greeting: 'Bonjour {name},',
-        body: "Vous avez utilisé toutes vos analyses gratuites sur Verify ce mois-ci. Votre compteur se remet à zéro le mois prochain — mais si vous avez besoin d'analyser plus de textes maintenant, nous avons quelque chose pour vous.",
+        body: "Vous avez utilisé toutes vos analyses gratuites sur Lettrine ce mois-ci. Votre compteur se remet à zéro le mois prochain — mais si vous avez besoin d'analyser plus de textes maintenant, nous avons quelque chose pour vous.",
         offerTitle: '🎁 Offre exclusive — 30% de réduction',
         offerBody: "Passez au plan Starter (1 000 analyses/mois) ou Student (100 analyses/mois) avec 30% de réduction sur votre premier mois.",
         offerFeatures: [
@@ -749,7 +750,7 @@ const config: ResellerConfig = {
       trialEnded: {
         subject: "{name}, votre essai est termin\u00e9 \u2014 mais il n'est pas trop tard ! \ud83d\udd13",
         title: 'Vous nous manquez, {name} ! \ud83d\udc4b',
-        body: "Votre essai gratuit Verify est termin\u00e9. Mais ne vous inqui\u00e9tez pas \u2014 votre compte et votre historique sont toujours l\u00e0, et vous attendent.",
+        body: "Votre essai gratuit Lettrine est termin\u00e9. Mais ne vous inqui\u00e9tez pas \u2014 votre compte et votre historique sont toujours l\u00e0, et vous attendent.",
         offerTitle: '\ud83c\udf81 Offre sp\u00e9ciale :',
         offerBody: 'Passez \u00e0 Pro dans les prochaines 48 heures et b\u00e9n\u00e9ficiez de 50% de r\u00e9duction sur votre premier mois.',
         ctaButton: 'Profiter de -50% \u2192',
