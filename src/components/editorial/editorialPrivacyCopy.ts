@@ -23,11 +23,11 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
     htmlLang: 'fr',
     path: '/revues-scientifiques/confidentialite',
     backPath: '/revues-scientifiques',
-    backLabel: 'Retour à Auditelle Éditorial',
+    backLabel: 'Retour à Lettrine Éditorial',
     metadata: {
-      title: 'Données personnelles | Auditelle Éditorial',
+      title: 'Données personnelles | Lettrine Éditorial',
       description:
-        'Comment Auditelle traite les données transmises via le formulaire de demande de compte démo Éditorial.',
+        'Comment Auditelle traite les données transmises via le formulaire de demande de compte démo Lettrine Éditorial.',
     },
     title: 'Données personnelles : demandes de compte démo',
     updated: 'Dernière mise à jour : octobre 2026',
@@ -76,7 +76,7 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       {
         heading: 'Cookies',
         paragraphs: [
-          "Les cookies de mesure d'audience et de mesure publicitaire ne sont activés que si vous les acceptez dans le bandeau cookies. Vous pouvez modifier votre choix à tout moment via le lien « Gérer les cookies » en bas de la page Auditelle Éditorial.",
+          "Les cookies de mesure d'audience et de mesure publicitaire ne sont activés que si vous les acceptez dans le bandeau cookies. Vous pouvez modifier votre choix à tout moment via le lien « Gérer les cookies » en bas de la page Lettrine Éditorial.",
         ],
       },
     ],
@@ -86,11 +86,11 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
     htmlLang: 'sv',
     path: '/vetenskapliga-tidskrifter/integritet',
     backPath: '/vetenskapliga-tidskrifter',
-    backLabel: 'Tillbaka till Verify Editorial',
+    backLabel: 'Tillbaka till Lettrine Editorial',
     metadata: {
-      title: 'Personuppgifter | Verify Editorial',
+      title: 'Personuppgifter | Lettrine Editorial',
       description:
-        'Så behandlar Auditelle de uppgifter som skickas via formuläret för demokonto i Verify Editorial.',
+        'Så behandlar Auditelle de uppgifter som skickas via formuläret för demokonto i Lettrine Editorial.',
     },
     title: 'Personuppgifter: förfrågningar om demokonto',
     updated: 'Senast uppdaterad: oktober 2026',
@@ -139,7 +139,7 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       {
         heading: 'Cookies',
         paragraphs: [
-          'Cookies för besöksstatistik och annonsmätning används bara om du godkänner dem i cookiebannern. Du kan när som helst ändra ditt val via länken ”Hantera cookies” längst ned på sidan för Verify Editorial.',
+          'Cookies för besöksstatistik och annonsmätning används bara om du godkänner dem i cookiebannern. Du kan när som helst ändra ditt val via länken ”Hantera cookies” längst ned på sidan för Lettrine Editorial.',
         ],
       },
     ],

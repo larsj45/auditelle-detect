@@ -60,7 +60,7 @@ test('sends the required internal email before the best-effort confirmation', as
   assert.equal(sent[1].replyTo, 'contact@auditelle.fr')
 })
 
-test('uses Verify Editorial and Swedish copy for Swedish requests', async () => {
+test('uses Lettrine Editorial and Swedish copy for Swedish requests', async () => {
   const sent: EditorialEmailParams[] = []
   const result = await handleEditorialDemoRequest(
     {
@@ -80,7 +80,7 @@ test('uses Verify Editorial and Swedish copy for Swedish requests', async () => 
   )
 
   assert.equal(result.status, 200)
-  assert.equal(sent[0].fromName, 'Verify Editorial')
+  assert.equal(sent[0].fromName, 'Lettrine Editorial')
   assert.match(sent[0].subject, /^\[SV\]/)
   assert.match(sent[0].html, /Svara direkt på detta meddelande/)
   assert.match(sent[0].text, /Svara direkt på detta meddelande/)

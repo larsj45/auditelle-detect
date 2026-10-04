@@ -67,9 +67,9 @@ interface EditorialEmailCopy {
 
 const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
   fr: {
-    brand: 'Auditelle Éditorial',
+    brand: 'Lettrine Éditorial',
     internalTitle: 'Nouvelle demande de compte démo Éditorial',
-    internalIntro: 'Une institution souhaite évaluer Auditelle Éditorial.',
+    internalIntro: 'Une institution souhaite évaluer Lettrine Éditorial.',
     contextTitle: 'Contexte',
     missingContext: 'Non renseigné',
     replyInstruction: 'Répondre directement à cet email pour poursuivre par écrit.',
@@ -100,23 +100,23 @@ const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
       journal: 'Éditorial Revue',
       organization: 'Éditorial Organisation',
     },
-    confirmationSubject: 'Votre demande de compte démo Auditelle Éditorial',
+    confirmationSubject: 'Votre demande de compte démo Lettrine Éditorial',
     confirmationTitle: 'Votre demande de compte démo est bien reçue',
     greeting: (name) => `Bonjour ${name},`,
     confirmationReceived: (organization) =>
-      `Nous avons reçu la demande de ${organization} pour évaluer Auditelle Éditorial.`,
+      `Nous avons reçu la demande de ${organization} pour évaluer Lettrine Éditorial.`,
     confirmationNext:
       "Notre équipe vérifie l'éligibilité et le périmètre demandé. Si la demande est retenue, les instructions d'accès au compte démo seront envoyées par email. Aucun rendez-vous n'est nécessaire.",
-    signature: 'Auditelle Éditorial',
+    signature: 'Lettrine Éditorial · Auditelle SASU',
   },
   sv: {
-    brand: 'Verify Editorial',
-    internalTitle: 'Ny begäran om ett demokonto för Verify Editorial',
-    internalIntro: 'En organisation vill utvärdera Verify Editorial.',
+    brand: 'Lettrine Editorial',
+    internalTitle: 'Ny begäran om ett demokonto för Lettrine Editorial',
+    internalIntro: 'En organisation vill utvärdera Lettrine Editorial.',
     contextTitle: 'Bakgrund',
     missingContext: 'Ingen information lämnad',
     replyInstruction: 'Svara direkt på detta meddelande för att fortsätta via e-post.',
-    internalSubject: (organization) => `[SV] Demokonto Verify Editorial — ${organization}`,
+    internalSubject: (organization) => `[SV] Demokonto Lettrine Editorial — ${organization}`,
     labels: {
       name: 'Namn',
       email: 'E-post',
@@ -143,14 +143,14 @@ const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
       journal: 'Editorial Journal',
       organization: 'Editorial Organisation',
     },
-    confirmationSubject: 'Vi har tagit emot er begäran om ett demokonto för Verify Editorial',
+    confirmationSubject: 'Vi har tagit emot er begäran om ett demokonto för Lettrine Editorial',
     confirmationTitle: 'Er begäran om ett demokonto har tagits emot',
     greeting: (name) => `Hej ${name},`,
     confirmationReceived: (organization) =>
-      `Vi har tagit emot en begäran från ${organization} om att utvärdera Verify Editorial.`,
+      `Vi har tagit emot en begäran från ${organization} om att utvärdera Lettrine Editorial.`,
     confirmationNext:
       'Vi bedömer organisationen och den önskade prisplanen. Om begäran godkänns skickas åtkomstinstruktioner via e-post. Inget möte krävs.',
-    signature: 'Verify Editorial · Auditelle SASU',
+    signature: 'Lettrine Editorial · Auditelle SASU',
   },
 }
 

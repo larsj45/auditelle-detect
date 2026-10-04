@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { IBM_Plex_Mono, Newsreader, Public_Sans } from 'next/font/google'
 import { getResellerConfig } from '@/lib/config'
+import { EDITORIAL_ORIGIN } from '@/lib/editorial-host'
 import EditorialLanding from '@/components/editorial/EditorialLanding'
 import { editorialCopy, getEditorialCopy } from '@/components/editorial/editorialCopy'
 
@@ -39,11 +40,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: content.metadata.title,
     description: content.metadata.description,
+    // The root layout carries the education product's keywords.
+    keywords: null,
     alternates: {
-      canonical: `https://${config.domain}${content.path}`,
+      canonical: `${EDITORIAL_ORIGIN}${content.path}`,
       languages: {
-        fr: `https://${config.domain}${editorialCopy.fr.path}`,
-        sv: `https://${config.domain}${editorialCopy.sv.path}`,
+        fr: `${EDITORIAL_ORIGIN}${editorialCopy.fr.path}`,
+        sv: `${EDITORIAL_ORIGIN}${editorialCopy.sv.path}`,
       },
     },
     openGraph: {
@@ -51,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: content.metadata.description,
       type: 'website',
       locale: content.openGraphLocale,
-      url: `https://${config.domain}${content.path}`,
+      url: `${EDITORIAL_ORIGIN}${content.path}`,
       siteName: content.metadata.pageName,
     },
     twitter: {
@@ -75,7 +78,7 @@ export default async function VetenskapligaTidskrifterPage() {
     '@type': 'WebPage',
     name: content.metadata.pageName,
     description: content.metadata.pageDescription,
-    url: `https://${config.domain}${content.path}`,
+    url: `${EDITORIAL_ORIGIN}${content.path}`,
     inLanguage: content.htmlLang,
     publisher: {
       '@type': 'Organization',
