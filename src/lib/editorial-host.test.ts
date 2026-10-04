@@ -49,7 +49,7 @@ test('serves editorial pages and host-aware files on lettrine.eu', () => {
 
 test('sends education and account pages on lettrine.eu back to auditelle.fr', () => {
   assert.deepEqual(resolveEditorialRedirect({ host: 'lettrine.eu', pathname: '/login' }), {
-    location: 'https://auditelle.fr/login',
+    location: 'https://www.auditelle.fr/login',
     status: 308,
   })
 })

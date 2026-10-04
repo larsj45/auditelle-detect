@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { getResellerConfig } from '@/lib/config'
+import { siteOrigin } from '@/lib/site-origin'
 import { ConfigProvider } from '@/components/ConfigProvider'
 import { CookieConsent } from '@/components/CookieConsent'
 import './globals.css'
@@ -17,17 +18,16 @@ export const metadata: Metadata = {
     type: 'website',
     locale: config.locale,
     siteName: config.name,
-    url: `https://${config.domain}`,
+    url: siteOrigin(config),
   },
   twitter: {
     card: 'summary_large_image',
     title: config.seo.ogTitle,
     description: config.seo.ogDescription,
   },
-  alternates: {
-    canonical: `https://${config.domain}`,
-  },
-  metadataBase: new URL(`https://${config.domain}`),
+  // No canonical here: a layout-level canonical is inherited by every page that
+  // does not set its own, pointing /tester, /contact etc. at the home page.
+  metadataBase: new URL(siteOrigin(config)),
 }
 
 export default function RootLayout({

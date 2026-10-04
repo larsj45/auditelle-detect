@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
   },
   alternates: {
-    canonical: 'https://auditelle.fr/etablissements',
+    canonical: 'https://www.auditelle.fr/etablissements',
   },
 }
 
@@ -42,7 +42,7 @@ export default async function EtablissementsPage() {
     name: `${config.name} pour les établissements`,
     description:
       "Couche d'intégrité académique pour les établissements français : détection IA Pangram, plagiat, rapport exportable.",
-    url: 'https://auditelle.fr/etablissements',
+    url: 'https://www.auditelle.fr/etablissements',
   }
 
   return (

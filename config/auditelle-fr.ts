@@ -8,6 +8,8 @@ const config: ResellerConfig = {
   // the domain (auditelle.fr) stay as-is — entity/domain ≠ displayed brand.
   name: 'Verify',
   domain: 'auditelle.fr',
+  // Vercel redirects the apex to www (308), so canonical URLs use www.
+  siteUrl: 'https://www.auditelle.fr',
   // Textual placeholder logos (swap the SVGs in /public/brands/verify/ when art exists).
   logoColor: '/brands/verify/logo-color.svg',
   logoWhite: '/brands/verify/logo-white.svg',

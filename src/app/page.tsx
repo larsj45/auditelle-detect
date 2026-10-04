@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PricingCard from '@/components/PricingCard'
@@ -5,6 +6,7 @@ import HeroDemo from '@/components/HeroDemo'
 import { Shield, Brain, FileSearch, BarChart3, Zap, Globe, Check, X } from 'lucide-react'
 import Link from 'next/link'
 import { getResellerConfig } from '@/lib/config'
+import { siteOrigin } from '@/lib/site-origin'
 
 const iconMap: Record<string, React.ReactNode> = {
   Brain: <Brain className="w-8 h-8" />,
@@ -13,6 +15,11 @@ const iconMap: Record<string, React.ReactNode> = {
   Shield: <Shield className="w-8 h-8" />,
   Zap: <Zap className="w-8 h-8" />,
   Globe: <Globe className="w-8 h-8" />,
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getResellerConfig()
+  return { alternates: { canonical: siteOrigin(config) } }
 }
 
 export default async function Home() {
@@ -24,7 +31,7 @@ export default async function Home() {
       {
         '@type': 'SoftwareApplication',
         name: config.name,
-        url: `https://${config.domain}`,
+        url: siteOrigin(config),
         applicationCategory: 'EducationalApplication',
         operatingSystem: 'Web',
         description: config.seo.description,
@@ -41,8 +48,8 @@ export default async function Home() {
       {
         '@type': 'Organization',
         name: config.legalEntity,
-        url: `https://${config.domain}`,
-        logo: `https://${config.domain}/images/logo-color.png`,
+        url: siteOrigin(config),
+        logo: `${siteOrigin(config)}/images/logo-color.png`,
         sameAs: [],
         contactPoint: {
           '@type': 'ContactPoint',
@@ -53,7 +60,7 @@ export default async function Home() {
       },
       {
         '@type': 'WebSite',
-        url: `https://${config.domain}`,
+        url: siteOrigin(config),
         name: config.name,
         description: config.seo.description,
         inLanguage: config.htmlLang,

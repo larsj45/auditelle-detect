@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
   },
   alternates: {
-    canonical: 'https://auditelle.fr/professeurs',
+    canonical: 'https://www.auditelle.fr/professeurs',
   },
 }
 
@@ -28,7 +28,7 @@ export default async function ProfesseursPage() {
     '@type': 'WebPage',
     name: `${config.name} pour les enseignants`,
     description: 'Outil de detection IA pour enseignants et universites francaises',
-    url: 'https://auditelle.fr/professeurs',
+    url: 'https://www.auditelle.fr/professeurs',
     mainEntity: {
       '@type': 'SoftwareApplication',
       name: config.name,
