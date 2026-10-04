@@ -93,7 +93,7 @@ export default async function EtablissementsPage() {
             <span className="text-[var(--accent)]">mesure</span>
           </h1>
           <p className="text-xl text-gray-600 mt-6 max-w-3xl mx-auto leading-relaxed">
-            Votre établissement a une charte sur l&apos;usage de l&apos;IA. {config.name} la rend
+            Votre établissement a une charte sur l&apos;usage de l&apos;IA. {config.name}{' '}la rend
             mesurable : une couche d&apos;intégrité qui aide vos enseignants à objectiver
             l&apos;usage de l&apos;IA dans les travaux, sans rendre de verdict à leur place.
           </p>
@@ -135,8 +135,8 @@ export default async function EtablissementsPage() {
             <span className="text-[var(--accent)]">pas un verdict</span>
           </h2>
           <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed">
-            {config.name} ne décide pas à la place de l&apos;enseignant et ne sanctionne personne.
-            Il fournit un signal mesuré et un rapport clair pour nourrir le dialogue
+            {config.name}{' '}ne décide pas à la place de l&apos;enseignant et ne sanctionne personne.
+            Elle fournit un signal mesuré et un rapport clair pour nourrir le dialogue
             pédagogique. La décision reste humaine, éclairée par la donnée.
           </p>
         </div>
@@ -198,7 +198,7 @@ export default async function EtablissementsPage() {
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
                   Les données de vos analyses sont <strong>stockées dans l&apos;Union européenne</strong>{' '}
-                  (Supabase, région Paris). {config.name} est édité par {config.legalEntity},
+                  (Supabase, région Paris). {config.name} est éditée par {config.legalEntity},
                   société française ({config.registrationLabel} {config.registrationNumber}).
                   Lors d&apos;un pilote, nous vous communiquons en toute transparence le détail
                   des traitements et des éventuels sous-traitants techniques, pour que votre
