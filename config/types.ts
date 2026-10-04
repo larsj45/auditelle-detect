@@ -11,6 +11,7 @@ export interface ResellerConfig {
   // ── Branding ──────────────────────────────────────────────────────────────
   name: string          // e.g. "Auditelle"
   domain: string        // e.g. "auditelle.fr"
+  siteUrl?: string      // canonical origin when it is not https://${domain}, e.g. "https://www.auditelle.fr"
   logoColor: string     // path: e.g. "/brands/auditelle/logo-color.svg"
   logoWhite: string     // path: e.g. "/brands/auditelle/logo-white.svg"
   logoHeight?: string   // CSS height for logo img: e.g. "2rem", "3rem" (default "2rem")

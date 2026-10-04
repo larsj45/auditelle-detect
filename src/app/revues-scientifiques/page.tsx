@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { IBM_Plex_Mono, Newsreader, Public_Sans } from 'next/font/google'
 import { getResellerConfig } from '@/lib/config'
+import { siteOrigin } from '@/lib/site-origin'
 import { EDITORIAL_ORIGIN } from '@/lib/editorial-host'
 import EditorialLanding from '@/components/editorial/EditorialLanding'
 import { editorialCopy, getEditorialCopy } from '@/components/editorial/editorialCopy'
@@ -83,7 +84,7 @@ export default async function RevuesScientifiquesPage() {
     publisher: {
       '@type': 'Organization',
       name: config.legalEntity,
-      url: `https://${config.domain}`,
+      url: siteOrigin(config),
     },
   }
 

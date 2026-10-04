@@ -18,7 +18,7 @@ test('lists both editorial landings on lettrine.eu with reciprocal hreflang alte
 
 test('removes the editorial pages from the auditelle.fr sitemap', () => {
   const urls = legacySitemap().map((entry) => entry.url)
-  assert.ok(urls.includes('https://auditelle.fr'))
+  assert.ok(urls.includes('https://www.auditelle.fr'))
   assert.ok(!urls.some((url) => url.includes('/vetenskapliga-tidskrifter') || url.includes('/revues-scientifiques')))
 })
 

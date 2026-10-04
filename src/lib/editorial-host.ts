@@ -4,7 +4,7 @@
 
 export const EDITORIAL_HOST = 'lettrine.eu'
 export const EDITORIAL_ORIGIN = `https://${EDITORIAL_HOST}`
-export const LEGACY_ORIGIN = 'https://auditelle.fr'
+export const LEGACY_ORIGIN = 'https://www.auditelle.fr'
 
 const EDITORIAL_HOSTS = new Set([EDITORIAL_HOST, `www.${EDITORIAL_HOST}`])
 const LEGACY_HOSTS = new Set(['auditelle.fr', 'www.auditelle.fr'])
