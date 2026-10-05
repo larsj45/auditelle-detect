@@ -12,13 +12,21 @@ export type AppErrorCode =
   | 'invalid_credentials'
   | 'email_not_confirmed'
   | 'unknown'
+  | 'manuscript_ref_required'
+  | 'too_short'
+  | 'too_long'
+  | 'insufficient_units'
+  | 'analysis_failed'
+  | 'no_org'
+  | 'unsupported_file'
+  | 'extract_failed'
 
 export interface LettrineAppCopy {
   locale: LettrineLocale
   htmlLang: string
   landingPath: string
   brand: string
-  paths: { signup: string; login: string; confirm: string; dashboard: string }
+  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string }
   common: { back: string; logout: string; loading: string; required: string }
   signup: {
     metaTitle: string
@@ -69,6 +77,51 @@ export interface LettrineAppCopy {
     historyTitle: string
     historyEmpty: string
   }
+  analysis: {
+    metaTitle: string
+    title: string
+    intro: string
+    reference: string
+    referenceHint: string
+    titleField: string
+    optional: string
+    text: string
+    textPlaceholder: string
+    upload: string
+    uploadHint: string
+    extracting: string
+    words: (n: number) => string
+    cost: (units: number) => string
+    balance: (units: number) => string
+    notEnough: string
+    buyMore: string
+    dataNotice: string
+    submit: (units: number) => string
+    submitting: string
+  }
+  report: {
+    metaTitle: string
+    disclaimerTitle: string
+    disclaimer: string
+    reference: string
+    created: string
+    wordsUnits: (words: number, units: number) => string
+    aiTitle: string
+    aiShares: (ai: number, assisted: number, human: number) => string
+    aiLegend: { ai: string; assisted: string; human: string }
+    segmentsTitle: string
+    segmentsSummary: (high: number, medium: number, words: number) => string
+    level: { high: string; medium: string }
+    noSegments: string
+    aiUnavailable: string
+    similarityTitle: string
+    similarityPercent: (percent: number) => string
+    noSources: string
+    similarityUnavailable: string
+    partial: string
+    backToOverview: string
+    notFound: string
+  }
   email: {
     subject: string
     greeting: (name: string) => string
@@ -91,6 +144,8 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       login: '/app/sv/login',
       confirm: '/app/sv/confirm',
       dashboard: '/app/sv',
+      newAnalysis: '/app/sv/new',
+      analysis: (id) => `/app/sv/analysis/${id}`,
     },
     common: {
       back: 'Tillbaka till Lettrine Editorial',
@@ -147,6 +202,51 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       historyTitle: 'Analyser',
       historyEmpty: 'Inga analyser ännu.',
     },
+    analysis: {
+      metaTitle: 'Ny analys | Lettrine Editorial',
+      title: 'Ny analys',
+      intro: 'Klistra in manuskriptets text eller ladda upp en fil. Du ser kostnaden innan analysen startar.',
+      reference: 'Manuskriptets referens',
+      referenceHint: 'Er interna beteckning, till exempel MS-2026-014. Ange inte författarens namn.',
+      titleField: 'Titel',
+      optional: 'valfritt',
+      text: 'Text',
+      textPlaceholder: 'Klistra in manuskriptets text här.',
+      upload: 'Ladda upp PDF, DOCX eller TXT',
+      uploadHint: 'Texten läses i din webbläsare. Filen skickas inte till oss.',
+      extracting: 'Läser filen…',
+      words: (n) => `${n.toLocaleString('sv-SE')} ord`,
+      cost: (units) => `Kostnad: ${units} ${units === 1 ? 'enhet' : 'enheter'}`,
+      balance: (units) => `Tillgängligt: ${units} enheter`,
+      notEnough: 'Saldot räcker inte för den här texten.',
+      buyMore: 'Köp fler enheter',
+      dataNotice: 'Texten skickas till Pangram Labs (USA) för analys. Vi sparar resultatet och de markerade avsnitten, inte hela manuskriptet.',
+      submit: (units) => `Starta analysen (${units} ${units === 1 ? 'enhet' : 'enheter'})`,
+      submitting: 'Analyserar… det kan ta upp till en minut.',
+    },
+    report: {
+      metaTitle: 'Rapport | Lettrine Editorial',
+      disclaimerTitle: 'Signaler, inte beslut',
+      disclaimer: 'Rapporten visar signaler och avsnitt som kan behöva granskas. Den bevisar inte hur texten har skrivits. Tolkningen och beslutet görs alltid av redaktionen.',
+      reference: 'Referens',
+      created: 'Analyserad',
+      wordsUnits: (words, units) => `${words.toLocaleString('sv-SE')} ord · ${units} ${units === 1 ? 'enhet' : 'enheter'}`,
+      aiTitle: 'Tecken på AI-genererat innehåll',
+      aiShares: (ai, assisted, human) => `Uppskattad andel av texten: ${ai} % AI-genererad, ${assisted} % AI-assisterad, ${human} % mänskligt skriven.`,
+      aiLegend: { ai: 'AI-genererad', assisted: 'AI-assisterad', human: 'Mänskligt skriven' },
+      segmentsTitle: 'Avsnitt att granska',
+      segmentsSummary: (high, medium, words) => `${high} avsnitt med stark signal och ${medium} med måttlig signal (${words.toLocaleString('sv-SE')} ord).`,
+      level: { high: 'Stark signal', medium: 'Måttlig signal' },
+      noSegments: 'Inga avsnitt med tydliga signaler.',
+      aiUnavailable: 'AI-analysen kunde inte genomföras för den här texten.',
+      similarityTitle: 'Textlikhet',
+      similarityPercent: (percent) => `${percent} % av texten liknar andra källor.`,
+      noSources: 'Inga matchande källor hittades.',
+      similarityUnavailable: 'Textlikhetsanalysen kunde inte genomföras för den här texten.',
+      partial: 'En av analyserna kunde inte genomföras. Rapporten visar det som finns.',
+      backToOverview: 'Till översikten',
+      notFound: 'Rapporten finns inte eller har raderats.',
+    },
     email: {
       subject: 'Bekräfta ditt konto hos Lettrine Editorial',
       greeting: (name) => `Hej ${name},`,
@@ -169,6 +269,14 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       invalid_credentials: 'Fel e-postadress eller lösenord.',
       email_not_confirmed: 'Bekräfta din e-postadress via länken vi skickade.',
       unknown: 'Något gick fel. Försök igen.',
+      manuscript_ref_required: 'Ange manuskriptets referens.',
+      too_short: 'Texten är för kort för en analys (minst 50 ord).',
+      too_long: 'Texten är för lång (högst 20 000 ord per analys).',
+      insufficient_units: 'Saldot räcker inte för den här texten.',
+      analysis_failed: 'Analysen kunde inte genomföras. Inga enheter har dragits. Försök igen om en stund.',
+      no_org: 'Kontot är inte kopplat till någon tidskrift ännu.',
+      unsupported_file: 'Filformatet stöds inte. Använd PDF, DOCX eller TXT.',
+      extract_failed: 'Texten kunde inte läsas från filen. Klistra in den i stället.',
     },
   },
   fr: {
@@ -181,6 +289,8 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       login: '/app/fr/login',
       confirm: '/app/fr/confirm',
       dashboard: '/app/fr',
+      newAnalysis: '/app/fr/new',
+      analysis: (id) => `/app/fr/analysis/${id}`,
     },
     common: {
       back: 'Retour à Lettrine Éditorial',
@@ -237,6 +347,51 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       historyTitle: 'Analyses',
       historyEmpty: 'Aucune analyse pour le moment.',
     },
+    analysis: {
+      metaTitle: 'Nouvelle analyse | Lettrine Éditorial',
+      title: 'Nouvelle analyse',
+      intro: 'Collez le texte du manuscrit ou importez un fichier. Le coût s’affiche avant le lancement.',
+      reference: 'Référence du manuscrit',
+      referenceHint: 'Votre référence interne, par exemple MS-2026-014. N’indiquez pas le nom de l’auteur.',
+      titleField: 'Titre',
+      optional: 'facultatif',
+      text: 'Texte',
+      textPlaceholder: 'Collez ici le texte du manuscrit.',
+      upload: 'Importer un PDF, DOCX ou TXT',
+      uploadHint: 'Le texte est lu dans votre navigateur. Le fichier ne nous est pas envoyé.',
+      extracting: 'Lecture du fichier…',
+      words: (n) => `${n.toLocaleString('fr-FR')} mots`,
+      cost: (units) => `Coût : ${units} ${units === 1 ? 'unité' : 'unités'}`,
+      balance: (units) => `Disponible : ${units} unités`,
+      notEnough: 'Le solde ne suffit pas pour ce texte.',
+      buyMore: 'Acheter des unités',
+      dataNotice: 'Le texte est envoyé à Pangram Labs (États-Unis) pour l’analyse. Nous conservons le résultat et les passages signalés, pas le manuscrit complet.',
+      submit: (units) => `Lancer l’analyse (${units} ${units === 1 ? 'unité' : 'unités'})`,
+      submitting: 'Analyse en cours… cela peut prendre jusqu’à une minute.',
+    },
+    report: {
+      metaTitle: 'Rapport | Lettrine Éditorial',
+      disclaimerTitle: 'Des signaux, pas un verdict',
+      disclaimer: 'Le rapport présente des signaux et des passages à examiner. Il ne prouve pas la manière dont le texte a été écrit. L’interprétation et la décision appartiennent toujours au comité éditorial.',
+      reference: 'Référence',
+      created: 'Analysé le',
+      wordsUnits: (words, units) => `${words.toLocaleString('fr-FR')} mots · ${units} ${units === 1 ? 'unité' : 'unités'}`,
+      aiTitle: 'Signaux de contenu généré par IA',
+      aiShares: (ai, assisted, human) => `Part estimée du texte : ${ai} % générée par IA, ${assisted} % assistée par IA, ${human} % rédigée par un humain.`,
+      aiLegend: { ai: 'Générée par IA', assisted: 'Assistée par IA', human: 'Rédigée par un humain' },
+      segmentsTitle: 'Passages à examiner',
+      segmentsSummary: (high, medium, words) => `${high} passage(s) avec un signal fort et ${medium} avec un signal modéré (${words.toLocaleString('fr-FR')} mots).`,
+      level: { high: 'Signal fort', medium: 'Signal modéré' },
+      noSegments: 'Aucun passage avec un signal net.',
+      aiUnavailable: 'L’analyse IA n’a pas pu être réalisée pour ce texte.',
+      similarityTitle: 'Similarité',
+      similarityPercent: (percent) => `${percent} % du texte ressemble à d’autres sources.`,
+      noSources: 'Aucune source correspondante.',
+      similarityUnavailable: 'L’analyse de similarité n’a pas pu être réalisée pour ce texte.',
+      partial: 'L’une des analyses n’a pas pu être réalisée. Le rapport présente ce qui est disponible.',
+      backToOverview: 'Retour au tableau de bord',
+      notFound: 'Ce rapport n’existe pas ou a été supprimé.',
+    },
     email: {
       subject: 'Confirmez votre compte Lettrine Éditorial',
       greeting: (name) => `Bonjour ${name},`,
@@ -259,6 +414,14 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       invalid_credentials: 'Adresse email ou mot de passe incorrect.',
       email_not_confirmed: 'Confirmez votre adresse email via le lien envoyé.',
       unknown: 'Une erreur est survenue. Réessayez.',
+      manuscript_ref_required: 'Indiquez la référence du manuscrit.',
+      too_short: 'Le texte est trop court pour une analyse (50 mots minimum).',
+      too_long: 'Le texte est trop long (20 000 mots maximum par analyse).',
+      insufficient_units: 'Le solde ne suffit pas pour ce texte.',
+      analysis_failed: 'L’analyse n’a pas pu être réalisée. Aucune unité n’a été décomptée. Réessayez dans un instant.',
+      no_org: 'Ce compte n’est encore rattaché à aucune revue.',
+      unsupported_file: 'Format non pris en charge. Utilisez un PDF, DOCX ou TXT.',
+      extract_failed: 'Le texte n’a pas pu être lu dans le fichier. Collez-le plutôt.',
     },
   },
 }
