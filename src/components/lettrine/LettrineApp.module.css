@@ -338,3 +338,90 @@ a.button {
   color: #173d32;
   font-weight: 600;
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.choices {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.decisionRecorded {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: #e6efe9;
+}
+
+@media print {
+  .noPrint {
+    display: none !important;
+  }
+
+  .page {
+    background: #ffffff;
+  }
+
+  .card {
+    border: 0;
+    padding: 0;
+    break-inside: avoid-page;
+  }
+
+  .card + .card {
+    margin-top: 24px;
+  }
+}
+
+.select {
+  padding: 10px 12px;
+  border: 1px solid #c9c3b6;
+  background: #ffffff;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #e3ded2;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #ece8de;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  color: #697274;
+  font-family: var(--font-editorial-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.table a {
+  color: #173d32;
+  font-weight: 600;
+}

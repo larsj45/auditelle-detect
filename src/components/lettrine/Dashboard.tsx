@@ -64,7 +64,7 @@ export default function Dashboard({ locale }: { locale: LettrineLocale }) {
         .from('lettrine_analyses')
         .select('id, manuscript_ref, title, units, created_at')
         .order('created_at', { ascending: false })
-        .limit(20)
+        .limit(5)
       setAnalyses((rows as AnalysisItem[] | null) ?? [])
     }
     load().catch(() => setError(copy.errors.unknown))
@@ -106,6 +106,11 @@ export default function Dashboard({ locale }: { locale: LettrineLocale }) {
                     </li>
                   ))}
                 </ul>
+              )}
+              {analyses.length > 0 && (
+                <p className={styles.muted}>
+                  <a href={copy.paths.history}>{d.allAnalyses}</a>
+                </p>
               )}
             </section>
           </div>

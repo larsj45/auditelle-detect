@@ -20,13 +20,16 @@ export type AppErrorCode =
   | 'no_org'
   | 'unsupported_file'
   | 'extract_failed'
+  | 'invalid_decision'
+  | 'note_too_long'
+  | 'not_found'
 
 export interface LettrineAppCopy {
   locale: LettrineLocale
   htmlLang: string
   landingPath: string
   brand: string
-  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string }
+  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string; history: string }
   common: { back: string; logout: string; loading: string; required: string }
   signup: {
     metaTitle: string
@@ -76,6 +79,7 @@ export interface LettrineAppCopy {
     newAnalysisSoon: string
     historyTitle: string
     historyEmpty: string
+    allAnalyses: string
   }
   analysis: {
     metaTitle: string
@@ -121,6 +125,29 @@ export interface LettrineAppCopy {
     partial: string
     backToOverview: string
     notFound: string
+    decisionTitle: string
+    decisionIntro: string
+    decisionLabels: Record<'proceed' | 'clarify' | 'reject_other' | 'no_action', string>
+    notePlaceholder: string
+    saveDecision: string
+    savingDecision: string
+    decisionSaved: (date: string) => string
+    exportPdf: string
+    deleteAnalysis: string
+    deleteConfirm: string
+    retention: (date: string) => string
+  }
+  history: {
+    metaTitle: string
+    title: string
+    filterLabel: string
+    filterAll: string
+    filterUndecided: string
+    reference: string
+    date: string
+    decision: string
+    undecided: string
+    empty: string
   }
   email: {
     subject: string
@@ -146,6 +173,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       dashboard: '/app/sv',
       newAnalysis: '/app/sv/new',
       analysis: (id) => `/app/sv/analysis/${id}`,
+      history: '/app/sv/history',
     },
     common: {
       back: 'Tillbaka till Lettrine Editorial',
@@ -201,6 +229,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       newAnalysisSoon: 'Analysfunktionen öppnar inom kort.',
       historyTitle: 'Analyser',
       historyEmpty: 'Inga analyser ännu.',
+      allAnalyses: 'Visa alla analyser',
     },
     analysis: {
       metaTitle: 'Ny analys | Lettrine Editorial',
@@ -246,6 +275,34 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       partial: 'En av analyserna kunde inte genomföras. Rapporten visar det som finns.',
       backToOverview: 'Till översikten',
       notFound: 'Rapporten finns inte eller har raderats.',
+      decisionTitle: 'Redaktionens beslut',
+      decisionIntro: 'Dokumentera hur redaktionen har hanterat manuskriptet. Beslutet sparas med rapporten och kommer med i exporten.',
+      decisionLabels: {
+        proceed: 'Går vidare i granskningen',
+        clarify: 'Förtydligande begärs av författaren',
+        reject_other: 'Avböjs av andra skäl',
+        no_action: 'Ingen åtgärd',
+      },
+      notePlaceholder: 'Motivering eller anteckning (valfritt)',
+      saveDecision: 'Spara beslutet',
+      savingDecision: 'Sparar…',
+      decisionSaved: (date) => `Beslutet sparades ${date}.`,
+      exportPdf: 'Exportera PDF',
+      deleteAnalysis: 'Radera analysen',
+      deleteConfirm: 'Radera analysen och beslutet permanent?',
+      retention: (date) => `Raderas automatiskt ${date}.`,
+    },
+    history: {
+      metaTitle: 'Analyser | Lettrine Editorial',
+      title: 'Alla analyser',
+      filterLabel: 'Visa',
+      filterAll: 'Alla',
+      filterUndecided: 'Utan beslut',
+      reference: 'Referens',
+      date: 'Datum',
+      decision: 'Beslut',
+      undecided: 'Inget beslut ännu',
+      empty: 'Inga analyser att visa.',
     },
     email: {
       subject: 'Bekräfta ditt konto hos Lettrine Editorial',
@@ -277,6 +334,9 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       no_org: 'Kontot är inte kopplat till någon tidskrift ännu.',
       unsupported_file: 'Filformatet stöds inte. Använd PDF, DOCX eller TXT.',
       extract_failed: 'Texten kunde inte läsas från filen. Klistra in den i stället.',
+      invalid_decision: 'Välj ett beslut.',
+      note_too_long: 'Anteckningen är för lång (högst 4 000 tecken).',
+      not_found: 'Analysen finns inte längre.',
     },
   },
   fr: {
@@ -291,6 +351,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       dashboard: '/app/fr',
       newAnalysis: '/app/fr/new',
       analysis: (id) => `/app/fr/analysis/${id}`,
+      history: '/app/fr/history',
     },
     common: {
       back: 'Retour à Lettrine Éditorial',
@@ -346,6 +407,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       newAnalysisSoon: 'La fonction d’analyse ouvre très bientôt.',
       historyTitle: 'Analyses',
       historyEmpty: 'Aucune analyse pour le moment.',
+      allAnalyses: 'Voir toutes les analyses',
     },
     analysis: {
       metaTitle: 'Nouvelle analyse | Lettrine Éditorial',
@@ -391,6 +453,34 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       partial: 'L’une des analyses n’a pas pu être réalisée. Le rapport présente ce qui est disponible.',
       backToOverview: 'Retour au tableau de bord',
       notFound: 'Ce rapport n’existe pas ou a été supprimé.',
+      decisionTitle: 'Décision du comité éditorial',
+      decisionIntro: 'Documentez la manière dont le comité a traité le manuscrit. La décision est conservée avec le rapport et figure dans l’export.',
+      decisionLabels: {
+        proceed: 'Poursuite de l’évaluation',
+        clarify: 'Demande d’éclaircissements à l’auteur',
+        reject_other: 'Refus pour d’autres motifs',
+        no_action: 'Aucune suite',
+      },
+      notePlaceholder: 'Motivation ou note (facultatif)',
+      saveDecision: 'Enregistrer la décision',
+      savingDecision: 'Enregistrement…',
+      decisionSaved: (date) => `Décision enregistrée le ${date}.`,
+      exportPdf: 'Exporter en PDF',
+      deleteAnalysis: 'Supprimer l’analyse',
+      deleteConfirm: 'Supprimer définitivement l’analyse et la décision ?',
+      retention: (date) => `Suppression automatique le ${date}.`,
+    },
+    history: {
+      metaTitle: 'Analyses | Lettrine Éditorial',
+      title: 'Toutes les analyses',
+      filterLabel: 'Afficher',
+      filterAll: 'Toutes',
+      filterUndecided: 'Sans décision',
+      reference: 'Référence',
+      date: 'Date',
+      decision: 'Décision',
+      undecided: 'Pas encore de décision',
+      empty: 'Aucune analyse à afficher.',
     },
     email: {
       subject: 'Confirmez votre compte Lettrine Éditorial',
@@ -422,6 +512,9 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       no_org: 'Ce compte n’est encore rattaché à aucune revue.',
       unsupported_file: 'Format non pris en charge. Utilisez un PDF, DOCX ou TXT.',
       extract_failed: 'Le texte n’a pas pu être lu dans le fichier. Collez-le plutôt.',
+      invalid_decision: 'Choisissez une décision.',
+      note_too_long: 'La note est trop longue (4 000 caractères maximum).',
+      not_found: 'Cette analyse n’existe plus.',
     },
   },
 }
