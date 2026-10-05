@@ -8,7 +8,8 @@ export const LEGACY_ORIGIN = 'https://www.auditelle.fr'
 
 const EDITORIAL_HOSTS = new Set([EDITORIAL_HOST, `www.${EDITORIAL_HOST}`])
 const LEGACY_HOSTS = new Set(['auditelle.fr', 'www.auditelle.fr'])
-const EDITORIAL_PATH_PREFIXES = ['/vetenskapliga-tidskrifter', '/revues-scientifiques']
+// '/app' is the Lettrine self-service app (accounts, analyses, reports).
+const EDITORIAL_PATH_PREFIXES = ['/vetenskapliga-tidskrifter', '/revues-scientifiques', '/app']
 // Served on both hosts, with host-aware content.
 const SHARED_PATHS = new Set(['/robots.txt', '/sitemap.xml'])
 const NORDIC_LANGUAGES = new Set(['sv', 'da', 'no', 'nb', 'nn', 'fi', 'is'])

@@ -80,3 +80,12 @@ test('does nothing on preview and local hosts', () => {
     null
   )
 })
+
+test('serves the self-service app on lettrine.eu and moves it there from auditelle.fr', () => {
+  assert.equal(resolveEditorialRedirect({ host: 'lettrine.eu', pathname: '/app/sv' }), null)
+  assert.deepEqual(resolveEditorialRedirect({ host: 'www.auditelle.fr', pathname: '/app/fr/inscription' }), {
+    location: 'https://lettrine.eu/app/fr/inscription',
+    status: 308,
+  })
+  assert.equal(resolveEditorialRedirect({ host: 'auditelle.fr', pathname: '/apple' }), null)
+})
