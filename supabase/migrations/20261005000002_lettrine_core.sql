@@ -6,7 +6,9 @@
 -- goes through server routes (service role) or the SECURITY DEFINER functions
 -- below, which are not executable by anon/authenticated.
 --
--- NOT YET APPLIED. Requires Lars's authorisation.
+-- Applied to production on 2026-10-05 (authorised by Lars), together with the
+-- explicit REVOKEs at the end: Supabase grants EXECUTE on new functions to
+-- anon/authenticated by default, which REVOKE ... FROM PUBLIC does not remove.
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS public.lettrine_orgs (
@@ -173,3 +175,11 @@ GRANT EXECUTE ON FUNCTION public.lettrine_org_balance(UUID) TO service_role;
 GRANT EXECUTE ON FUNCTION public.lettrine_consume_units(UUID, INTEGER, UUID) TO service_role;
 GRANT EXECUTE ON FUNCTION public.lettrine_grant_trial(UUID, TEXT, INTEGER) TO service_role;
 GRANT EXECUTE ON FUNCTION public.lettrine_credit_purchase(UUID, INTEGER, TEXT) TO service_role;
+
+-- Supabase default privileges grant EXECUTE to anon/authenticated on new
+-- functions; remove them explicitly.
+REVOKE EXECUTE ON FUNCTION public.lettrine_org_balance(UUID) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.lettrine_consume_units(UUID, INTEGER, UUID) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.lettrine_grant_trial(UUID, TEXT, INTEGER) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.lettrine_credit_purchase(UUID, INTEGER, TEXT) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.lettrine_is_member(UUID) FROM anon;
