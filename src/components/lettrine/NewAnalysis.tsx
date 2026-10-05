@@ -145,7 +145,11 @@ export default function NewAnalysis({ locale }: { locale: LettrineLocale }) {
         </div>
         {tooShort && <p className={styles.error}>{copy.errors.too_short}</p>}
         {tooLong && <p className={styles.error}>{copy.errors.too_long}</p>}
-        {notEnough && <p className={styles.error}>{a.notEnough}</p>}
+        {notEnough && (
+          <p className={styles.error}>
+            {a.notEnough} <a href={copy.paths.buy}>{a.buyMore}</a>
+          </p>
+        )}
         <p className={styles.notice}>{a.dataNotice}</p>
         {error && <p className={styles.error} role="alert">{error}</p>}
         <button className={styles.button} type="submit" disabled={!canSubmit}>

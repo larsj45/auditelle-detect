@@ -33,6 +33,7 @@ export default function Dashboard({ locale }: { locale: LettrineLocale }) {
   const [me, setMe] = useState<MeResponse | null>(null)
   const [error, setError] = useState('')
   const [welcome, setWelcome] = useState<'granted' | 'none' | null>(null)
+  const [purchased, setPurchased] = useState(false)
   const [analyses, setAnalyses] = useState<AnalysisItem[]>([])
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function Dashboard({ locale }: { locale: LettrineLocale }) {
     // Browser-only query string, read after hydration (same reason as CookieConsent).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (params.get('welcome') === '1') setWelcome(params.get('trial') === 'granted' ? 'granted' : 'none')
+    setPurchased(params.get('purchase') === 'success')
 
     async function load() {
       const { data } = await supabase.auth.getSession()
@@ -81,6 +83,7 @@ export default function Dashboard({ locale }: { locale: LettrineLocale }) {
       {!me && !error && <p className={styles.intro}>{copy.common.loading}</p>}
       {me?.org && (
         <>
+          {purchased && <p className={styles.success}>{d.purchaseReceived}</p>}
           {welcome === 'granted' && <p className={styles.success}>{d.trialGranted(TRIAL_UNITS)}</p>}
           {welcome === 'none' && <p className={styles.notice}>{d.trialAlreadyUsed}</p>}
           <h1 className={styles.title}>{me.org.name}</h1>
@@ -89,6 +92,9 @@ export default function Dashboard({ locale }: { locale: LettrineLocale }) {
               <p className={styles.label}>{d.balanceLabel}</p>
               <p className={styles.balance}>{me.balance ?? 0}</p>
               <p className={styles.hint}>{d.unitExplainer}</p>
+              <p className={styles.muted}>
+                <a href={copy.paths.buy}>{d.buyMore}</a>
+              </p>
             </section>
             <section className={styles.card}>
               <p className={styles.label}>{d.historyTitle}</p>

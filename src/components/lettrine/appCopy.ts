@@ -23,13 +23,14 @@ export type AppErrorCode =
   | 'invalid_decision'
   | 'note_too_long'
   | 'not_found'
+  | 'payment_unavailable'
 
 export interface LettrineAppCopy {
   locale: LettrineLocale
   htmlLang: string
   landingPath: string
   brand: string
-  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string; history: string }
+  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string; history: string; buy: string }
   common: { back: string; logout: string; loading: string; required: string }
   signup: {
     metaTitle: string
@@ -80,6 +81,8 @@ export interface LettrineAppCopy {
     historyTitle: string
     historyEmpty: string
     allAnalyses: string
+    buyMore: string
+    purchaseReceived: string
   }
   analysis: {
     metaTitle: string
@@ -137,6 +140,19 @@ export interface LettrineAppCopy {
     deleteConfirm: string
     retention: (date: string) => string
   }
+  buy: {
+    metaTitle: string
+    title: string
+    intro: string
+    units: (n: number) => string
+    perUnit: (price: string) => string
+    exVat: string
+    buyButton: string
+    redirecting: string
+    vatNotice: string
+    canceled: string
+    productName: (units: number) => string
+  }
   history: {
     metaTitle: string
     title: string
@@ -174,6 +190,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       newAnalysis: '/app/sv/new',
       analysis: (id) => `/app/sv/analysis/${id}`,
       history: '/app/sv/history',
+      buy: '/app/sv/buy',
     },
     common: {
       back: 'Tillbaka till Lettrine Editorial',
@@ -230,6 +247,8 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       historyTitle: 'Analyser',
       historyEmpty: 'Inga analyser ännu.',
       allAnalyses: 'Visa alla analyser',
+      buyMore: 'Köp fler enheter',
+      purchaseReceived: 'Tack! Betalningen har tagits emot. Enheterna läggs till inom en minut; ladda om sidan om saldot inte har ändrats.',
     },
     analysis: {
       metaTitle: 'Ny analys | Lettrine Editorial',
@@ -292,6 +311,19 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       deleteConfirm: 'Radera analysen och beslutet permanent?',
       retention: (date) => `Raderas automatiskt ${date}.`,
     },
+    buy: {
+      metaTitle: 'Köp enheter | Lettrine Editorial',
+      title: 'Köp analysenheter',
+      intro: 'Enheterna är förbetalda och gäller hela tidskriften. En enhet motsvarar upp till 1 000 ord, med både AI-signaler och textlikhet.',
+      units: (n) => `${n} enheter`,
+      perUnit: (price) => `${price} per enhet`,
+      exVat: 'exkl. moms',
+      buyButton: 'Köp',
+      redirecting: 'Öppnar betalningen…',
+      vatNotice: 'Betalning med kort via Stripe. Ange tidskriftens eller organisationens momsregistreringsnummer i betalningen; faktura skickas via e-post.',
+      canceled: 'Betalningen avbröts. Inga enheter har dragits.',
+      productName: (units) => `Lettrine Editorial: ${units} analysenheter`,
+    },
     history: {
       metaTitle: 'Analyser | Lettrine Editorial',
       title: 'Alla analyser',
@@ -337,6 +369,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       invalid_decision: 'Välj ett beslut.',
       note_too_long: 'Anteckningen är för lång (högst 4 000 tecken).',
       not_found: 'Analysen finns inte längre.',
+      payment_unavailable: 'Betalningen kunde inte öppnas just nu. Försök igen om en stund.',
     },
   },
   fr: {
@@ -352,6 +385,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       newAnalysis: '/app/fr/new',
       analysis: (id) => `/app/fr/analysis/${id}`,
       history: '/app/fr/history',
+      buy: '/app/fr/buy',
     },
     common: {
       back: 'Retour à Lettrine Éditorial',
@@ -408,6 +442,8 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       historyTitle: 'Analyses',
       historyEmpty: 'Aucune analyse pour le moment.',
       allAnalyses: 'Voir toutes les analyses',
+      buyMore: 'Acheter des unités',
+      purchaseReceived: 'Merci ! Le paiement a bien été reçu. Les unités sont ajoutées sous une minute ; rechargez la page si le solde n’a pas changé.',
     },
     analysis: {
       metaTitle: 'Nouvelle analyse | Lettrine Éditorial',
@@ -470,6 +506,19 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       deleteConfirm: 'Supprimer définitivement l’analyse et la décision ?',
       retention: (date) => `Suppression automatique le ${date}.`,
     },
+    buy: {
+      metaTitle: 'Acheter des unités | Lettrine Éditorial',
+      title: 'Acheter des unités d’analyse',
+      intro: 'Les unités sont prépayées et valent pour toute la revue. Une unité correspond à 1 000 mots maximum, avec les signaux IA et la similarité.',
+      units: (n) => `${n} unités`,
+      perUnit: (price) => `${price} par unité`,
+      exVat: 'HT',
+      buyButton: 'Acheter',
+      redirecting: 'Ouverture du paiement…',
+      vatNotice: 'Paiement par carte via Stripe. Indiquez le numéro de TVA de la revue ou de l’organisation lors du paiement ; la facture est envoyée par email.',
+      canceled: 'Paiement annulé. Aucune unité n’a été décomptée.',
+      productName: (units) => `Lettrine Éditorial : ${units} unités d’analyse`,
+    },
     history: {
       metaTitle: 'Analyses | Lettrine Éditorial',
       title: 'Toutes les analyses',
@@ -515,6 +564,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       invalid_decision: 'Choisissez une décision.',
       note_too_long: 'La note est trop longue (4 000 caractères maximum).',
       not_found: 'Cette analyse n’existe plus.',
+      payment_unavailable: 'Le paiement n’a pas pu être ouvert. Réessayez dans un instant.',
     },
   },
 }

@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import { getResellerConfig } from '@/lib/config'
 import { sendEmail, subscriptionConfirmedEmail } from '@/lib/email'
+import { parseLettrineCheckout } from '@/lib/lettrine/packs'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,6 +46,28 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.metadata?.supabase_user_id
+
+      // ── Lettrine unit purchase (journals) ─────────────────────────────────
+      const lettrine = parseLettrineCheckout(session.metadata)
+      if (lettrine) {
+        if (session.payment_status !== 'paid') {
+          console.log(`[Stripe Webhook] Lettrine session ${session.id} not paid yet (${session.payment_status})`)
+          break
+        }
+        const { data: credited, error: lettrineError } = await supabase.rpc('lettrine_credit_purchase', {
+          p_org: lettrine.orgId,
+          p_units: lettrine.units,
+          p_checkout_session: session.id,
+        })
+        if (lettrineError) {
+          console.error('[Stripe Webhook] Failed to credit Lettrine units:', { sessionId: session.id, error: lettrineError })
+          return NextResponse.json({ error: 'Failed to credit Lettrine units' }, { status: 500 })
+        }
+        console.log(credited
+          ? `[Stripe Webhook] Credited ${lettrine.units} Lettrine units for session ${session.id}`
+          : `[Stripe Webhook] Duplicate Lettrine event ignored for session ${session.id}`)
+        break
+      }
 
       // ── Credit purchase (pay-per-scan) ─────────────────────────────────
       if (session.metadata?.type === 'credits' && userId) {

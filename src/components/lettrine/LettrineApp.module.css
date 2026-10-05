@@ -425,3 +425,23 @@ a.button {
   color: #173d32;
   font-weight: 600;
 }
+
+.packs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.packs .card + .card {
+  margin-top: 0;
+}
+
+.error a {
+  color: inherit;
+}
+
+@media (max-width: 720px) {
+  .packs {
+    grid-template-columns: 1fr;
+  }
+}
