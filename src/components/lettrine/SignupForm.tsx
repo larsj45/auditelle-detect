@@ -82,9 +82,9 @@ export default function SignupForm({ locale }: { locale: LettrineLocale }) {
                 <input name="acceptTerms" type="checkbox" required />
                 <span>
                   {s.termsLead}{' '}
-                  <a href={`${copy.landingPath}/villkor`} target="_blank" rel="noopener">{s.termsLink}</a>{' '}
+                  <a href={copy.paths.terms} target="_blank" rel="noopener">{s.termsLink}</a>{' '}
                   {s.termsJoin}{' '}
-                  <a href={`${copy.landingPath}/dpa`} target="_blank" rel="noopener">{s.dpaLink}</a>.
+                  <a href={copy.paths.dpa} target="_blank" rel="noopener">{s.dpaLink}</a>.
                 </span>
               </label>
               {error && <p className={styles.error} role="alert">{error}</p>}

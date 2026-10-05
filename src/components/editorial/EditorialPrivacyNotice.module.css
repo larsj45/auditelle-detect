@@ -51,3 +51,11 @@
   font-size: 12px;
   text-align: center;
 }
+
+.draft {
+  margin: 0 0 28px;
+  padding: 12px 14px;
+  border-left: 3px solid #b8892f;
+  background: #fbf6ea;
+  font-size: 14px;
+}

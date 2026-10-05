@@ -31,3 +31,12 @@ test('Swedish notice points to the Swedish supervisory authority', () => {
   const text = editorialPrivacyCopy.sv.sections.flatMap((s) => s.paragraphs).join(' ')
   assert.match(text, /Integritetsskyddsmyndigheten/)
 })
+
+test('notices cover the self-service processors and retention', () => {
+  for (const locale of ['fr', 'sv'] as const) {
+    const text = editorialPrivacyCopy[locale].sections.flatMap((s) => s.paragraphs).join(' ')
+    for (const processor of ['Supabase', 'Stripe', 'Pangram Labs', 'Plausible']) assert.match(text, new RegExp(processor))
+    assert.match(text, /180/)
+    assert.match(text, /10/)
+  }
+})

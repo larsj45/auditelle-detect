@@ -1,33 +1,24 @@
 'use client'
 
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   Download,
   FileText,
   Menu,
-  Send,
-  ShieldCheck,
   X,
 } from 'lucide-react'
 import type {
   EditorialCopy,
-  EditorialErrorCode,
-  EditorialPlanId,
 } from './editorialCopy'
 import { OPEN_COOKIE_CONSENT_EVENT } from '@/components/CookieConsent'
 import styles from './EditorialLanding.module.css'
 
-type ModalName = 'report' | 'contact' | null
+type ModalName = 'report' | null
 
 interface EditorialLandingProps {
   content: EditorialCopy
   supportEmail: string
-}
-
-interface DemoRequestResponse {
-  success?: boolean
-  errorCode?: EditorialErrorCode
 }
 
 export default function EditorialLanding({
@@ -36,9 +27,6 @@ export default function EditorialLanding({
 }: EditorialLandingProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [modal, setModal] = useState<ModalName>(null)
-  const [selectedPlan, setSelectedPlan] = useState<EditorialPlanId>('undecided')
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle')
-  const [formError, setFormError] = useState('')
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -58,56 +46,7 @@ export default function EditorialLanding({
     return () => document.removeEventListener('keydown', handleEscape)
   }, [])
 
-  const openContact = (plan: EditorialPlanId = 'undecided') => {
-    setSelectedPlan(plan)
-    setFormStatus('idle')
-    setFormError('')
-    setModal('contact')
-  }
-
   const closeMobileMenu = () => setMenuOpen(false)
-
-  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const form = new FormData(event.currentTarget)
-    setFormStatus('submitting')
-    setFormError('')
-
-    try {
-      const response = await fetch('/api/editorial-demo-request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          version: 1,
-          locale: content.locale,
-          name: form.get('name'),
-          email: form.get('email'),
-          organization: form.get('organization'),
-          role: form.get('role'),
-          journalCount: form.get('journalCount'),
-          volume: form.get('volume'),
-          plan: selectedPlan,
-          message: form.get('message'),
-          website: form.get('website'),
-        }),
-      })
-      const result = await response.json().catch(() => null) as DemoRequestResponse | null
-
-      if (!response.ok || !result?.success) {
-        const errorCode = result?.errorCode || 'delivery_unavailable'
-        throw new Error(content.form.errors[errorCode])
-      }
-
-      setFormStatus('success')
-    } catch (error) {
-      setFormStatus('idle')
-      setFormError(
-        error instanceof Error
-          ? error.message
-          : content.form.errors.delivery_unavailable
-      )
-    }
-  }
 
   return (
     <div className={styles.page} lang={content.htmlLang}>
@@ -131,12 +70,9 @@ export default function EditorialLanding({
           </nav>
 
           <div className={styles.headerActions}>
-            <button
-              className={`${styles.button} ${styles.buttonPrimary}`}
-              onClick={() => openContact()}
-            >
+            <a className={`${styles.button} ${styles.buttonPrimary}`} href={content.signupPath}>
               {content.common.demoCta}
-            </button>
+            </a>
             <button
               className={styles.menuButton}
               type="button"
@@ -174,15 +110,9 @@ export default function EditorialLanding({
               <a href="#editorial-faq" onClick={closeMobileMenu}>
                 {content.navigation.faq}
               </a>
-              <button
-                className={`${styles.button} ${styles.buttonPrimary}`}
-                onClick={() => {
-                  closeMobileMenu()
-                  openContact()
-                }}
-              >
+              <a className={`${styles.button} ${styles.buttonPrimary}`} href={content.signupPath} onClick={closeMobileMenu}>
                 {content.common.demoCta}
-              </button>
+              </a>
             </nav>
           )}
         </div>
@@ -326,12 +256,12 @@ export default function EditorialLanding({
                       <li key={feature}>{feature}</li>
                     ))}
                   </ul>
-                  <button
+                  <a
                     className={`${styles.button} ${plan.featured ? styles.buttonPrimary : styles.buttonOutline}`}
-                    onClick={() => openContact(plan.id)}
+                    href={content.signupPath}
                   >
                     {content.common.demoCta}
-                  </button>
+                  </a>
                 </article>
               ))}
             </div>
@@ -373,13 +303,13 @@ export default function EditorialLanding({
               <p>{content.closing.description}</p>
             </div>
             <div className={styles.closingActions}>
-              <button
+              <a
                 className={`${styles.button} ${styles.buttonLight} ${styles.buttonLarge}`}
-                onClick={() => openContact()}
+                href={content.signupPath}
               >
                 {content.common.demoCta}
                 <ArrowRight size={17} />
-              </button>
+              </a>
               <button
                 className={`${styles.button} ${styles.buttonOutlineLight} ${styles.buttonLarge}`}
                 onClick={() => setModal('report')}
@@ -423,38 +353,6 @@ export default function EditorialLanding({
         </Modal>
       )}
 
-      {modal === 'contact' && (
-        <Modal
-          title={content.form.modalTitle}
-          closeLabel={content.common.close}
-          onClose={() => setModal(null)}
-          closeButtonRef={closeButtonRef}
-          narrow
-        >
-          {formStatus === 'success' ? (
-            <div className={styles.successMessage}>
-              <ShieldCheck size={36} />
-              <h3>{content.form.successTitle}</h3>
-              <p>{content.form.successMessage}</p>
-              <button
-                className={`${styles.button} ${styles.buttonPrimary}`}
-                onClick={() => setModal(null)}
-              >
-                {content.common.close}
-              </button>
-            </div>
-          ) : (
-            <ContactForm
-              content={content}
-              selectedPlan={selectedPlan}
-              onPlanChange={setSelectedPlan}
-              onSubmit={handleContactSubmit}
-              submitting={formStatus === 'submitting'}
-              error={formError}
-            />
-          )}
-        </Modal>
-      )}
     </div>
   )
 }
@@ -715,115 +613,5 @@ function Finding({
       </strong>
       <span>{detail}</span>
     </div>
-  )
-}
-
-function ContactForm({
-  content,
-  selectedPlan,
-  onPlanChange,
-  onSubmit,
-  submitting,
-  error,
-}: {
-  content: EditorialCopy
-  selectedPlan: EditorialPlanId
-  onPlanChange: (plan: EditorialPlanId) => void
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void
-  submitting: boolean
-  error: string
-}) {
-  const form = content.form
-
-  return (
-    <form onSubmit={onSubmit}>
-      <p className={styles.formIntro}>{form.intro}</p>
-      <div className={styles.formGrid}>
-        <label className={styles.field}>
-          <span>{form.name}</span>
-          <input name="name" autoComplete="name" required />
-        </label>
-        <label className={styles.field}>
-          <span>{form.email}</span>
-          <input name="email" type="email" autoComplete="email" required />
-        </label>
-        <label className={styles.field}>
-          <span>{form.organization}</span>
-          <input name="organization" autoComplete="organization" required />
-        </label>
-        <label className={styles.field}>
-          <span>{form.role}</span>
-          <input
-            name="role"
-            autoComplete="organization-title"
-            required
-            placeholder={form.rolePlaceholder}
-          />
-        </label>
-        <label className={styles.field}>
-          <span>{form.journalCount}</span>
-          <select name="journalCount" defaultValue="one">
-            {form.journalCountOptions.map((option) => (
-              <option value={option.value} key={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className={styles.field}>
-          <span>{form.volume}</span>
-          <select name="volume" defaultValue="300_600">
-            {form.volumeOptions.map((option) => (
-              <option value={option.value} key={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className={`${styles.field} ${styles.fieldFull}`}>
-          <span>{form.plan}</span>
-          <select
-            value={selectedPlan}
-            onChange={(event) => onPlanChange(event.target.value as EditorialPlanId)}
-          >
-            {form.planOptions.map((option) => (
-              <option value={option.value} key={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className={`${styles.field} ${styles.fieldFull}`}>
-          <span>{form.context}</span>
-          <textarea
-            name="message"
-            rows={4}
-            placeholder={form.contextPlaceholder}
-          />
-        </label>
-        <label className={styles.honeypot} aria-hidden="true">
-          <span>{form.honeypot}</span>
-          <input name="website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-      {error && <p className={styles.formError} role="alert">{error}</p>}
-      <div className={styles.formActions}>
-        <p>
-          {form.reassurance}{' '}
-          {form.privacyNotice.lead}{' '}
-          <a href={content.privacyNoticePath} target="_blank" rel="noopener">
-            {form.privacyNotice.link}
-          </a>
-        </p>
-        <button
-          className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonLarge}`}
-          type="submit"
-          disabled={submitting}
-        >
-          <Send size={16} />
-          {submitting ? form.submitting : form.submit}
-        </button>
-      </div>
-    </form>
   )
 }

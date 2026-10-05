@@ -30,7 +30,7 @@ export interface LettrineAppCopy {
   htmlLang: string
   landingPath: string
   brand: string
-  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string; history: string; buy: string }
+  paths: { signup: string; login: string; confirm: string; dashboard: string; newAnalysis: string; analysis: (id: string) => string; history: string; buy: string; terms: string; dpa: string; privacy: string }
   common: { back: string; logout: string; loading: string; required: string }
   signup: {
     metaTitle: string
@@ -191,6 +191,9 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       analysis: (id) => `/app/sv/analysis/${id}`,
       history: '/app/sv/history',
       buy: '/app/sv/buy',
+      terms: '/vetenskapliga-tidskrifter/villkor',
+      dpa: '/vetenskapliga-tidskrifter/dpa',
+      privacy: '/vetenskapliga-tidskrifter/integritet',
     },
     common: {
       back: 'Tillbaka till Lettrine Editorial',
@@ -386,6 +389,9 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       analysis: (id) => `/app/fr/analysis/${id}`,
       history: '/app/fr/history',
       buy: '/app/fr/buy',
+      terms: '/revues-scientifiques/conditions',
+      dpa: '/revues-scientifiques/dpa',
+      privacy: '/revues-scientifiques/confidentialite',
     },
     common: {
       back: 'Retour à Lettrine Éditorial',

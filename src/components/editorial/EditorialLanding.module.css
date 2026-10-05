@@ -950,7 +950,7 @@
 }
 
 .closing::before {
-  content: 'AUDITELLE';
+  content: 'LETTRINE';
   position: absolute;
   right: -18px;
   bottom: -36px;

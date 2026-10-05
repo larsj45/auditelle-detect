@@ -16,6 +16,7 @@ export default function EditorialPrivacyNotice({
         </a>
         <h1>{content.title}</h1>
         <p className={styles.updated}>{content.updated}</p>
+        {content.draftNotice && <p className={styles.draft}>{content.draftNotice}</p>}
         {content.sections.map((section) => (
           <section key={section.heading}>
             <h2>{section.heading}</h2>

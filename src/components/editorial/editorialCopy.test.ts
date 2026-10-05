@@ -2,13 +2,23 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { editorialCopy } from './editorialCopy.ts'
 
-test('preserves the approved French route, brand, CTA, and commercial wording', () => {
+test('preserves the French route and brand and points the CTA to self-service signup', () => {
   assert.equal(editorialCopy.fr.path, '/revues-scientifiques')
   assert.equal(editorialCopy.fr.brand.name, 'Lettrine')
   assert.equal(editorialCopy.fr.brand.product, 'Éditorial')
-  assert.equal(editorialCopy.fr.common.demoCta, 'Demander un compte démo')
-  assert.equal(editorialCopy.fr.pricing.plans[0].price, 'Tarif à valider')
-  assert.match(editorialCopy.fr.form.successMessage, /Aucun rendez-vous/)
+  assert.equal(editorialCopy.fr.common.demoCta, 'Essayer gratuitement')
+  assert.equal(editorialCopy.fr.signupPath, '/app/fr/signup')
+  assert.equal(editorialCopy.sv.signupPath, '/app/sv/signup')
+})
+
+test('shows the same unit packs and prices as checkout', () => {
+  for (const locale of ['fr', 'sv'] as const) {
+    assert.deepEqual(
+      editorialCopy[locale].pricing.plans.map((plan) => plan.price),
+      ['590 €', '1 990 €', '3 990 €']
+    )
+    assert.match(editorialCopy[locale].pricing.noteLead, /10/)
+  }
 })
 
 test('keeps the Swedish page under the Lettrine Editorial brand', () => {
@@ -44,7 +54,7 @@ test('uses the same semantic qualification values in both locales', () => {
 test('keeps the company only where it is the legal entity, never as the product name', () => {
   for (const locale of ['fr', 'sv'] as const) {
     const text = JSON.stringify(editorialCopy[locale])
-    assert.ok(!/Verify/.test(text))
+    assert.ok(!/Verify|VERIFY|AUDITELLE/.test(text))
     assert.ok(!/Auditelle(?! SASU)/.test(text))
     assert.match(editorialCopy[locale].footer.legal, /Auditelle SASU/)
   }
@@ -52,6 +62,6 @@ test('keeps the company only where it is the legal entity, never as the product 
 
 test('uses feminine agreement for Lettrine in French', () => {
   const text = JSON.stringify(editorialCopy.fr)
-  assert.match(text, /Lettrine est conçue/)
+  assert.ok(!/Lettrine est conçu\b/.test(text))
   assert.match(text, /Lettrine décide-t-elle/)
 })

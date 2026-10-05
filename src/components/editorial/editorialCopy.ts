@@ -26,6 +26,7 @@ export interface EditorialCopy {
   openGraphLocale: string
   path: string
   privacyNoticePath: string
+  signupPath: string
   metadata: {
     title: string
     description: string
@@ -187,6 +188,7 @@ export const editorialCopy = {
     openGraphLocale: 'fr_FR',
     path: '/revues-scientifiques',
     privacyNoticePath: '/revues-scientifiques/confidentialite',
+    signupPath: '/app/fr/signup',
     metadata: {
       title: 'Lettrine Éditorial | Intégrité pour les revues scientifiques',
       description:
@@ -213,7 +215,7 @@ export const editorialCopy = {
     },
     common: {
       skipLink: 'Aller au contenu',
-      demoCta: 'Demander un compte démo',
+      demoCta: 'Essayer gratuitement',
       reportCta: 'Voir un exemple de rapport',
       close: 'Fermer',
     },
@@ -224,7 +226,7 @@ export const editorialCopy = {
         "Analysez les manuscrits, identifiez les signaux liés à l'IA et à la similarité, puis documentez chaque décision éditoriale dans un rapport clair. La révision reste humaine.",
       offerCta: "Découvrir l'offre Éditorial",
       principlesAriaLabel: 'Principes du produit',
-      principles: ['Signaux, pas verdicts', 'Accès multi-éditeurs', 'Rapports exportables'],
+      principles: ['Signaux, pas verdicts', 'Décision documentée', 'Rapports exportables'],
     },
     audience: {
       label: 'Conçu pour celles et ceux qui publient',
@@ -269,7 +271,7 @@ export const editorialCopy = {
     },
     product: {
       label: "L'espace éditorial",
-      title: "Une file de manuscrits lisible par toute l'équipe.",
+      title: 'Une file de manuscrits claire pour la rédaction.',
       intro:
         "Suivez le statut de chaque analyse, les signaux à examiner et les rapports disponibles sans multiplier les feuilles de calcul.",
     },
@@ -277,86 +279,86 @@ export const editorialCopy = {
       label: 'Confidentialité par conception',
       title: 'Les manuscrits méritent un cadre explicite.',
       intro:
-        "Lettrine est conçue pour documenter la conservation, les accès et les prestataires impliqués avant le déploiement d'une équipe éditoriale.",
+        'Lettrine indique clairement ce qui est conservé, pendant combien de temps et par quels prestataires le texte passe.',
       principles: [
         {
           number: '01',
-          title: 'Accès maîtrisés',
+          title: 'Manuscrit non conservé',
           description:
-            'Des rôles distincts pour les responsables, éditeurs et lecteurs, avec un historique rattaché à chaque manuscrit.',
+            'Nous conservons le résultat et les passages signalés, pas le manuscrit complet. Le fichier est lu dans votre navigateur.',
         },
         {
           number: '02',
-          title: 'Conservation définie',
+          title: 'Suppression automatique',
           description:
-            'Une politique de conservation et de suppression est fixée avec la revue avant la mise en production.',
+            'Les analyses sont supprimées automatiquement après 180 jours et peuvent être supprimées plus tôt par la revue.',
         },
         {
           number: '03',
           title: 'Prestataires documentés',
           description:
-            "Les moteurs d'analyse et leurs conditions de traitement sont identifiés dans la documentation contractuelle.",
+            "Les moteurs d'analyse et les autres sous-traitants sont listés dans l'accord de traitement des données.",
         },
       ],
     },
     pricing: {
-      label: 'Cadrage annuel',
-      title: 'Un volume de contrôles adapté au rythme de votre revue.',
+      label: 'Unités prépayées',
+      title: 'Payez selon le volume de votre revue, sans abonnement.',
       intro:
-        'Les prix, volumes et conditions prestataires sont validés avec chaque revue avant toute proposition contractuelle.',
-      recommended: 'Recommandé',
+        'Une unité correspond à 1 000 mots maximum, avec les signaux IA et la similarité. Les unités valent pour toute la revue pendant 24 mois.',
+      recommended: 'Le plus choisi',
       plans: [
         {
           id: 'essential',
-          name: 'Essentiel',
-          audience: 'Pour une petite revue ou un comité éditorial resserré.',
-          price: 'Tarif à valider',
-          period: 'offre annuelle préparée avec votre équipe',
-          volume: 'Volume éditorial défini après cadrage',
+          name: '50 unités',
+          audience: "Pour une petite revue, environ quinze articles de 3 000 mots.",
+          price: '590 €',
+          period: 'HT · 11,80 € par unité',
+          volume: '1 unité = jusqu’à 1 000 mots',
           features: [
-            'Équipe éditoriale restreinte',
-            'Analyse IA et similarité',
-            'Rapports PDF exportables',
-            'Historique des manuscrits',
+            'Signaux IA et similarité',
+            'Passages signalés par niveau',
+            'Décision éditoriale documentée',
+            'Rapport exportable en PDF',
             'Support par email',
           ],
         },
         {
           id: 'journal',
-          name: 'Revue',
-          audience: 'Pour une revue active avec plusieurs éditeurs ou sections.',
-          price: 'Tarif à valider',
-          period: 'offre annuelle préparée avec votre équipe',
-          volume: 'Volume adapté au rythme de publication',
+          name: '200 unités',
+          audience: 'Pour une revue active avec un flux régulier de soumissions.',
+          price: '1 990 €',
+          period: 'HT · 9,95 € par unité',
+          volume: '1 unité = jusqu’à 1 000 mots',
           features: [
-            'Plusieurs éditeurs ou sections',
-            'Analyse IA et similarité',
-            'Rapports et historique complet',
-            'Suivi de consommation',
-            "Parcours d'activation documenté",
+            'Signaux IA et similarité',
+            'Passages signalés par niveau',
+            'Décision éditoriale documentée',
+            'Historique filtrable par décision',
+            'Support par email',
           ],
           featured: true,
         },
         {
           id: 'organization',
-          name: 'Organisation',
-          audience: "Pour une maison d'édition, une société savante ou un portefeuille de revues.",
-          price: 'Sur devis',
-          period: 'volume et gouvernance personnalisés',
-          volume: 'Plusieurs revues ou équipes',
+          name: '500 unités',
+          audience: "Pour une maison d'édition, une société savante ou plusieurs revues.",
+          price: '3 990 €',
+          period: 'HT · 7,98 € par unité',
+          volume: '1 unité = jusqu’à 1 000 mots',
           features: [
-            'Éditeurs et administrateurs',
-            'Volumes adaptés par revue',
-            'Activation guidée par email',
-            'Conditions de conservation dédiées',
-            'Support prioritaire',
+            'Signaux IA et similarité',
+            'Passages signalés par niveau',
+            'Décision éditoriale documentée',
+            'Historique filtrable par décision',
+            'Support par email',
           ],
         },
       ],
-      noteTitle: 'Tarifs non publiés :',
-      noteLead: "l'offre reste contact-led.",
+      noteTitle: 'Essai gratuit :',
+      noteLead: '10 unités offertes à la création du compte.',
       noteDetail:
-        'Les hypothèses de prix et de blocs supplémentaires ne sont pas affichées tant que les coûts et les termes prestataires ne sont pas validés.',
+        'Paiement par carte, facture envoyée par email, TVA appliquée selon le pays et le numéro de TVA de la revue. Les unités consommées ne sont pas remboursables.',
     },
     faq: {
       label: 'Questions fréquentes',
@@ -368,29 +370,29 @@ export const editorialCopy = {
             "Non. Lettrine met en évidence des signaux et des passages à examiner. L'interprétation appartient toujours au comité éditorial, dans le contexte du manuscrit et de la politique de la revue.",
         },
         {
-          question: 'Que comprend un contrôle éditorial ?',
+          question: 'Que comprend une analyse ?',
           answer:
-            "Le prototype prévoit une analyse du contenu IA, une analyse de similarité, les passages signalés et un rapport exportable. La définition contractuelle finale dépendra des moteurs activés pour votre offre.",
+            "Chaque analyse comprend les signaux de contenu généré ou assisté par IA, les passages signalés par niveau, une analyse de similarité avec des sources en ligne et un rapport exportable où le comité consigne sa décision.",
         },
         {
           question: 'Les manuscrits sont-ils utilisés pour entraîner des modèles ?',
           answer:
-            "Les conditions de traitement doivent être confirmées dans la documentation contractuelle de chaque prestataire activé. Lettrine les présente avant la mise en production de la revue.",
+            "Non. Notre moteur d'analyse, Pangram Labs, indique dans sa politique de confidentialité ne pas utiliser les textes soumis pour entraîner ses modèles. Le texte est traité aux États-Unis ; nous ne conservons pas le manuscrit complet.",
         },
         {
-          question: "Peut-on ajouter des contrôles en cours d'année ?",
+          question: 'Que se passe-t-il quand les unités sont épuisées ?',
           answer:
-            'Oui. Des blocs de contrôles supplémentaires sont prévus sans modifier la date de renouvellement annuelle.',
+            'Vous achetez un nouveau bloc en ligne, à tout moment. Les unités valent pour toute la revue pendant 24 mois.',
         },
         {
           question: 'Combien de temps faut-il pour démarrer ?',
           answer:
-            "Une petite équipe peut être configurée rapidement après validation des responsables, des rôles d'accès, de la politique de conservation et du volume annuel.",
+            'Quelques minutes : créez le compte, confirmez votre adresse email et lancez une première analyse avec les unités offertes.',
         },
         {
-          question: 'Comment demander un compte démo ?',
+          question: 'Comment commencer ?',
           answer:
-            "Transmettez les informations de votre revue avec une adresse professionnelle. Lettrine vérifie l'éligibilité et répond par email. Si la demande est retenue, les instructions d'accès sont envoyées sans rendez-vous obligatoire.",
+            "Créez un compte avec une adresse professionnelle. Tout se fait sur le site, sans rendez-vous. Pour toute question, écrivez-nous par email.",
         },
       ],
     },
@@ -424,7 +426,7 @@ export const editorialCopy = {
     },
     workspace: {
       ariaLabel: "Aperçu de l'espace Lettrine Éditorial",
-      brand: 'AUDITELLE / REVUE DÉMO',
+      brand: 'LETTRINE / REVUE DÉMO',
       cycle: 'Cycle éditorial 2026',
       export: 'Exporter',
       newManuscript: 'Nouveau manuscrit',
@@ -538,6 +540,7 @@ export const editorialCopy = {
     openGraphLocale: 'sv_SE',
     path: '/vetenskapliga-tidskrifter',
     privacyNoticePath: '/vetenskapliga-tidskrifter/integritet',
+    signupPath: '/app/sv/signup',
     metadata: {
       title: 'Lettrine Editorial | Integritet för vetenskapliga tidskrifter',
       description:
@@ -564,7 +567,7 @@ export const editorialCopy = {
     },
     common: {
       skipLink: 'Gå till innehållet',
-      demoCta: 'Begär ett demokonto',
+      demoCta: 'Prova gratis',
       reportCta: 'Se ett exempel på en rapport',
       close: 'Stäng',
     },
@@ -575,7 +578,7 @@ export const editorialCopy = {
         'Granska manuskript, identifiera tecken på AI-genererat innehåll och textlikhet och dokumentera den redaktionella bedömningen i en tydlig rapport. Granskningen görs alltid av en människa.',
       offerCta: 'Upptäck Lettrine Editorial',
       principlesAriaLabel: 'Produktprinciper',
-      principles: ['Signaler, inte beslut', 'Åtkomst för flera redaktörer', 'Exporterbara rapporter'],
+      principles: ['Signaler, inte beslut', 'Dokumenterat beslut', 'Exporterbara rapporter'],
     },
     audience: {
       label: 'Utformad för vetenskaplig publicering',
@@ -620,7 +623,7 @@ export const editorialCopy = {
     },
     product: {
       label: 'Den redaktionella miljön',
-      title: 'En tydlig manuskriptkö för hela redaktionen.',
+      title: 'En tydlig manuskriptkö för redaktionen.',
       intro:
         'Följ analysstatus, signaler som behöver granskas och tillgängliga rapporter utan separata kalkylblad.',
     },
@@ -628,86 +631,86 @@ export const editorialCopy = {
       label: 'Inbyggd integritet',
       title: 'Manuskript kräver tydliga ramar.',
       intro:
-        'Lettrine är utformat för att dokumentera lagring, åtkomst och berörda leverantörer innan en redaktion börjar använda tjänsten.',
+        'Lettrine anger tydligt vad som sparas, hur länge och vilka leverantörer texten passerar.',
       principles: [
         {
           number: '01',
-          title: 'Behörighetsstyrning',
+          title: 'Manuskriptet sparas inte',
           description:
-            'Separata roller för ansvariga, redaktörer och läsare, med historik kopplad till varje manuskript.',
+            'Vi sparar resultatet och de markerade avsnitten, inte hela manuskriptet. Filen läses i din webbläsare.',
         },
         {
           number: '02',
-          title: 'Fastställda lagringsrutiner',
+          title: 'Automatisk radering',
           description:
-            'Villkor för lagring och radering fastställs med tidskriften innan produktionsstart.',
+            'Analyser raderas automatiskt efter 180 dagar och kan raderas tidigare av tidskriften.',
         },
         {
           number: '03',
           title: 'Dokumenterade leverantörer',
           description:
-            'Analysmotorer och villkor för databehandling anges i avtalsdokumentationen.',
+            'Analysmotorer och övriga underbiträden anges i personuppgiftsbiträdesavtalet.',
         },
       ],
     },
     pricing: {
-      label: 'Årlig planering',
-      title: 'En granskningsvolym som följer tidskriftens utgivningstakt.',
+      label: 'Förbetalda enheter',
+      title: 'Betala efter tidskriftens volym, utan abonnemang.',
       intro:
-        'Pris, volym och leverantörsvillkor fastställs med varje tidskrift innan ett avtalsförslag tas fram.',
-      recommended: 'Rekommenderad',
+        'En enhet motsvarar upp till 1 000 ord, med både AI-signaler och textlikhet. Enheterna gäller för hela tidskriften i 24 månader.',
+      recommended: 'Vanligast',
       plans: [
         {
           id: 'essential',
-          name: 'Essential',
-          audience: 'För en mindre tidskrift eller en liten redaktion.',
-          price: 'Pris fastställs',
-          period: 'årlig prisplan utformas med redaktionen',
-          volume: 'Antalet granskningar fastställs efter behovsbedömning',
+          name: '50 enheter',
+          audience: 'För en mindre tidskrift, ungefär femton artiklar på 3 000 ord.',
+          price: '590 €',
+          period: 'exkl. moms · 11,80 € per enhet',
+          volume: '1 enhet = upp till 1 000 ord',
           features: [
-            'Mindre redaktion',
-            'Tecken på AI-genererat innehåll och textlikhet',
-            'Exporterbara PDF-rapporter',
-            'Manuskripthistorik',
+            'AI-signaler och textlikhet',
+            'Markerade avsnitt efter nivå',
+            'Dokumenterat redaktionellt beslut',
+            'Rapport som kan exporteras som PDF',
             'Support via e-post',
           ],
         },
         {
           id: 'journal',
-          name: 'Journal',
-          audience: 'För en aktiv tidskrift med flera redaktörer eller sektioner.',
-          price: 'Pris fastställs',
-          period: 'årlig prisplan utformas med redaktionen',
-          volume: 'Volym anpassad till utgivningstakten',
+          name: '200 enheter',
+          audience: 'För en aktiv tidskrift med ett jämnt flöde av manuskript.',
+          price: '1 990 €',
+          period: 'exkl. moms · 9,95 € per enhet',
+          volume: '1 enhet = upp till 1 000 ord',
           features: [
-            'Flera redaktörer eller sektioner',
-            'Tecken på AI-genererat innehåll och textlikhet',
-            'Rapporter och fullständig historik',
-            'Användningsöversikt',
-            'Dokumenterad startprocess',
+            'AI-signaler och textlikhet',
+            'Markerade avsnitt efter nivå',
+            'Dokumenterat redaktionellt beslut',
+            'Historik som kan filtreras efter beslut',
+            'Support via e-post',
           ],
           featured: true,
         },
         {
           id: 'organization',
-          name: 'Organisation',
-          audience: 'För ett förlag, ett vetenskapligt sällskap eller en tidskriftsportfölj.',
-          price: 'Enligt offert',
-          period: 'anpassad volym och styrning',
-          volume: 'Flera tidskrifter eller redaktioner',
+          name: '500 enheter',
+          audience: 'För ett förlag, ett vetenskapligt sällskap eller flera tidskrifter.',
+          price: '3 990 €',
+          period: 'exkl. moms · 7,98 € per enhet',
+          volume: '1 enhet = upp till 1 000 ord',
           features: [
-            'Redaktörer och administratörer',
-            'Volymer per tidskrift',
-            'Aktivering via e-post',
-            'Särskilda lagringsvillkor',
-            'Prioriterad support',
+            'AI-signaler och textlikhet',
+            'Markerade avsnitt efter nivå',
+            'Dokumenterat redaktionellt beslut',
+            'Historik som kan filtreras efter beslut',
+            'Support via e-post',
           ],
         },
       ],
-      noteTitle: 'Priser publiceras inte:',
-      noteLead: 'prisplanen är kontaktbaserad.',
+      noteTitle: 'Prova gratis:',
+      noteLead: '10 enheter ingår när ni skapar ett konto.',
       noteDetail:
-        'Pris- och volymantaganden visas inte innan kostnader och leverantörsvillkor har fastställts.',
+        'Betalning med kort, faktura via e-post och moms enligt tidskriftens land och momsregistreringsnummer. Använda enheter återbetalas inte.',
     },
     faq: {
       label: 'Vanliga frågor',
@@ -719,29 +722,29 @@ export const editorialCopy = {
             'Nej. Lettrine visar signaler och avsnitt som behöver granskas. Tolkningen görs alltid av redaktionen utifrån manuskriptets sammanhang och tidskriftens policy.',
         },
         {
-          question: 'Vad ingår i en redaktionell granskning?',
+          question: 'Vad ingår i en analys?',
           answer:
-            'Prototypen omfattar tecken på AI-genererat innehåll, textlikhet, markerade avsnitt och en exporterbar rapport. Tjänstens slutliga omfattning beror på vilka analysmotorer som aktiveras.',
+            'Varje analys omfattar tecken på AI-genererat eller AI-assisterat innehåll, markerade avsnitt efter nivå, en textlikhetsanalys mot källor på nätet och en rapport där redaktionen dokumenterar sitt beslut.',
         },
         {
           question: 'Används manuskript för att träna modeller?',
           answer:
-            'Villkoren för databehandling måste bekräftas i dokumentationen för varje aktiverad leverantör. Lettrine redovisar dem innan tidskriften går i produktion.',
+            'Nej. Vår analysleverantör Pangram Labs anger i sin integritetspolicy att inskickade texter inte används för att träna modeller. Texten behandlas i USA, och vi sparar inte hela manuskriptet.',
         },
         {
-          question: 'Kan fler granskningar läggas till under året?',
+          question: 'Vad händer när enheterna tar slut?',
           answer:
-            'Ytterligare granskningar kan ingå i den planerade prisplanen utan att ändra den årliga förnyelsedagen.',
+            'Ni köper ett nytt paket på webbplatsen när som helst. Enheterna gäller för hela tidskriften i 24 månader.',
         },
         {
           question: 'Hur snabbt kan en redaktion komma igång?',
           answer:
-            'En mindre redaktion kan konfigureras efter att ansvariga, åtkomstroller, lagringspolicy och årlig volym har fastställts.',
+            'På några minuter: skapa ett konto, bekräfta e-postadressen och starta en första analys med provenheterna.',
         },
         {
-          question: 'Hur begär vi ett demokonto?',
+          question: 'Hur kommer vi igång?',
           answer:
-            'Skicka information om tidskriften från en arbetsrelaterad e-postadress. Lettrine bedömer om organisationen är relevant och svarar via e-post. Om begäran godkänns skickas åtkomstinstruktioner utan krav på möte.',
+            'Skapa ett konto med en arbetsrelaterad e-postadress. Allt sköts på webbplatsen, utan möte. Har ni frågor kan ni skriva till oss via e-post.',
         },
       ],
     },
@@ -775,7 +778,7 @@ export const editorialCopy = {
     },
     workspace: {
       ariaLabel: 'Förhandsvisning av miljön i Lettrine Editorial',
-      brand: 'VERIFY / DEMOTIDSKRIFT',
+      brand: 'LETTRINE / DEMOTIDSKRIFT',
       cycle: 'Redaktionell cykel 2026',
       export: 'Exportera',
       newManuscript: 'Nytt manuskript',
