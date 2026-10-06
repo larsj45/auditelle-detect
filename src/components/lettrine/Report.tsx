@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { currentAccessToken } from './session'
 import AppFrame from './AppFrame'
 import styles from './LettrineApp.module.css'
 import { getLettrineAppCopy } from './appCopy'
@@ -67,7 +68,7 @@ export default function Report({ locale, id }: { locale: LettrineLocale; id: str
     const form = new FormData(event.currentTarget)
     const response = await fetch(`/api/lettrine/analyses/${row.id}`, {
       method: 'PATCH',
-      headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'content-type': 'application/json', Authorization: `Bearer ${(await currentAccessToken()) ?? ''}` },
       body: JSON.stringify({ decision: form.get('decision'), note: form.get('note') }),
     }).catch(() => null)
     const result = (await response?.json().catch(() => null)) as
@@ -85,7 +86,7 @@ export default function Report({ locale, id }: { locale: LettrineLocale; id: str
     if (!token || !row || !window.confirm(r.deleteConfirm)) return
     const response = await fetch(`/api/lettrine/analyses/${row.id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${(await currentAccessToken()) ?? ''}` },
     }).catch(() => null)
     if (!response?.ok) {
       setActionError(copy.errors.unknown)

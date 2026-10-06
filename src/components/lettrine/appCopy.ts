@@ -24,6 +24,7 @@ export type AppErrorCode =
   | 'note_too_long'
   | 'not_found'
   | 'payment_unavailable'
+  | 'unauthorized'
 
 export interface LettrineAppCopy {
   locale: LettrineLocale
@@ -361,6 +362,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       invalid_credentials: 'Fel e-postadress eller lösenord.',
       email_not_confirmed: 'Bekräfta din e-postadress via länken vi skickade.',
       unknown: 'Något gick fel. Försök igen.',
+      unauthorized: 'Sessionen har gått ut. Logga in igen.',
       manuscript_ref_required: 'Ange manuskriptets referens.',
       too_short: 'Texten är för kort för en analys (minst 50 ord).',
       too_long: 'Texten är för lång (högst 20 000 ord per analys).',
@@ -559,6 +561,7 @@ export const lettrineAppCopy: Record<LettrineLocale, LettrineAppCopy> = {
       invalid_credentials: 'Adresse email ou mot de passe incorrect.',
       email_not_confirmed: 'Confirmez votre adresse email via le lien envoyé.',
       unknown: 'Une erreur est survenue. Réessayez.',
+      unauthorized: 'Votre session a expiré. Reconnectez-vous.',
       manuscript_ref_required: 'Indiquez la référence du manuscrit.',
       too_short: 'Le texte est trop court pour une analyse (50 mots minimum).',
       too_long: 'Le texte est trop long (20 000 mots maximum par analyse).',

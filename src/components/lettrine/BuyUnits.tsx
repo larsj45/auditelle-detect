@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { currentAccessToken } from './session'
 import AppFrame from './AppFrame'
 import styles from './LettrineApp.module.css'
 import { getLettrineAppCopy, type AppErrorCode } from './appCopy'
@@ -32,7 +33,7 @@ export default function BuyUnits({ locale }: { locale: LettrineLocale }) {
     setPending(pack.id)
     const response = await fetch('/api/lettrine/checkout', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'content-type': 'application/json', Authorization: `Bearer ${(await currentAccessToken()) ?? ''}` },
       body: JSON.stringify({ pack: pack.id }),
     }).catch(() => null)
     const result = (await response?.json().catch(() => null)) as { success?: boolean; url?: string; errorCode?: AppErrorCode } | null

@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { currentAccessToken } from './session'
 import AppFrame from './AppFrame'
 import styles from './LettrineApp.module.css'
 import { getLettrineAppCopy, type AppErrorCode } from './appCopy'
@@ -86,9 +87,14 @@ export default function NewAnalysis({ locale }: { locale: LettrineLocale }) {
     setSubmitting(true)
     const form = new FormData(event.currentTarget)
     try {
+      const accessToken = await currentAccessToken()
+      if (!accessToken) {
+        window.location.replace(copy.paths.login)
+        return
+      }
       const response = await fetch('/api/lettrine/analyses', {
         method: 'POST',
-        headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'content-type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({ text, manuscriptRef: form.get('manuscriptRef'), title: form.get('title') }),
       })
       const result = (await response.json().catch(() => null)) as { success?: boolean; id?: string; errorCode?: AppErrorCode } | null
