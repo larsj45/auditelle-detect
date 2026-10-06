@@ -73,3 +73,11 @@ export function validateSignup(payload: unknown): SignupValidation {
     data: { locale: body.locale, name, email, journal, password, emailDomain: domain },
   }
 }
+
+/** Confirmation link on the app's own origin; ConfirmAccount verifies the token hash. */
+export function confirmationUrl(origin: string, confirmPath: string, tokenHash: string): string {
+  const url = new URL(confirmPath, origin)
+  url.searchParams.set('token_hash', tokenHash)
+  url.searchParams.set('type', 'signup')
+  return url.toString()
+}

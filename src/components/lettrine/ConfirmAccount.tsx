@@ -17,6 +17,20 @@ export default function ConfirmAccount({ locale }: { locale: LettrineLocale }) {
     let cancelled = false
     async function run() {
       const fragmentError = new URLSearchParams(window.location.hash.slice(1)).get('error')
+      const tokenHash = new URLSearchParams(window.location.search).get('token_hash')
+      if (tokenHash) {
+        const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'signup' })
+        // Drop the single-use token from the address bar and history.
+        window.history.replaceState(null, '', window.location.pathname)
+        if (error) {
+          // The link may already have been used (e.g. by a mail scanner); an existing session still counts.
+          const { data: existing } = await supabase.auth.getSession()
+          if (!existing.session) {
+            if (!cancelled) setFailed(true)
+            return
+          }
+        }
+      }
       const { data } = await supabase.auth.getSession()
       const token = data.session?.access_token
       if (fragmentError || !token) {

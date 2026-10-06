@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { validateSignup } from './signup.ts'
+import { confirmationUrl, validateSignup } from './signup.ts'
 
 const valid = {
   locale: 'sv',
@@ -33,4 +33,12 @@ test('rejects malformed input', () => {
   assert.deepEqual(validateSignup({ ...valid, email: 'not-an-email' }), { ok: false, errorCode: 'invalid_email' })
   assert.deepEqual(validateSignup({ ...valid, journal: ' ' }), { ok: false, errorCode: 'invalid_journal' })
   assert.deepEqual(validateSignup({ ...valid, name: 'A' }), { ok: false, errorCode: 'invalid_name' })
+})
+
+test('confirmation link stays on the app origin and carries the token hash', () => {
+  const url = new URL(confirmationUrl('https://lettrine.eu', '/app/sv/confirm', 'abc123'))
+  assert.equal(url.origin, 'https://lettrine.eu')
+  assert.equal(url.pathname, '/app/sv/confirm')
+  assert.equal(url.searchParams.get('token_hash'), 'abc123')
+  assert.equal(url.searchParams.get('type'), 'signup')
 })

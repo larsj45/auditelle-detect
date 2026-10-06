@@ -3,6 +3,7 @@ import { checkRateLimit } from '@vercel/firewall'
 import { sendEmail } from '@/lib/email'
 import { TERMS_VERSION, validateSignup } from '@/lib/lettrine/signup'
 import { appOrigin, clientKey, confirmationEmail, lettrineServiceClient } from '@/lib/lettrine/server'
+import { confirmationUrl } from '@/lib/lettrine/signup'
 import { getLettrineAppCopy } from '@/components/lettrine/appCopy'
 
 export const dynamic = 'force-dynamic'
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
     },
   })
 
-  if (error || !link?.properties?.action_link || !link.user) {
+  if (error || !link?.properties?.hashed_token || !link.user) {
     const message = error?.message?.toLowerCase() || ''
     if (message.includes('already') || error?.status === 422) return fail('already_registered', 409)
     console.error('[lettrine-signup] generateLink failed:', error?.message)
@@ -95,12 +96,16 @@ export async function POST(request: NextRequest) {
     })
     .eq('id', link.user.id)
 
+  // Link on our own domain (verified client-side with verifyOtp) instead of the
+  // supabase.co action_link: a third-party verify URL makes the email look like phishing.
+  const confirmUrl = confirmationUrl(appOrigin(request), copy.paths.confirm, link.properties.hashed_token)
+
   if (process.env.LETTRINE_LOG_LINKS === '1' && process.env.VERCEL_ENV !== 'production') {
-    console.info('[lettrine-signup] confirmation link (dev only):', link.properties.action_link)
+    console.info('[lettrine-signup] confirmation link (dev only):', confirmUrl)
     return NextResponse.json({ success: true })
   }
 
-  const email = confirmationEmail(copy, data.name, data.journal, link.properties.action_link)
+  const email = confirmationEmail(copy, data.name, data.journal, confirmUrl)
   const sent = await sendEmail({
     to: data.email,
     subject: email.subject,
