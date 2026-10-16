@@ -3,7 +3,7 @@ import { checkRateLimit } from '@vercel/firewall'
 import { sendEmail } from '@/lib/email'
 import { TERMS_VERSION, validateSignup } from '@/lib/lettrine/signup'
 import { appOrigin, clientKey, confirmationEmail, lettrineServiceClient } from '@/lib/lettrine/server'
-import { confirmationUrl } from '@/lib/lettrine/signup'
+import { LETTRINE_REPLY_TO, LETTRINE_SENDER, confirmationUrl } from '@/lib/lettrine/signup'
 import { getLettrineAppCopy } from '@/components/lettrine/appCopy'
 
 export const dynamic = 'force-dynamic'
@@ -112,6 +112,8 @@ export async function POST(request: NextRequest) {
     html: email.html,
     text: email.text,
     fromName: copy.brand,
+    fromAddress: LETTRINE_SENDER,
+    replyTo: LETTRINE_REPLY_TO,
   })
   if (!sent.success) return fail('delivery_unavailable', 502)
 

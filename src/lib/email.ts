@@ -15,12 +15,14 @@ export interface EmailParams {
   html: string
   text?: string
   fromName?: string
+  /** Sender address on a domain verified in Resend; defaults to the brand's noReplyEmail. */
+  fromAddress?: string
   replyTo?: string
 }
 
-export async function sendEmail({ to, subject, html, text, fromName, replyTo }: EmailParams) {
+export async function sendEmail({ to, subject, html, text, fromName, fromAddress, replyTo }: EmailParams) {
   const config = await getResellerConfig()
-  const fromEmail = `${fromName || config.name} <${config.noReplyEmail}>`
+  const fromEmail = `${fromName || config.name} <${fromAddress || config.noReplyEmail}>`
 
   const resend = getResend()
   if (!resend) {

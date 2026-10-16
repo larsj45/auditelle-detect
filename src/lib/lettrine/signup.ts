@@ -4,6 +4,11 @@ export const LETTRINE_LOCALES = ['sv', 'fr'] as const
 export type LettrineLocale = typeof LETTRINE_LOCALES[number]
 
 // Free trial granted once per email domain (see lettrine_grant_trial).
+// Lettrine emails come from its own domain (DKIM, SPF and DMARC on lettrine.eu) so the
+// sender matches the brand; noreply@auditelle.fr under the Lettrine name landed in spam.
+export const LETTRINE_SENDER = 'noreply@lettrine.eu'
+export const LETTRINE_REPLY_TO = 'contact@auditelle.fr'
+
 export const TRIAL_UNITS = 10
 // Bump when the terms or the data processing agreement change.
 export const TERMS_VERSION = 'draft-2026-10'
