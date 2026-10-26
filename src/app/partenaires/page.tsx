@@ -5,9 +5,9 @@ import { getResellerConfig } from '@/lib/config'
 import { Users, Share2, BadgeEuro, ShieldCheck, Globe, Headphones, GraduationCap, ArrowRight, Mail } from 'lucide-react'
 
 export const metadata = {
-  title: 'Devenez partenaire — Auditelle',
+  title: 'Programme partenaire Lettrine — Auditelle SASU',
   description:
-    'Rejoignez le programme partenaire Auditelle. Gagnez 20 % de commission récurrente en recommandant la détection IA à vos membres.',
+    'Rejoignez le programme partenaire Lettrine, édité par Auditelle SASU. Gagnez 20 % de commission récurrente en recommandant Lettrine à vos membres.',
 }
 
 export default async function PartenairesPage() {
@@ -41,7 +41,7 @@ export default async function PartenairesPage() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href={`mailto:${config.supportEmail}?subject=${encodeURIComponent('Programme partenaire Auditelle')}`}
+              href={`mailto:${config.supportEmail}?subject=${encodeURIComponent('Programme partenaire Lettrine')}`}
               className="btn-secondary text-lg px-8 py-4 rounded-xl inline-flex items-center gap-2"
             >
               <Mail className="w-5 h-5" />
@@ -118,20 +118,20 @@ export default async function PartenairesPage() {
               <h3 className="text-lg font-bold text-[var(--navy)] mb-6">Simulation de revenus</h3>
               <div className="space-y-3 text-gray-600">
                 <p>
-                  Vous recommandez {config.name} &agrave; <strong className="text-[var(--navy)]">10 universit&eacute;s</strong> qui
-                  souscrivent au plan <strong className="text-[var(--navy)]">Universit&eacute;</strong> (149 {config.currencySymbol}/mois).
+                  Vous recommandez {config.name} &agrave; <strong className="text-[var(--navy)]">20 enseignants</strong> qui
+                  souscrivent au plan <strong className="text-[var(--navy)]">Professionnel</strong> (25 {config.currencySymbol}/mois).
                 </p>
                 <div className="bg-[var(--bg-light)] rounded-xl p-6 mt-4">
                   <div className="text-sm text-gray-500">Votre commission mensuelle</div>
                   <div className="text-4xl font-bold text-[var(--accent)] mt-1">
-                    298 {config.currencySymbol}<span className="text-lg font-normal text-gray-400">/mois</span>
+                    100 {config.currencySymbol}<span className="text-lg font-normal text-gray-400">/mois</span>
                   </div>
                   <div className="text-sm text-gray-500 mt-2">
-                    10 clients &times; 149 {config.currencySymbol} &times; 20 % = 298 {config.currencySymbol}/mois pendant 12 mois
+                    20 abonnements &times; 25 {config.currencySymbol} &times; 20 % = 100 {config.currencySymbol}/mois pendant 12 mois
                   </div>
                 </div>
                 <p className="text-sm text-gray-400 mt-4">
-                  Soit <strong className="text-[var(--navy)]">3 576 {config.currencySymbol}</strong> sur la premi&egrave;re ann&eacute;e, pour 10 clients seulement.
+                  Soit <strong className="text-[var(--navy)]">1 200 {config.currencySymbol}</strong> sur la premi&egrave;re ann&eacute;e. Exemple indicatif, hors pilotes et devis &eacute;tablissements.
                 </p>
               </div>
             </div>
@@ -159,8 +159,8 @@ export default async function PartenairesPage() {
             />
             <BenefitCard
               icon={<Globe className="w-8 h-8" />}
-              title="Conforme RGPD"
-              description="Donn&eacute;es h&eacute;berg&eacute;es en Europe. Aucune conservation des documents analys&eacute;s. Conformit&eacute; totale."
+              title="Donn&eacute;es et RGPD"
+              description="Donn&eacute;es stock&eacute;es dans l&apos;UE (Supabase, r&eacute;gion Paris). Sous-traitants techniques communiqu&eacute;s au DPO de chaque &eacute;tablissement."
             />
             <BenefitCard
               icon={<Headphones className="w-8 h-8" />}
@@ -169,8 +169,8 @@ export default async function PartenairesPage() {
             />
             <BenefitCard
               icon={<GraduationCap className="w-8 h-8" />}
-              title="Adopt&eacute; par les universit&eacute;s"
-              description="D&eacute;j&agrave; utilis&eacute; par des universit&eacute;s et grandes &eacute;coles fran&ccedil;aises pour prot&eacute;ger l'int&eacute;grit&eacute; acad&eacute;mique."
+              title="Pilote pour les &eacute;tablissements"
+              description="Un diagnostic gratuit de 20 minutes, puis un pilote de 30 jours pour que l'&eacute;tablissement d&eacute;cide en connaissance de cause."
             />
           </div>
         </div>
@@ -194,7 +194,7 @@ export default async function PartenairesPage() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href={`mailto:${config.supportEmail}?subject=${encodeURIComponent('Programme partenaire Auditelle')}`}
+              href={`mailto:${config.supportEmail}?subject=${encodeURIComponent('Programme partenaire Lettrine')}`}
               className="btn-secondary text-lg px-8 py-4 inline-flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               <Mail className="w-5 h-5" />

@@ -113,8 +113,68 @@ export interface ResellerConfig {
     permanent: boolean
   }>
 
+  // ── Company home (optional) ───────────────────────────────────────────────
+  // When set, "/" renders the publisher's company page (several products) and
+  // the product landing moves to `productPath` (e.g. "/lettrine"). Brands
+  // without it keep the product landing on "/".
+  companyHome?: CompanyHomeConfig
+
   // ── UI Strings ────────────────────────────────────────────────────────────
   strings: ResellerStrings
+}
+
+// ── Company home ────────────────────────────────────────────────────────────
+
+export interface CompanyHomeLink {
+  label: string
+  href: string
+  external?: boolean
+}
+
+export interface CompanyHomeProduct {
+  name: string
+  tagline: string
+  description: string
+  points: string[]
+  tone: 'accent' | 'teal'
+  primary: CompanyHomeLink
+  secondary?: CompanyHomeLink
+}
+
+export interface CompanyHomeConfig {
+  companyName: string        // e.g. "Auditelle"
+  productPath: string        // e.g. "/lettrine"
+  seo: {
+    title: string
+    description: string
+    ogTitle: string
+    ogDescription: string
+  }
+  nav: {
+    products: string
+    about: string
+    contact: string
+    backToCompany: string    // link from product pages back to "/"
+  }
+  hero: {
+    badge: string
+    title: string
+    titleAccent: string
+    subtitle: string
+    ctaPrimary: string
+    ctaSecondary: string
+  }
+  principles: Array<{ title: string; description: string }>
+  productsTitle: string
+  productsSubtitle: string
+  products: CompanyHomeProduct[]
+  about: {
+    title: string
+    body: string
+    facts: Array<{ label: string; value: string }>
+    cta: string
+  }
+  footerNote: string
 }
 
 // ── Plan types ──────────────────────────────────────────────────────────────
@@ -208,8 +268,8 @@ export interface ResellerStrings {
     footer: string
   }
 
-  // Competitor comparison
-  comparison: {
+  // Competitor comparison (optional: omitted brands show no table)
+  comparison?: {
     title: string
     subtitle: string
     competitors: string[]
@@ -233,6 +293,7 @@ export interface ResellerStrings {
     companyLabel: string
     contactLabel: string
     copyright: string
+    copyrightHolder?: string   // defaults to the brand name
     poweredBy: string
     poweredByName: string
   }

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useConfig } from '@/components/ConfigProvider';
 import ManageCookiesLink from '@/components/ManageCookiesLink';
+import { copyrightHolder, productAnchor } from '@/lib/company-home';
 
 export default function Footer() {
   const config = useConfig();
@@ -31,12 +32,12 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
-                <Link href="/#features" className="hover:text-white transition-colors">
+                <Link href={productAnchor(config, 'features')} className="hover:text-white transition-colors">
                   {s.nav.features}
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-white transition-colors">
+                <Link href={productAnchor(config, 'pricing')} className="hover:text-white transition-colors">
                   {s.nav.pricing}
                 </Link>
               </li>
@@ -53,6 +54,13 @@ export default function Footer() {
               {s.footer.companyLabel}
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">
+              {config.companyHome && (
+                <li>
+                  <Link href="/" className="hover:text-white transition-colors">
+                    {config.legalEntity}
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors">
                   {s.footer.contactLabel}
@@ -74,7 +82,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-700 mt-10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} {config.name}. {s.footer.copyright}
+            &copy; {new Date().getFullYear()} {copyrightHolder(config)}. {s.footer.copyright}
             <ManageCookiesLink className="ml-4 text-gray-500 hover:text-white transition-colors" />
           </p>
           <p className="text-xs text-gray-600">

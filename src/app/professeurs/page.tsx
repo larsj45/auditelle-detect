@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
-import { Shield, Brain, FileSearch, BarChart3, Zap, GraduationCap, Check, X, Clock, Users, ArrowRight } from 'lucide-react'
+import { copyrightHolder, productHomePath } from '@/lib/company-home'
+import { Shield, Brain, FileSearch, BarChart3, Zap, GraduationCap, Check, Clock, Users, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Lettrine pour les enseignants — Détectez le contenu IA dans les travaux étudiants',
   description:
-    'Outil de détection IA pour les enseignants, motorisé par Pangram Labs. Vérifiez les copies en quelques secondes. Données hébergées dans l’UE. Support français.',
+    'Outil de détection IA pour les enseignants, motorisé par Pangram Labs. Vérifiez les copies en quelques secondes. Données stockées dans l’UE. Support français.',
   openGraph: {
     title: 'Lettrine pour les enseignants — Détectez le contenu IA',
     description:
@@ -27,7 +28,7 @@ export default async function ProfesseursPage() {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: `${config.name} pour les enseignants`,
-    description: 'Outil de detection IA pour enseignants et universites francaises',
+    description: 'Outil de détection IA pour enseignants et universités françaises',
     url: 'https://www.auditelle.fr/professeurs',
     mainEntity: {
       '@type': 'SoftwareApplication',
@@ -38,7 +39,7 @@ export default async function ProfesseursPage() {
         '@type': 'Offer',
         price: '0.50',
         priceCurrency: 'EUR',
-        description: 'Paiement a l\'analyse, sans abonnement',
+        description: 'Paiement à l’analyse, sans abonnement',
       },
     },
   }
@@ -54,7 +55,7 @@ export default async function ProfesseursPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center">
+            <Link href={productHomePath(config)} className="flex items-center">
               {config.logoColor ? (
                 <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
               ) : (
@@ -76,24 +77,24 @@ export default async function ProfesseursPage() {
         <div className="max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-[var(--accent-light)] text-[var(--accent)] text-sm font-semibold px-4 py-2 rounded-full mb-6">
             <GraduationCap className="w-4 h-4" />
-            Concu pour les enseignants
+            Conçu pour les enseignants
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--navy)] leading-tight">
-            Detectez le contenu IA dans les{' '}
-            <span className="text-[var(--accent)]">travaux etudiants</span>
+            Détectez le contenu IA dans les{' '}
+            <span className="text-[var(--accent)]">travaux étudiants</span>
           </h1>
           <p className="text-xl text-gray-600 mt-6 max-w-3xl mx-auto leading-relaxed">
-            Verifiez les copies, memoires et rapports en quelques secondes.
-            Un signal a interpreter, pas un verdict.
-            Donnees hebergees dans l&apos;UE.
+            Vérifiez les copies, mémoires et rapports en quelques secondes.
+            Un signal à interpréter, pas un verdict.
+            Données stockées dans l&apos;UE.
           </p>
 
           <div className="flex flex-wrap gap-6 mt-8 justify-center">
             {[
               'Moteur Pangram Labs',
               'Un signal, pas un verdict',
-              'Donnees hebergees dans l\'UE',
-              'Support francais',
+              'Données stockées dans l’UE',
+              'Support français',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-gray-600 font-medium">
                 <Check className="w-5 h-5 text-emerald-500 shrink-0" />
@@ -107,14 +108,14 @@ export default async function ProfesseursPage() {
               href="/signup"
               className="btn-primary text-lg px-10 py-4 rounded-xl shadow-lg shadow-orange-500/25 inline-flex items-center gap-2"
             >
-              Creer un compte
+              Créer un compte
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/contact?subject=Demonstration%20pour%20mon%20etablissement"
+              href="/contact?subject=D%C3%A9monstration%20pour%20mon%20%C3%A9tablissement"
               className="btn-secondary text-lg px-8 py-4 rounded-xl"
             >
-              Demander une demo
+              Demander une démo
             </Link>
           </div>
 
@@ -128,13 +129,13 @@ export default async function ProfesseursPage() {
       <section className="py-20 px-4 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-            ChatGPT a change la donne.<br />
+            ChatGPT a changé la donne.<br />
             <span className="text-[var(--accent)]">Vos outils doivent suivre.</span>
           </h2>
           <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed">
-            Depuis novembre 2022, les enseignants font face a un defi sans precedent :
-            comment distinguer un travail etudiant authentique d&apos;un texte genere par IA ?
-            Un score seul ne suffit pas : il faut un signal clair, et une lecture humaine avant toute decision.
+            Depuis novembre 2022, les enseignants font face à un défi sans précédent :
+            comment distinguer un travail étudiant authentique d&apos;un texte généré par IA ?
+            Un score seul ne suffit pas : il faut un signal clair, et une lecture humaine avant toute décision.
           </p>
         </div>
       </section>
@@ -144,40 +145,40 @@ export default async function ProfesseursPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Tout ce dont vous avez besoin pour proteger l&apos;integrite academique
+              Tout ce dont vous avez besoin pour protéger l&apos;intégrité académique
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
               icon={<Brain className="w-8 h-8" />}
-              title="Score de probabilite IA"
-              description="Obtenez un score precis pour chaque document. Sachez immediatement si le texte est humain ou genere par IA."
+              title="Score de probabilité IA"
+              description="Obtenez un score précis pour chaque document. Sachez immédiatement si le texte est humain ou généré par IA."
             />
             <FeatureCard
               icon={<FileSearch className="w-8 h-8" />}
-              title="Identification du modele"
-              description="Detectez quel modele a ete utilise : ChatGPT, Claude, Gemini, Llama, Perplexity et bien d'autres."
+              title="Identification du modèle"
+              description="Détectez quel modèle a été utilisé : ChatGPT, Claude, Gemini, Llama, Perplexity et bien d'autres."
             />
             <FeatureCard
               icon={<BarChart3 className="w-8 h-8" />}
               title="Analyse par section"
-              description="Comprenez quelles parties sont IA et lesquelles sont humaines. Ideal pour les travaux partiellement assistes."
+              description="Comprenez quelles parties sont IA et lesquelles sont humaines. Idéal pour les travaux partiellement assistés."
             />
             <FeatureCard
               icon={<Shield className="w-8 h-8" />}
-              title="Detection de plagiat"
-              description="Recherche parmi des milliards de pages pour detecter le plagiat en plus de l'IA. Tout-en-un."
+              title="Détection de plagiat"
+              description="Recherche parmi des milliards de pages pour détecter le plagiat en plus de l'IA. Tout-en-un."
             />
             <FeatureCard
               icon={<Zap className="w-8 h-8" />}
               title="Un signal, pas un verdict"
-              description="Ne punissez jamais un etudiant sur la seule base d'un score. Lettrine vous aide a ouvrir la discussion, pas a la conclure."
+              description="Ne punissez jamais un étudiant sur la seule base d'un score. Lettrine vous aide à ouvrir la discussion, pas à la conclure."
             />
             <FeatureCard
               icon={<Clock className="w-8 h-8" />}
-              title="Resultats en secondes"
-              description="Collez le texte ou uploadez un fichier PDF/DOCX. Obtenez un rapport detaille en moins de 10 secondes."
+              title="Résultats en secondes"
+              description="Collez le texte ou uploadez un fichier PDF/DOCX. Obtenez un rapport détaillé en moins de 10 secondes."
             />
           </div>
         </div>
@@ -191,69 +192,26 @@ export default async function ProfesseursPage() {
               Simple comme 1, 2, 3
             </h2>
             <p className="text-gray-500 mt-4 text-lg">
-              Aucune installation necessaire. Fonctionne directement dans votre navigateur.
+              Aucune installation nécessaire. Fonctionne directement dans votre navigateur.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <StepCard
               number="1"
-              title="Collez le texte ou uploadez le fichier"
-              description="Copiez-collez le contenu du travail etudiant ou uploadez directement le fichier PDF ou Word."
+              title="Collez le texte ou importez le fichier"
+              description="Copiez-collez le contenu du travail étudiant ou importez directement le fichier PDF ou Word."
             />
             <StepCard
               number="2"
               title="Lancez l'analyse"
-              description="Notre moteur analyse chaque phrase avec la technologie Pangram Labs, evaluee de facon independante."
+              description="Notre moteur analyse chaque phrase avec la technologie Pangram Labs, évaluée de façon indépendante."
             />
             <StepCard
               number="3"
-              title="Consultez le rapport detaille"
-              description="Score IA global, identification du modele, analyse section par section. Tout ce qu'il faut pour prendre une decision eclairee."
+              title="Consultez le rapport détaillé"
+              description="Score IA global, identification du modèle, analyse section par section. Tout ce qu'il faut pour prendre une décision éclairée."
             />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Comparison with alternatives ─────────────────────────────────── */}
-      <section className="py-24 px-4 bg-[var(--bg-light)]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Pourquoi les enseignants choisissent {config.name}
-            </h2>
-            <p className="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">
-              Comparez avec les alternatives disponibles sur le marche francais.
-            </p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr>
-                  <th className="py-4 px-4 text-sm font-semibold text-gray-500"></th>
-                  <th className="py-4 px-4 text-sm font-bold text-center text-[var(--accent)] bg-orange-50 rounded-t-xl">
-                    {config.name}
-                  </th>
-                  <th className="py-4 px-4 text-sm font-bold text-center text-[var(--navy)]">
-                    Turnitin AI
-                  </th>
-                  <th className="py-4 px-4 text-sm font-bold text-center text-[var(--navy)]">
-                    GPTZero
-                  </th>
-                  <th className="py-4 px-4 text-sm font-bold text-center text-[var(--navy)]">
-                    Compilatio
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <ComparisonRow label="Support en francais" values={[true, false, false, true]} />
-                <ComparisonRow label="Identification du modele" values={[true, false, true, false]} />
-                <ComparisonRow label="Analyse par section" values={[true, false, false, false]} />
-                <ComparisonRow label="Conforme RGPD" values={[true, true, false, true]} />
-                <ComparisonRow label="Essai gratuit" values={[true, false, true, false]} />
-                <ComparisonRow label="Prix (a partir de)" values={['0,50 €/analyse', 'Sur devis', '$9.99/mois', 'Sur devis']} />
-              </tbody>
-            </table>
           </div>
         </div>
       </section>
@@ -263,25 +221,15 @@ export default async function ProfesseursPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Ce que disent les professionnels de l&apos;education
+              Ce qu&apos;ils disent du moteur Pangram
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="max-w-2xl mx-auto">
             <TestimonialCard
-              quote="Parmi les detecteurs automatiques, ce systeme surpasse significativement tous les autres. La precision est remarquable."
+              quote="Parmi les détecteurs automatiques, ce système surpasse significativement tous les autres."
               author="Dr. Jenna Russell"
-              role="Chercheur, University of Maryland"
-            />
-            <TestimonialCard
-              quote="Mes etudiants sont tellement convaincus de sa precision que c'est devenu le meilleur moyen de dissuasion contre la triche."
-              author="Jarred Phillips"
-              role="Enseignant, New Roads School"
-            />
-            <TestimonialCard
-              quote="Un detecteur presque surnaturellement bon. Aucun faux positif constate en 6 mois d'utilisation intensive."
-              author="Ryan Nicolace"
-              role="Cloud Architect & Formateur"
+              role="University of Maryland, à propos du moteur Pangram Labs"
             />
           </div>
 
@@ -293,30 +241,30 @@ export default async function ProfesseursPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
-              Adapte a tous les niveaux d&apos;enseignement
+              Adapté à tous les niveaux d&apos;enseignement
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <UseCaseCard
               icon={<GraduationCap className="w-8 h-8" />}
-              title="Universites"
-              items={['Memoires et theses', 'Travaux diriges', 'Examens ecrits', 'Rapports de stage']}
+              title="Universités"
+              items={['Mémoires et thèses', 'Travaux dirigés', 'Examens écrits', 'Rapports de stage']}
             />
             <UseCaseCard
               icon={<Users className="w-8 h-8" />}
-              title="Grandes ecoles"
-              items={['Etudes de cas', 'Business plans', 'Projets de groupe', 'Examens de synthese']}
+              title="Grandes écoles"
+              items={['Études de cas', 'Business plans', 'Projets de groupe', 'Examens de synthèse']}
             />
             <UseCaseCard
               icon={<Shield className="w-8 h-8" />}
-              title="Lycees & BTS"
-              items={['Dissertations', 'Commentaires composes', 'Rapports de stage', 'Grand oral prep']}
+              title="Lycées & BTS"
+              items={['Dissertations', 'Commentaires composés', 'Rapports de stage', 'Préparation au grand oral']}
             />
             <UseCaseCard
               icon={<BarChart3 className="w-8 h-8" />}
               title="Formation pro"
-              items={['Evaluations certifiantes', 'Memoires professionnels', 'Etudes de terrain', 'Rapports de mission']}
+              items={['Évaluations certifiantes', 'Mémoires professionnels', 'Études de terrain', 'Rapports de mission']}
             />
           </div>
         </div>
@@ -330,21 +278,21 @@ export default async function ProfesseursPage() {
               Tarification simple et transparente
             </h2>
             <p className="text-gray-500 mt-4 text-lg">
-              Commencez gratuitement. Evoluez quand vous en avez besoin.
+              Commencez gratuitement. Évoluez quand vous en avez besoin.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <PricingCard
-              name="A l'analyse"
+              name="À l’analyse"
               price="0,50"
               features={[
                 '0,50 € par analyse',
                 'Aucun engagement',
-                'Identification du modele',
-                'Les credits n\'expirent jamais',
+                'Identification du modèle',
+                'Les crédits n’expirent jamais',
               ]}
-              cta="Creer un compte"
+              cta="Créer un compte"
               href="/signup"
             />
             <PricingCard
@@ -354,7 +302,7 @@ export default async function ProfesseursPage() {
               features={[
                 '1 000 analyses par mois',
                 'Export PDF/CSV',
-                'Detection de plagiat',
+                'Détection de plagiat',
                 'Support email prioritaire',
                 'Historique 30 jours',
               ]}
@@ -363,23 +311,22 @@ export default async function ProfesseursPage() {
               popular
             />
             <PricingCard
-              name="Universite"
-              price="149"
-              period="/mois"
+              name="Établissements"
+              price="1 500 € HT"
+              rawPrice
               features={[
-                '10 000 analyses par mois',
-                'Multi-utilisateurs',
-                'Rapports exportables (PDF/CSV)',
-                'Support prioritaire',
-                'Rapports personnalises',
+                'Pilote de 30 jours, puis déploiement sur devis',
+                '5 utilisateurs, jusqu’à 100 unités d’analyse',
+                'Onboarding et protocole de lecture des signaux',
+                'Bilan final et recommandation de déploiement',
               ]}
-              cta="Demander une demo"
-              href="/contact?subject=Demo%20plan%20Universite"
+              cta="Découvrir le pilote"
+              href="/etablissements"
             />
           </div>
 
           <p className="text-center text-gray-400 text-sm mt-8">
-            Facturation mensuelle. Annulation a tout moment. Paiement securise par Stripe.
+            Abonnement mensuel résiliable à tout moment. Paiement sécurisé par Stripe. Établissements : sur facture.
           </p>
         </div>
       </section>
@@ -388,29 +335,29 @@ export default async function ProfesseursPage() {
       <section className="py-24 px-4 bg-[var(--bg-light)]">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)] text-center mb-16">
-            Questions frequentes
+            Questions fréquentes
           </h2>
 
           <div className="space-y-6">
             <FaqItem
-              question={`${config.name} est-il fiable pour prendre des decisions academiques ?`}
-              answer="Le score est un signal, pas une preuve. Le moteur Pangram Labs a ete evalue de facon independante (University of Maryland), mais aucune decision academique ne doit reposer sur le seul score : combinez-le toujours avec un entretien et votre jugement pedagogique."
+              question={`${config.name} est-il fiable pour prendre des décisions académiques ?`}
+              answer="Le score est un signal, pas une preuve. Le moteur Pangram Labs a été évalué de façon indépendante (University of Maryland), mais aucune décision académique ne doit reposer sur le seul score : combinez-le toujours avec un entretien et votre jugement pédagogique."
             />
             <FaqItem
-              question="Les donnees de mes etudiants sont-elles protegees ?"
-              answer="Les comptes et l'historique des analyses sont heberges dans l'Union europeenne (Paris). L'analyse elle-meme est effectuee par notre fournisseur de detection, Pangram Labs. Contactez-nous pour le detail des sous-traitants et de la duree de conservation."
+              question="Les données de mes étudiants sont-elles protégées ?"
+              answer="Les comptes et l'historique des analyses sont stockés dans l'Union européenne (Paris). L'analyse elle-même est effectuée par notre fournisseur de détection, Pangram Labs. Contactez-nous pour le détail des sous-traitants et de la durée de conservation."
             />
             <FaqItem
-              question="Quels modeles d'IA sont detectes ?"
-              answer={`${config.name} detecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modeles de langage actuels, y compris les textes paraphrases par des outils de reformulation.`}
+              question="Quels modèles d'IA sont détectés ?"
+              answer={`${config.name} détecte ChatGPT (GPT-3.5, GPT-4, GPT-4o), Claude, Gemini, Llama, Mistral, Perplexity et la plupart des modèles de langage actuels, y compris les textes paraphrasés par des outils de reformulation.`}
             />
             <FaqItem
               question="Puis-je integrer Lettrine dans notre LMS (Moodle, Canvas) ?"
-              answer="Pas encore. Nous etudions les integrations LMS avec nos premiers etablissements pilotes."
+              answer="Pas encore. Nous étudions les intégrations LMS avec nos premiers établissements pilotes."
             />
             <FaqItem
-              question="L'analyse fonctionne-t-elle en francais ?"
-              answer={`Oui. ${config.name} detecte le contenu IA dans de nombreuses langues, dont le francais, l'anglais, l'espagnol, l'allemand et le portugais.`}
+              question="L'analyse fonctionne-t-elle en français ?"
+              answer={`Oui. ${config.name} détecte le contenu IA dans de nombreuses langues, dont le français, l'anglais, l'espagnol, l'allemand et le portugais.`}
             />
           </div>
         </div>
@@ -420,24 +367,24 @@ export default async function ProfesseursPage() {
       <section className="gradient-hero py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            Protegez l&apos;integrite de vos evaluations
+            Protégez l&apos;intégrité de vos évaluations
           </h2>
           <p className="text-gray-300 mt-4 text-lg">
-            Creez un compte et payez uniquement les analyses que vous lancez, sans abonnement ni engagement.
+            Créez un compte et payez uniquement les analyses que vous lancez, sans abonnement ni engagement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
               href="/signup"
               className="btn-primary text-lg px-10 py-4 inline-flex items-center gap-2"
             >
-              Creer un compte gratuit
+              Créer un compte gratuit
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="/contact?subject=D%C3%A9monstration"
               className="btn-secondary text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
-              Demander une demo
+              Demander une démo
             </Link>
           </div>
           <p className="text-sm text-gray-400 mt-4">
@@ -450,7 +397,9 @@ export default async function ProfesseursPage() {
       <footer className="bg-navy text-white py-8">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} {config.name}. Tous droits reserves. {config.legalEntity} &mdash; {config.registrationLabel} {config.registrationNumber}
+            &copy; {new Date().getFullYear()} {copyrightHolder(config)}. Tous droits réservés.{' '}
+            {copyrightHolder(config) === config.legalEntity ? '' : <>{config.legalEntity} &mdash; </>}
+            {config.registrationLabel} {config.registrationNumber}
           </p>
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
@@ -486,32 +435,6 @@ function StepCard({ number, title, description }: { number: string; title: strin
       <h3 className="text-lg font-bold text-[var(--navy)] mb-2">{title}</h3>
       <p className="text-gray-500">{description}</p>
     </div>
-  )
-}
-
-function ComparisonRow({ label, values }: { label: string; values: Array<string | boolean> }) {
-  return (
-    <tr className="border-b border-gray-100">
-      <td className="py-4 px-4 text-sm font-medium text-[var(--navy)]">{label}</td>
-      {values.map((val, i) => (
-        <td
-          key={i}
-          className={`py-4 px-4 text-sm text-center ${
-            i === 0 ? 'font-semibold text-[var(--accent)] bg-orange-50' : 'text-gray-600'
-          }`}
-        >
-          {typeof val === 'boolean' ? (
-            val ? (
-              <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-            ) : (
-              <X className="w-5 h-5 text-gray-300 mx-auto" />
-            )
-          ) : (
-            val
-          )}
-        </td>
-      ))}
-    </tr>
   )
 }
 
@@ -555,9 +478,11 @@ function PricingCard({
   cta,
   href,
   popular,
+  rawPrice,
 }: {
   name: string
   price: string
+  rawPrice?: boolean
   period?: string
   features: string[]
   cta: string
@@ -573,7 +498,10 @@ function PricingCard({
       )}
       <h3 className="text-lg font-bold text-[var(--navy)]">{name}</h3>
       <div className="mt-4 mb-6">
-        <span className="text-4xl font-bold text-[var(--navy)]">{price}&euro;</span>
+        <span className="text-4xl font-bold text-[var(--navy)]">
+          {price}
+          {!rawPrice && <>&euro;</>}
+        </span>
         {period && <span className="text-gray-500">{period}</span>}
       </div>
       <ul className="space-y-3 mb-8">

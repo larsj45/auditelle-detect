@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
+import { productHomePath } from '@/lib/company-home'
 
 declare function gtag(...args: unknown[]): void
 
@@ -168,7 +169,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     <div className="min-h-screen bg-[var(--bg-light)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center mb-6">
+          <Link href={productHomePath(config)} className="inline-flex items-center mb-6">
             <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight ? `calc(${config.logoHeight} * 1.25)` : '2.5rem' }} />
           </Link>
           <h1 className="text-2xl font-bold text-[var(--navy)]">{titles[mode]}</h1>
