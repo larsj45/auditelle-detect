@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import { useConfig } from '@/components/ConfigProvider';
 import { productHomePath } from '@/lib/company-home';
+import BrandMark from '@/components/BrandMark';
 
 export default function DashboardLayout({
   children,
@@ -59,7 +60,7 @@ export default function DashboardLayout({
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0">
         <div className="p-6">
           <Link href={productHomePath(config)} className="flex items-center gap-2">
-            <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
+            <BrandMark config={config} />
           </Link>
         </div>
 
@@ -97,7 +98,7 @@ export default function DashboardLayout({
 
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 h-16 flex items-center justify-between">
         <Link href={productHomePath(config)} className="flex items-center gap-2">
-          <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
+          <BrandMark config={config} />
         </Link>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Menu">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

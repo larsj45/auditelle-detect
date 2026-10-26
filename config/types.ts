@@ -15,6 +15,7 @@ export interface ResellerConfig {
   logoColor: string     // path: e.g. "/brands/auditelle/logo-color.svg"
   logoWhite: string     // path: e.g. "/brands/auditelle/logo-white.svg"
   logoHeight?: string   // CSS height for logo img: e.g. "2rem", "3rem" (default "2rem")
+  wordmark?: string     // when set, render this text as a serif wordmark instead of the logo image
 
   // ── Theme (CSS custom properties) ───────────────────────────────────────
   theme: {
@@ -24,6 +25,10 @@ export interface ResellerConfig {
     navy: string            // dark text / bg,     e.g. "#1a1a2e"
     navyLight: string       // lighter variant,    e.g. "#16213e"
     heroGradient: string    // CSS gradient for hero section
+    // Optional visual skin. 'paper' = cream paper, serif headings, flat cards
+    // (auditelle-fr, shared with the Lettrine editorial identity). Absent =
+    // the default look used by the other brands.
+    skin?: 'paper'
   }
 
   // ── Locale ────────────────────────────────────────────────────────────────
@@ -134,6 +139,7 @@ export interface CompanyHomeLink {
 export interface CompanyHomeProduct {
   name: string
   tagline: string
+  summary: string            // one-line pitch for the hero card
   description: string
   points: string[]
   tone: 'accent' | 'teal'

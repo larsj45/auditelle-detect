@@ -4,6 +4,7 @@ import { getResellerConfig } from '@/lib/config'
 import { siteOrigin } from '@/lib/site-origin'
 import { ConfigProvider } from '@/components/ConfigProvider'
 import { CookieConsent } from '@/components/CookieConsent'
+import { paperFontVariables } from '@/lib/paper-fonts'
 import './globals.css'
 
 const config = await getResellerConfig()
@@ -47,7 +48,10 @@ export default function RootLayout({
 
   return (
     <html lang={config.htmlLang}>
-      <body style={themeVars}>
+      <body
+        style={themeVars}
+        className={config.theme.skin === 'paper' ? `skin-paper ${paperFontVariables}` : undefined}
+      >
         <ConfigProvider config={config}>
           {children}
           {config.googleAdsId && <CookieConsent />}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useConfig } from '@/components/ConfigProvider'
 import { productHomePath } from '@/lib/company-home'
+import BrandMark from '@/components/BrandMark'
 
 declare function gtag(...args: unknown[]): void
 
@@ -170,7 +171,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href={productHomePath(config)} className="inline-flex items-center mb-6">
-            <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight ? `calc(${config.logoHeight} * 1.25)` : '2.5rem' }} />
+            <BrandMark config={config} scale={1.25} />
           </Link>
           <h1 className="text-2xl font-bold text-[var(--navy)]">{titles[mode]}</h1>
           <p className="text-gray-500 mt-2">{subtitles[mode]}</p>

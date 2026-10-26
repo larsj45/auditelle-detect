@@ -46,3 +46,25 @@ test('auditelle-fr landing copy does not claim EU hosting nor unverified testimo
   assert.doesNotMatch(landing, /h[eé]berg[eé]es dans l/i)
   assert.doesNotMatch(landing, /faux positif/i)
 })
+
+test('paper skin and serif wordmark are auditelle-fr only', async () => {
+  assert.equal(auditelleFr.theme.skin, 'paper')
+  assert.equal(auditelleFr.wordmark, 'Lettrine')
+  assert.equal(auditelleFr.theme.accent, '#14533f') // Lettrine editorial green
+  const others = await Promise.all([
+    import('../../config/novalearn-uk.ts'),
+    import('../../config/veritexto-es.ts'),
+    import('../../config/veritexto-pt.ts'),
+    import('../../config/klartext-se.ts'),
+  ])
+  for (const { default: c } of others) {
+    assert.equal(c.theme.skin, undefined, c.id)
+    assert.equal(c.wordmark, undefined, c.id)
+    assert.equal(c.companyHome, undefined, c.id)
+  }
+})
+
+test('auditelle-fr copy no longer positions Lettrine against Turnitin', () => {
+  assert.doesNotMatch(auditelleFr.strings.footer.description, /Turnitin/)
+  assert.doesNotMatch(auditelleFr.strings.tester.title, /Turnitin/)
+})

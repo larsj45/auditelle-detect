@@ -26,6 +26,7 @@ export default async function ProductLanding() {
     ? `${siteOrigin(config)}${config.companyHome.productPath}`
     : siteOrigin(config)
   const planCount = config.plans.homepage.length
+  const paper = config.theme.skin === 'paper'
   // The CTA band sits on the light hero gradient: dark text on the company-home
   // brand (auditelle-fr); other brands keep their current styling.
   const ctaTitle = config.companyHome ? 'text-[var(--navy)]' : 'text-white'
@@ -114,11 +115,11 @@ export default async function ProductLanding() {
                 ))}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
-                <Link href="/etablissements" className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-orange-500/20">
+              <div className={`flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8 ${paper ? 'sm:flex-wrap' : ''}`}>
+                <Link href="/etablissements" className={`btn-primary rounded-xl shadow-lg shadow-orange-500/20 ${paper ? 'text-base px-6 py-3.5 whitespace-nowrap text-center' : 'text-lg px-8 py-4'}`}>
                   {s.hero.ctaPrimary}
                 </Link>
-                <Link href="/signup" className="btn-secondary text-lg px-8 py-4 rounded-xl">
+                <Link href="/signup" className={`btn-secondary rounded-xl ${paper ? 'text-base px-6 py-3.5 whitespace-nowrap text-center' : 'text-lg px-8 py-4'}`}>
                   {s.hero.ctaSecondary}
                 </Link>
               </div>

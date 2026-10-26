@@ -14,15 +14,21 @@ const config: ResellerConfig = {
   // Textual placeholder logos (swap the SVGs in /public/brands/lettrine/ when art exists).
   logoColor: '/brands/lettrine/logo-color.svg',
   logoWhite: '/brands/lettrine/logo-white.svg',
+  // 2026-10-26: serif text wordmark, as on lettrine.eu (the SVGs above stay
+  // for any image-only context).
+  wordmark: 'Lettrine',
 
   // ── Theme ───────────────────────────────────────────────────────────────
+  // 2026-10-26 (Lars): direction "Papier & encre". Ink green = Lettrine
+  // editorial green (lettrine.eu, --editorial-green), on cream paper.
   theme: {
-    accent: '#e85d04',
-    accentHover: '#dc2f02',
-    accentLight: '#fff4e6',
-    navy: '#1a1a2e',
-    navyLight: '#16213e',
-    heroGradient: 'linear-gradient(180deg, #fef3c7 0%, #fef9ef 50%, #ffffff 100%)',
+    accent: '#14533f',
+    accentHover: '#0c382b',
+    accentLight: '#e5f0eb',
+    navy: '#1f2a24',
+    navyLight: '#33413a',
+    heroGradient: 'linear-gradient(180deg, #f3ebdb 0%, #f7f2e8 100%)',
+    skin: 'paper',
   },
 
   // ── Locale ────────────────────────────────────────────────────────────────
@@ -226,7 +232,7 @@ const config: ResellerConfig = {
       title: 'Auditelle — Intégrité des travaux écrits et surveillance d’examens (Lettrine, VigiExam)',
       description: 'Auditelle SASU, société française, édite et opère Lettrine (détection IA et similarités dans les travaux écrits) et VigiExam (surveillance d’examens à distance avec revue humaine).',
       ogTitle: 'Auditelle — Lettrine et VigiExam',
-      ogDescription: 'Société française qui édite et opère Lettrine et VigiExam. Un signal, pas un verdict : la décision reste humaine.',
+      ogDescription: 'Société française qui édite et opère Lettrine et VigiExam. Un signal, pas un verdict : la décision reste humaine.',
     },
     nav: {
       products: 'Produits',
@@ -237,8 +243,8 @@ const config: ResellerConfig = {
     hero: {
       badge: 'Société française · Intégrité académique et examens',
       title: 'Des évaluations plus sûres, ',
-      titleAccent: 'une décision qui reste humaine',
-      subtitle: 'Auditelle SASU est une société française qui édite et opère Lettrine et VigiExam : l’analyse des travaux écrits d’un côté, la surveillance des examens à distance de l’autre. Nos outils signalent et documentent ; vos équipes décident.',
+      titleAccent: 'une décision qui reste humaine.',
+      subtitle: 'Auditelle SASU est une société française qui édite et opère Lettrine et VigiExam : l’analyse des travaux écrits d’un côté, la surveillance des examens à distance de l’autre. Nos outils signalent et documentent ; vos équipes décident.',
       ctaPrimary: 'Découvrir nos produits',
       ctaSecondary: 'Nous contacter',
     },
@@ -248,11 +254,12 @@ const config: ResellerConfig = {
       { title: 'Transparence pour votre DPO', description: 'Traitements et sous-traitants techniques communiqués avant tout pilote.' },
     ],
     productsTitle: 'Nos produits',
-    productsSubtitle: 'Deux services distincts, un même principe : fournir des éléments clairs et laisser la décision à votre établissement.',
+    productsSubtitle: 'Deux services distincts, un même principe : fournir des éléments clairs et laisser la décision à votre établissement.',
     products: [
       {
         name: 'Lettrine',
         tagline: 'Intégrité des travaux écrits',
+        summary: 'Détection IA et similarités, passage par passage. Un signal à lire, jamais une sanction.',
         description: 'Lettrine signale, passage par passage, les parties probablement générées ou assistées par IA et les similarités avec des sources existantes, dans un rapport exportable.',
         points: [
           'Détection IA (moteur Pangram Labs) et recherche de similarités',
@@ -267,6 +274,7 @@ const config: ResellerConfig = {
       {
         name: 'VigiExam',
         tagline: 'Surveillance d’examens à distance',
+        summary: 'Identité vérifiée, session enregistrée, revue humaine et rapport sous 72 h.',
         description: 'VigiExam permet aux candidats de passer l’examen à distance, avec vérification d’identité, surveillance de la webcam, de l’écran et du son, et une revue humaine des sessions signalées.',
         points: [
           'Vérification d’identité et surveillance pendant toute la session',
@@ -400,7 +408,7 @@ const config: ResellerConfig = {
 
     // Footer
     footer: {
-      description: 'La solution française d’intégrité académique et alternative à Turnitin pour détecter IA, plagiat et contenus suspects avec conformité RGPD.',
+      description: 'Lettrine, service français d’intégrité académique édité par Auditelle SASU.',
       productLabel: 'Produit',
       companyLabel: 'Entreprise',
       contactLabel: 'Contact',
@@ -540,7 +548,7 @@ const config: ResellerConfig = {
     // Public tester page
     tester: {
       badge: 'Test gratuit — Aucun compte requis',
-      title: 'Testez l’alternative à Turnitin',
+      title: 'Testez Lettrine gratuitement',
       subtitle: 'Collez un texte et vérifiez l’IA, le plagiat ou les deux en quelques secondes.',
       testsRemaining: '{count} tests gratuits restants',
       limitReached: 'Limite atteinte — créez un compte pour continuer',

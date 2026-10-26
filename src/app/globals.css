@@ -95,6 +95,203 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* ── 'paper' skin (auditelle-fr) ────────────────────────────────────────────
+   Cream paper, editorial serif headings, flat cards with a thin rule and an
+   offset shadow. Scoped to body.skin-paper, so other brands are untouched.
+   Green and fonts match the Lettrine editorial pages (lettrine.eu). */
+.skin-paper {
+  --paper: #f7f2e8;
+  --paper-deep: #efe6d3;
+  --paper-card: #fffdf8;
+  --paper-line: #e3d9c6;
+  --paper-shadow: #e9dfcc;
+  --ink: #1f2a24;
+  --ink-soft: #4a5550;
+  --ink-muted: #6b6458;
+  --terracotta: #c8553d;
+  --vigi: #2a9d8f;
+  --vigi-dark: #1d6f66;
+  --bg-light: #f7f2e8;
+  --bg-warm: #f3ebdb;
+  --teal: #14533f;
+  --teal-dark: #0c382b;
+  /* Re-bind the Tailwind colour tokens on <body>, where the theme vars live
+     (at :root they resolve to the orange fallbacks). */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-light: var(--accent-light);
+  --color-navy: var(--navy);
+  --color-navy-light: var(--navy-light);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-paper-sans), 'Inter', -apple-system, sans-serif;
+}
+
+.skin-paper h1,
+.skin-paper h2,
+.skin-paper h3 {
+  font-family: var(--font-paper-serif), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.skin-paper .bg-white {
+  background-color: var(--paper-card);
+}
+
+.skin-paper .bg-white\/95 {
+  background-color: rgb(247 242 232 / 0.95);
+}
+
+.skin-paper nav.fixed {
+  border-bottom-color: var(--paper-line);
+}
+
+.skin-paper .border-gray-100,
+.skin-paper .border-gray-200 {
+  border-color: var(--paper-line);
+}
+
+.skin-paper .rounded-xl,
+.skin-paper .rounded-2xl {
+  border-radius: 6px;
+}
+
+.skin-paper .shadow-lg,
+.skin-paper .shadow-xl {
+  box-shadow: 6px 6px 0 var(--paper-shadow);
+}
+
+.skin-paper .text-emerald-500 {
+  color: var(--accent);
+}
+
+.skin-paper .border-orange-200 {
+  border-color: var(--paper-line);
+}
+
+.skin-paper .bg-gradient-to-r.from-orange-50 {
+  background: var(--accent-light);
+}
+
+.skin-paper .card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-line);
+  border-radius: 4px;
+  box-shadow: 6px 6px 0 var(--paper-shadow);
+}
+
+.skin-paper .card:hover {
+  box-shadow: 6px 6px 0 var(--paper-shadow);
+}
+
+.skin-paper .btn-primary {
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.skin-paper .btn-primary:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.skin-paper .btn-secondary {
+  background-color: transparent;
+  border: 1.5px solid var(--accent);
+  border-radius: 6px;
+}
+
+.skin-paper .btn-secondary:hover {
+  background-color: var(--accent-light);
+}
+
+/* Shared pages written for a dark hero (e.g. /contact): dark ink on paper. */
+.skin-paper .gradient-hero h1.text-white,
+.skin-paper .gradient-hero h2.text-white {
+  color: var(--ink);
+}
+
+.skin-paper .gradient-hero p.text-gray-300 {
+  color: var(--ink-soft);
+}
+
+.skin-paper section.bg-gray-50 {
+  background-color: var(--paper);
+}
+
+/* Hard-coded blue on shared pages (contact form) → ink green. */
+.skin-paper .text-blue-500,
+.skin-paper .text-blue-600 {
+  color: var(--accent);
+}
+
+.skin-paper .bg-blue-600 {
+  background-color: var(--accent);
+}
+
+.skin-paper .hover\:bg-blue-700:hover {
+  background-color: var(--accent-hover);
+}
+
+.skin-paper .focus\:ring-blue-500:focus {
+  --tw-ring-color: var(--accent);
+}
+
+/* Footers: light paper band instead of the dark navy one. */
+.skin-paper footer.bg-navy {
+  background: var(--paper-deep);
+  color: var(--ink);
+  border-top: 1px solid var(--paper-line);
+}
+
+.skin-paper footer.bg-navy .text-white,
+.skin-paper footer.bg-navy h3 {
+  color: var(--ink);
+}
+
+.skin-paper footer.bg-navy .text-gray-300 {
+  color: var(--ink-soft);
+}
+
+.skin-paper footer.bg-navy .text-gray-400,
+.skin-paper footer.bg-navy .text-gray-500,
+.skin-paper footer.bg-navy .text-gray-600 {
+  color: var(--ink-muted);
+}
+
+.skin-paper footer.bg-navy a:hover,
+.skin-paper footer.bg-navy button:hover {
+  color: var(--accent);
+}
+
+.skin-paper footer.bg-navy .border-gray-700 {
+  border-color: var(--paper-line);
+}
+
+/* Serif wordmark (Lettrine, Auditelle), as on lettrine.eu. */
+.brand-wordmark {
+  font-family: var(--font-paper-serif), Georgia, serif;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.skin-paper .small-caps-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+
+.skin-paper .drop-cap {
+  float: left;
+  font-family: var(--font-paper-serif), Georgia, serif;
+  font-weight: 600;
+  color: var(--terracotta);
+  line-height: 0.8;
+}
+
 @media print {
   body {
     background: white !important;

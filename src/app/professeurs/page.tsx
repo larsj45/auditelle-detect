@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
+import BrandMark from '@/components/BrandMark'
 import { copyrightHolder, productHomePath } from '@/lib/company-home'
 import { Shield, Brain, FileSearch, BarChart3, Zap, GraduationCap, Check, Clock, Users, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -56,11 +57,7 @@ export default async function ProfesseursPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href={productHomePath(config)} className="flex items-center">
-              {config.logoColor ? (
-                <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
-              ) : (
-                <span className="text-xl font-bold text-[var(--navy)]">{config.name}</span>
-              )}
+              <BrandMark config={config} />
             </Link>
             <Link
               href="/signup"
