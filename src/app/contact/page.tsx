@@ -29,6 +29,15 @@ export default function ContactPage() {
   }, [s.subjectOptions])
   const [sending, setSending] = useState(false)
 
+  // Signed load-time token: lets the API refuse direct POSTs and too-fast submissions
+  const [formToken, setFormToken] = useState<string | null>(null)
+  useEffect(() => {
+    fetch('/api/contact', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setFormToken(typeof data?.token === 'string' ? data.token : null))
+      .catch(() => setFormToken(null))
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSending(true)
@@ -39,7 +48,7 @@ export default function ContactPage() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, website }),
+        body: JSON.stringify({ ...formData, website, t: formToken }),
       })
       delivered = res.ok
     } catch {
@@ -194,15 +203,16 @@ export default function ContactPage() {
                   />
                 </div>
 
-                {/* Honeypot: hidden from people, filled by bots */}
-                <input
-                  type="text"
-                  name="website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  aria-hidden="true"
-                  className="hidden"
-                />
+                {/* Honeypot: off-screen for people, filled by bots */}
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    defaultValue=""
+                  />
+                </div>
 
                 <button
                   type="submit"
