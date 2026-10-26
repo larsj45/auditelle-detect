@@ -144,6 +144,69 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       },
     ],
   },
+  it: {
+    locale: 'it',
+    htmlLang: 'it',
+    path: '/riviste-scientifiche/privacy',
+    backPath: '/riviste-scientifiche',
+    backLabel: 'Torna a Lettrine Editoriale',
+    metadata: {
+      title: 'Dati personali | Lettrine Editoriale',
+      description:
+        'Come Auditelle tratta i dati inviati tramite il modulo di richiesta di un account demo di Lettrine Editoriale.',
+    },
+    title: 'Dati personali: richieste di account demo',
+    updated: 'Ultimo aggiornamento: ottobre 2026',
+    sections: [
+      {
+        heading: 'Titolare del trattamento',
+        paragraphs: [
+          `Auditelle SASU, Parigi, Francia, SIREN 945117000. Contatto: ${CONTACT}.`,
+        ],
+      },
+      {
+        heading: 'Dati trattati',
+        paragraphs: [
+          'Nome, email professionale, rivista o organizzazione, ruolo, numero di riviste, volume di manoscritti, offerta di interesse e il contesto che scegliete di descrivere.',
+          'Anche il vostro indirizzo IP viene trattato temporaneamente per limitare gli abusi del modulo.',
+        ],
+      },
+      {
+        heading: 'Finalità e basi giuridiche',
+        paragraphs: [
+          'Rispondere alla vostra richiesta di account demo e comunicare con voi in merito: misure precontrattuali adottate su vostra richiesta (articolo 6.1.b del GDPR).',
+          'Proteggere il modulo dagli abusi: legittimo interesse (articolo 6.1.f del GDPR).',
+        ],
+      },
+      {
+        heading: 'Destinatari',
+        paragraphs: [
+          'I vostri dati non vengono mai venduti. Sono trattati dai nostri fornitori tecnici: Vercel (hosting del sito), Resend (invio delle email), Google Workspace (la nostra posta elettronica) e Plausible (statistiche di visita senza cookie).',
+          "Alcuni di questi fornitori possono trattare dati al di fuori dell'Unione europea. In tal caso, i trasferimenti si basano sulle clausole contrattuali tipo della Commissione europea o sul quadro UE-USA per la protezione dei dati.",
+        ],
+      },
+      {
+        heading: 'Periodo di conservazione',
+        paragraphs: [
+          'Le richieste che non portano a una collaborazione vengono cancellate al più tardi 12 mesi dopo il nostro ultimo scambio.',
+          'I log tecnici e i dati per la protezione dagli abusi sono conservati per un massimo di 30 giorni.',
+        ],
+      },
+      {
+        heading: 'I vostri diritti',
+        paragraphs: [
+          `Avete diritto di accesso, rettifica, cancellazione, limitazione, opposizione e portabilità. Scriveteci a ${CONTACT}.`,
+          'Potete inoltre proporre reclamo al Garante per la protezione dei dati personali (garanteprivacy.it) o alla CNIL in Francia (cnil.fr).',
+        ],
+      },
+      {
+        heading: 'Cookie',
+        paragraphs: [
+          'I cookie di misurazione del pubblico e di misurazione pubblicitaria sono attivati solo se li accettate nel banner dei cookie. Potete modificare la vostra scelta in qualsiasi momento tramite il link «Gestisci i cookie» in fondo alla pagina di Lettrine Editoriale.',
+        ],
+      },
+    ],
+  },
 }
 
 export function getEditorialPrivacyCopy(locale: EditorialLocale) {

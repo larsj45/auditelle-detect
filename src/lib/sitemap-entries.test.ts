@@ -2,16 +2,18 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { editorialSitemap, legacySitemap, sitemapForHost } from './sitemap-entries.ts'
 
-test('lists both editorial landings on lettrine.eu with reciprocal hreflang alternates', () => {
+test('lists the editorial landings on lettrine.eu with reciprocal hreflang alternates', () => {
   const entries = editorialSitemap()
   assert.deepEqual(entries.map((entry) => entry.url), [
     'https://lettrine.eu/revues-scientifiques',
     'https://lettrine.eu/vetenskapliga-tidskrifter',
+    'https://lettrine.eu/riviste-scientifiche',
   ])
   for (const entry of entries) {
     assert.deepEqual(entry.alternates?.languages, {
       fr: 'https://lettrine.eu/revues-scientifiques',
       sv: 'https://lettrine.eu/vetenskapliga-tidskrifter',
+      it: 'https://lettrine.eu/riviste-scientifiche',
     })
   }
 })
@@ -28,6 +30,6 @@ test('keeps the editorial privacy notices out of both sitemaps', () => {
 })
 
 test('chooses the sitemap by host kind', () => {
-  assert.equal(sitemapForHost('editorial').length, 2)
+  assert.equal(sitemapForHost('editorial').length, 3)
   assert.equal(sitemapForHost('other').length, legacySitemap().length)
 })

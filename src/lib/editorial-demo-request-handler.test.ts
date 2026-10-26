@@ -179,3 +179,29 @@ test('keeps a successful request when only applicant confirmation fails', async 
   assert.deepEqual(result, { status: 200, body: { success: true } })
   assert.equal(sendCount, 2)
 })
+
+test('uses Lettrine Editoriale and Italian copy for Italian requests', async () => {
+  const sent: EditorialEmailParams[] = []
+  const result = await handleEditorialDemoRequest(
+    {
+      ...validRequest,
+      locale: 'it',
+      name: 'Giulia Rossi',
+      email: 'redazione@rivista-esempio.it',
+      organization: 'Rivista di Esempio',
+      role: 'Direttrice',
+    },
+    dependencies({
+      sendEmail: async (params) => {
+        sent.push(params)
+        return { success: true }
+      },
+    })
+  )
+
+  assert.equal(result.status, 200)
+  assert.equal(sent[0].fromName, 'Lettrine Editoriale')
+  assert.match(sent[0].subject, /^\[IT\]/)
+  assert.match(sent[1].html, /Gentile Giulia Rossi/)
+  assert.match(sent[1].html, /Non è necessario alcun appuntamento/)
+})

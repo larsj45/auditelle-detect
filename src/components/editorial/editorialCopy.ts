@@ -1,4 +1,4 @@
-export type EditorialLocale = 'fr' | 'sv'
+export type EditorialLocale = 'fr' | 'sv' | 'it'
 export type EditorialPlanId = 'undecided' | 'essential' | 'journal' | 'organization'
 export type EditorialJournalCount = 'one' | 'two_to_five' | 'six_plus'
 export type EditorialVolume = 'under_300' | '300_600' | '600_1500' | 'over_1500'
@@ -880,6 +880,357 @@ export const editorialCopy = {
         too_large: 'Begäran innehåller för mycket text. Förkorta beskrivningen och försök igen.',
         rate_limited: 'För många försök. Försök igen om en timme.',
         delivery_unavailable: 'Begäran kunde inte skickas. Försök igen senare.',
+      },
+    },
+  },
+  it: {
+    locale: 'it',
+    htmlLang: 'it',
+    openGraphLocale: 'it_IT',
+    path: '/riviste-scientifiche',
+    privacyNoticePath: '/riviste-scientifiche/privacy',
+    metadata: {
+      title: 'Lettrine Editoriale | Integrità per le riviste scientifiche',
+      description:
+        "Lettrine Editoriale aiuta le riviste scientifiche di lingua italiana a esaminare i segnali legati all'IA e alla similarità e a documentare la revisione umana.",
+      pageName: 'Lettrine Editoriale',
+      pageDescription:
+        'Piattaforma di integrità editoriale per le riviste scientifiche di lingua italiana.',
+    },
+    brand: {
+      name: 'Lettrine',
+      product: 'Editoriale',
+      ariaLabel: 'Lettrine Editoriale, home',
+    },
+    navigation: {
+      ariaLabel: 'Navigazione principale',
+      mobileAriaLabel: 'Navigazione mobile',
+      product: 'Prodotto',
+      workflow: 'Come funziona',
+      privacy: 'Riservatezza',
+      pricing: 'Prezzi',
+      faq: 'FAQ',
+      openMenu: 'Apri il menu',
+      closeMenu: 'Chiudi il menu',
+    },
+    common: {
+      skipLink: 'Vai al contenuto',
+      demoCta: 'Richiedi un account demo',
+      reportCta: 'Vedi un esempio di report',
+      close: 'Chiudi',
+    },
+    hero: {
+      eyebrow: 'Piattaforma di integrità editoriale',
+      title: "L'integrità editoriale per le riviste scientifiche di lingua italiana.",
+      lead:
+        "Analizzate i manoscritti, individuate i segnali legati all'IA e alla similarità e documentate ogni decisione editoriale in un report chiaro. La revisione resta umana.",
+      offerCta: "Scopri l'offerta Editoriale",
+      principlesAriaLabel: 'Principi del prodotto',
+      principles: ['Segnali, non verdetti', 'Accesso per più redattori', 'Report esportabili'],
+    },
+    audience: {
+      label: 'Pensato per chi pubblica',
+      items: [
+        'Riviste scientifiche',
+        'Case editrici',
+        'Società scientifiche',
+        'Comitati scientifici',
+      ],
+    },
+    workflow: {
+      label: 'Un processo documentato',
+      title: "Dall'invio alla decisione editoriale, senza perdere il contesto.",
+      intro:
+        "Lettrine riunisce l'analisi, i passaggi da esaminare e lo storico della rivista in un unico spazio di lavoro condiviso.",
+      steps: [
+        {
+          number: '01',
+          title: 'Inviare',
+          description:
+            'Caricate un manoscritto e associatelo alla rivista, al fascicolo o al dossier editoriale di riferimento.',
+        },
+        {
+          number: '02',
+          title: 'Analizzare',
+          description:
+            "Ottenete i segnali relativi ai contenuti generati con l'IA e alla similarità, con i passaggi e le fonti disponibili.",
+        },
+        {
+          number: '03',
+          title: 'Esaminare',
+          description:
+            'Il comitato interpreta i risultati nel contesto scientifico. Lettrine non emette verdetti.',
+        },
+        {
+          number: '04',
+          title: 'Documentare',
+          description:
+            "Esportate il report e conservate una traccia chiara dell'analisi nello storico editoriale.",
+        },
+      ],
+    },
+    product: {
+      label: 'Lo spazio editoriale',
+      title: 'Una coda di manoscritti leggibile da tutta la redazione.',
+      intro:
+        'Seguite lo stato di ogni analisi, i segnali da esaminare e i report disponibili senza moltiplicare i fogli di calcolo.',
+    },
+    privacy: {
+      label: 'Riservatezza fin dalla progettazione',
+      title: 'I manoscritti meritano un quadro esplicito.',
+      intro:
+        'Lettrine è pensata per documentare conservazione, accessi e fornitori coinvolti prima che una redazione inizi a usarla.',
+      principles: [
+        {
+          number: '01',
+          title: 'Accessi controllati',
+          description:
+            'Ruoli distinti per responsabili, redattori e lettori, con uno storico collegato a ciascun manoscritto.',
+        },
+        {
+          number: '02',
+          title: 'Conservazione definita',
+          description:
+            'Una politica di conservazione e cancellazione viene concordata con la rivista prima della messa in produzione.',
+        },
+        {
+          number: '03',
+          title: 'Fornitori documentati',
+          description:
+            'I motori di analisi e le relative condizioni di trattamento sono indicati nella documentazione contrattuale.',
+        },
+      ],
+    },
+    pricing: {
+      label: 'Accordo annuale',
+      title: 'Un volume di controlli adatto al ritmo della vostra rivista.',
+      intro:
+        'Prezzi, volumi e condizioni dei fornitori vengono definiti con ciascuna rivista prima di qualsiasi proposta contrattuale.',
+      recommended: 'Consigliato',
+      plans: [
+        {
+          id: 'essential',
+          name: 'Essenziale',
+          audience: 'Per una piccola rivista o un comitato editoriale ristretto.',
+          price: 'Prezzo da definire',
+          period: 'offerta annuale preparata con la vostra redazione',
+          volume: 'Volume editoriale definito dopo un primo confronto',
+          features: [
+            'Redazione ristretta',
+            'Analisi IA e similarità',
+            'Report PDF esportabili',
+            'Storico dei manoscritti',
+            'Assistenza via email',
+          ],
+        },
+        {
+          id: 'journal',
+          name: 'Rivista',
+          audience: 'Per una rivista attiva con più redattori o sezioni.',
+          price: 'Prezzo da definire',
+          period: 'offerta annuale preparata con la vostra redazione',
+          volume: 'Volume adeguato al ritmo di pubblicazione',
+          features: [
+            'Più redattori o sezioni',
+            'Analisi IA e similarità',
+            'Report e storico completo',
+            'Monitoraggio dei consumi',
+            'Percorso di attivazione documentato',
+          ],
+          featured: true,
+        },
+        {
+          id: 'organization',
+          name: 'Organizzazione',
+          audience: 'Per una casa editrice, una società scientifica o un portafoglio di riviste.',
+          price: 'Su preventivo',
+          period: 'volume e governance personalizzati',
+          volume: 'Più riviste o redazioni',
+          features: [
+            'Redattori e amministratori',
+            'Volumi adattati per rivista',
+            'Attivazione guidata via email',
+            'Condizioni di conservazione dedicate',
+            'Assistenza prioritaria',
+          ],
+        },
+      ],
+      noteTitle: 'Prezzi non pubblicati:',
+      noteLead: "l'offerta si definisce su richiesta.",
+      noteDetail:
+        'Le ipotesi di prezzo e di pacchetti aggiuntivi non vengono pubblicate finché costi e condizioni dei fornitori non sono confermati.',
+    },
+    faq: {
+      label: 'Domande frequenti',
+      title: 'Quello che una redazione deve sapere.',
+      items: [
+        {
+          question: "Lettrine stabilisce se un autore ha usato un'IA?",
+          answer:
+            "No. Lettrine evidenzia segnali e passaggi da esaminare. L'interpretazione spetta sempre al comitato editoriale, nel contesto del manoscritto e della politica della rivista.",
+        },
+        {
+          question: 'Che cosa comprende un controllo editoriale?',
+          answer:
+            "Il prototipo prevede un'analisi dei contenuti generati con l'IA, un'analisi di similarità, i passaggi segnalati e un report esportabile. La definizione contrattuale finale dipenderà dai motori attivati per la vostra offerta.",
+        },
+        {
+          question: 'I manoscritti vengono usati per addestrare modelli?',
+          answer:
+            'Le condizioni di trattamento devono essere confermate nella documentazione contrattuale di ciascun fornitore attivato. Lettrine le presenta prima della messa in produzione della rivista.',
+        },
+        {
+          question: "Si possono aggiungere controlli nel corso dell'anno?",
+          answer:
+            'Sì. Sono previsti pacchetti di controlli aggiuntivi senza modificare la data di rinnovo annuale.',
+        },
+        {
+          question: 'Quanto tempo serve per iniziare?',
+          answer:
+            'Una piccola redazione può essere configurata rapidamente, dopo aver definito responsabili, ruoli di accesso, politica di conservazione e volume annuale.',
+        },
+        {
+          question: 'Come si richiede un account demo?',
+          answer:
+            "Inviate le informazioni sulla vostra rivista con un indirizzo email professionale. Lettrine verifica l'idoneità e risponde via email. Se la richiesta viene accolta, le istruzioni di accesso vengono inviate senza bisogno di un appuntamento.",
+        },
+      ],
+    },
+    closing: {
+      title: 'Date al vostro comitato segnali chiari, non un verdetto automatico.',
+      description:
+        'Scoprite come Lettrine Editoriale può inserirsi nel flusso di lavoro della vostra rivista scientifica.',
+    },
+    footer: {
+      legal: 'Auditelle SASU · Parigi · SIREN 945117000',
+      privacyLink: 'Dati personali',
+      manageCookies: 'Gestisci i cookie',
+    },
+    reportPreview: {
+      ariaLabel: 'Anteprima del report Lettrine',
+      id: 'REPORT-2026-0341',
+      status: 'Analisi completata',
+      kicker: 'Manoscritto · 6.214 parole · Rivista di studi umanistici digitali',
+      title: 'Approcci computazionali alla lessicografia storica',
+      aiValue: '3',
+      aiLabel: 'passaggi IA da esaminare',
+      similarityValue: '18%',
+      similarityLabel: 'similarità · 2 fonti',
+      beforeAi: 'I corpora digitalizzati consentono una copertura diacronica senza precedenti. ',
+      aiPassage:
+        "I modelli linguistici offrono una maggiore produttività nell'estrazione delle varianti grafiche",
+      betweenMarks: ', previa ',
+      similarityPassage: 'validazione filologica condotta da specialisti del settore',
+      note: 'Da esaminare a cura del comitato di redazione.',
+      exportLabel: 'Esporta il report PDF',
+    },
+    workspace: {
+      ariaLabel: 'Anteprima dello spazio Lettrine Editoriale',
+      brand: 'AUDITELLE / RIVISTA DEMO',
+      cycle: 'Ciclo editoriale 2026',
+      export: 'Esporta',
+      newManuscript: 'Nuovo manoscritto',
+      sidebar: ['Manoscritti', 'Report', 'Redazione', 'Consumi', 'Impostazioni'],
+      recentTitle: 'Manoscritti recenti',
+      recentSummary: '24 invii · 18 analisi completate',
+      filter: 'Filtra',
+      headers: ['Manoscritto', 'Stato', 'IA', 'Similarità', 'Report'],
+      rows: [
+        ['Lessicografia storica', 'Da esaminare', '3 passaggi', '18%', 'Disponibile'],
+        ['Archivi aperti e scienza', 'Completata', 'Nessun segnale', '6%', 'Disponibile'],
+        ['Etica dei dati clinici', 'In corso', 'n.d.', 'n.d.', 'In attesa'],
+        ['Pedagogie critiche digitali', 'Da esaminare', '1 passaggio', '12%', 'Disponibile'],
+        ['Corpora e traduzione assistita', 'Completata', 'Nessun segnale', '9%', 'Disponibile'],
+      ],
+      reviewStatus: 'Da esaminare',
+      readyStatus: 'Completata',
+    },
+    reportModal: {
+      title: 'Esempio di report editoriale',
+      kicker: 'REPORT-2026-0341 · MANOSCRITTO ANONIMIZZATO',
+      manuscriptTitle: 'Approcci computazionali alla lessicografia storica',
+      paragraphs: [
+        {
+          before:
+            'I corpora digitalizzati consentono ormai una copertura diacronica senza precedenti. ',
+          marked:
+            "I modelli linguistici offrono una maggiore produttività nell'estrazione delle varianti grafiche",
+          after:
+            ', a condizione che i risultati siano validati filologicamente da specialisti.',
+          tone: 'ai',
+        },
+        {
+          before: 'Questa evoluzione trasforma le pratiche di documentazione. ',
+          marked:
+            'La costituzione di corpora comparabili resta tuttavia una condizione essenziale per la solidità delle analisi',
+          after:
+            ', in particolare quando le fonti presentano livelli di digitalizzazione eterogenei.',
+          tone: 'similarity',
+        },
+        {
+          before:
+            'La redazione mette in relazione i segnali con la metodologia, le citazioni e la politica della rivista prima di qualsiasi decisione.',
+        },
+      ],
+      findingsTitle: 'Segnali da esaminare',
+      findings: [
+        { title: 'Contenuti IA', detail: '3 passaggi segnalati · livello da esaminare', tone: 'ochre' },
+        { title: 'Similarità', detail: '18% · 2 fonti associate', tone: 'green' },
+        { title: 'Contesto', detail: '6.214 parole · scienze umane' },
+        { title: 'Principio', detail: 'Questo report non costituisce un verdetto.' },
+      ],
+      exportLabel: 'Esporta PDF',
+    },
+    form: {
+      modalTitle: 'Richiedi un account demo istituzionale',
+      intro:
+        "Riservato a riviste, case editrici e organizzazioni scientifiche. La valutazione e l'attivazione avvengono via email.",
+      name: 'Nome e cognome',
+      email: 'Email professionale',
+      organization: 'Rivista o organizzazione',
+      role: 'Ruolo',
+      rolePlaceholder: 'Direzione, redazione, segreteria di redazione…',
+      journalCount: 'Numero di riviste',
+      journalCountOptions: [
+        { value: 'one', label: '1 rivista' },
+        { value: 'two_to_five', label: 'Da 2 a 5 riviste' },
+        { value: 'six_plus', label: '6 riviste o più' },
+      ],
+      volume: "Manoscritti all'anno",
+      volumeOptions: [
+        { value: 'under_300', label: 'Meno di 300' },
+        { value: '300_600', label: 'Da 300 a 600' },
+        { value: '600_1500', label: 'Da 600 a 1.500' },
+        { value: 'over_1500', label: 'Più di 1.500' },
+      ],
+      plan: 'Offerta di interesse',
+      planOptions: [
+        { value: 'undecided', label: 'Da definire' },
+        { value: 'essential', label: 'Editoriale Essenziale' },
+        { value: 'journal', label: 'Editoriale Rivista' },
+        { value: 'organization', label: 'Editoriale Organizzazione' },
+      ],
+      context: 'Contesto',
+      contextPlaceholder:
+        'Descrivete il vostro processo editoriale e i controlli di cui avete bisogno.',
+      honeypot: 'Sito web',
+      reassurance: 'Nessun appuntamento necessario. Rispondiamo via email.',
+      privacyNotice: {
+        lead: 'Trattamento dei dati di questo modulo:',
+        link: 'informativa sulla privacy',
+      },
+      submitting: 'Invio in corso…',
+      submit: 'Invia la richiesta',
+      successTitle: 'Richiesta ricevuta.',
+      successMessage:
+        "Verifichiamo l'idoneità della vostra organizzazione. Se la richiesta viene accolta, le istruzioni di accesso saranno inviate via email. Non è necessario alcun appuntamento.",
+      errors: {
+        invalid_request: 'Verificate le informazioni inserite.',
+        professional_email_required:
+          "Usate l'indirizzo professionale della vostra istituzione o della vostra rivista.",
+        too_large: 'La richiesta è troppo lunga. Accorciate la descrizione e riprovate.',
+        rate_limited: "Troppe richieste. Riprovate tra un'ora.",
+        delivery_unavailable: 'Non è stato possibile inviare la richiesta. Riprovate più tardi.',
       },
     },
   },

@@ -8,7 +8,11 @@ export const LEGACY_ORIGIN = 'https://www.auditelle.fr'
 
 const EDITORIAL_HOSTS = new Set([EDITORIAL_HOST, `www.${EDITORIAL_HOST}`])
 const LEGACY_HOSTS = new Set(['auditelle.fr', 'www.auditelle.fr'])
-const EDITORIAL_PATH_PREFIXES = ['/vetenskapliga-tidskrifter', '/revues-scientifiques']
+const EDITORIAL_PATH_PREFIXES = [
+  '/vetenskapliga-tidskrifter',
+  '/revues-scientifiques',
+  '/riviste-scientifiche',
+]
 // Served on both hosts, with host-aware content.
 const SHARED_PATHS = new Set(['/robots.txt', '/sitemap.xml'])
 const NORDIC_LANGUAGES = new Set(['sv', 'da', 'no', 'nb', 'nn', 'fi', 'is'])
@@ -37,7 +41,8 @@ export function isEditorialPath(pathname: string): boolean {
   )
 }
 
-// Swedish for Nordic browsers, French when French comes first, Swedish otherwise
+// Swedish for Nordic browsers, French or Italian when that language comes first,
+// Swedish otherwise
 // (an English-language browser is more likely a Nordic editor than a French one).
 export function preferredEditorialPath(acceptLanguage: string | null | undefined): string {
   const languages = (acceptLanguage || '')
@@ -52,6 +57,7 @@ export function preferredEditorialPath(acceptLanguage: string | null | undefined
 
   for (const { lang } of languages) {
     if (lang === 'fr') return '/revues-scientifiques'
+    if (lang === 'it') return '/riviste-scientifiche'
     if (NORDIC_LANGUAGES.has(lang)) return '/vetenskapliga-tidskrifter'
   }
   return '/vetenskapliga-tidskrifter'

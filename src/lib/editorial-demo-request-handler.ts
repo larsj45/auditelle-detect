@@ -152,6 +152,49 @@ const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
       'Vi bedömer organisationen och den önskade prisplanen. Om begäran godkänns skickas åtkomstinstruktioner via e-post. Inget möte krävs.',
     signature: 'Lettrine Editorial · Auditelle SASU',
   },
+  it: {
+    brand: 'Lettrine Editoriale',
+    internalTitle: 'Nuova richiesta di account demo Lettrine Editoriale',
+    internalIntro: "Un'organizzazione desidera valutare Lettrine Editoriale.",
+    contextTitle: 'Contesto',
+    missingContext: 'Non indicato',
+    replyInstruction: 'Rispondere direttamente a questa email per proseguire per iscritto.',
+    internalSubject: (organization) => `[IT] Account demo Lettrine Editoriale: ${organization}`,
+    labels: {
+      name: 'Nome',
+      email: 'Email',
+      organization: 'Organizzazione',
+      role: 'Ruolo',
+      journalCount: 'Riviste',
+      volume: "Manoscritti all'anno",
+      plan: 'Offerta di interesse',
+    },
+    journalCounts: {
+      one: '1 rivista',
+      two_to_five: 'Da 2 a 5 riviste',
+      six_plus: '6 riviste o più',
+    },
+    volumes: {
+      under_300: 'Meno di 300',
+      '300_600': 'Da 300 a 600',
+      '600_1500': 'Da 600 a 1.500',
+      over_1500: 'Più di 1.500',
+    },
+    plans: {
+      undecided: 'Da definire',
+      essential: 'Editoriale Essenziale',
+      journal: 'Editoriale Rivista',
+      organization: 'Editoriale Organizzazione',
+    },
+    confirmationSubject: 'La vostra richiesta di account demo Lettrine Editoriale',
+    confirmationTitle: 'Abbiamo ricevuto la vostra richiesta di account demo',
+    greeting: (name) => `Gentile ${name},`,
+    confirmationReceived: (organization) =>
+      `Abbiamo ricevuto la richiesta di ${organization} per valutare Lettrine Editoriale.`,
+    confirmationNext:
+      "Il nostro team verifica l'idoneità e il perimetro richiesto. Se la richiesta viene accolta, le istruzioni di accesso all'account demo saranno inviate via email. Non è necessario alcun appuntamento.",
+    signature: 'Lettrine Editoriale · Auditelle SASU',
+  },
 }
 
 function requestRows(data: EditorialDemoRequest, copy: EditorialEmailCopy) {
@@ -187,7 +230,7 @@ function internalEmailHtml(data: EditorialDemoRequest, copy: EditorialEmailCopy)
 }
 
 function internalEmailText(data: EditorialDemoRequest, copy: EditorialEmailCopy) {
-  const replyInstruction = data.locale === 'sv'
+  const replyInstruction = data.locale !== 'fr'
     ? ['', copy.replyInstruction]
     : []
 
