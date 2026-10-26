@@ -1,6 +1,6 @@
 import { GENERIC_EMAIL_DOMAINS } from './institutional-email.ts'
 
-export const EDITORIAL_DEMO_LOCALES = ['fr', 'sv'] as const
+export const EDITORIAL_DEMO_LOCALES = ['fr', 'sv', 'it'] as const
 export const EDITORIAL_DEMO_VOLUMES = [
   'under_300',
   '300_600',
@@ -56,6 +56,12 @@ const CONSUMER_EMAIL_DOMAINS = new Set([
   'passagen.se',
   'spray.se',
   'telia.com',
+  'alice.it',
+  'email.it',
+  'libero.it',
+  'tin.it',
+  'tiscali.it',
+  'virgilio.it',
 ])
 
 function readString(

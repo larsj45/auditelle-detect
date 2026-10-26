@@ -4,7 +4,7 @@ import { EDITORIAL_ORIGIN, LEGACY_ORIGIN, type HostKind } from './editorial-host
 
 // The editorial landings live on lettrine.eu; auditelle.fr keeps the rest.
 export function editorialSitemap(now = new Date()): MetadataRoute.Sitemap {
-  return (['fr', 'sv'] as const).map((locale) => ({
+  return (['fr', 'sv', 'it'] as const).map((locale) => ({
     url: `${EDITORIAL_ORIGIN}${editorialCopy[locale].path}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
@@ -13,6 +13,7 @@ export function editorialSitemap(now = new Date()): MetadataRoute.Sitemap {
       languages: {
         fr: `${EDITORIAL_ORIGIN}${editorialCopy.fr.path}`,
         sv: `${EDITORIAL_ORIGIN}${editorialCopy.sv.path}`,
+        it: `${EDITORIAL_ORIGIN}${editorialCopy.it.path}`,
       },
     },
   }))
@@ -33,6 +34,12 @@ export function legacySitemap(now = new Date()): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/istituzioni`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/professeurs`,

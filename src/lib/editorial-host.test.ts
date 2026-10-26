@@ -14,12 +14,14 @@ test('classifies hosts, ignoring case and port', () => {
   assert.equal(hostKind(null), 'other')
 })
 
-test('moves the four editorial pages from auditelle.fr to lettrine.eu permanently', () => {
+test('moves the editorial pages from auditelle.fr to lettrine.eu permanently', () => {
   for (const pathname of [
     '/vetenskapliga-tidskrifter',
     '/vetenskapliga-tidskrifter/integritet',
     '/revues-scientifiques',
     '/revues-scientifiques/confidentialite',
+    '/riviste-scientifiche',
+    '/riviste-scientifiche/privacy',
   ]) {
     for (const host of ['auditelle.fr', 'www.auditelle.fr']) {
       assert.deepEqual(resolveEditorialRedirect({ host, pathname, search: '?utm=x' }), {
@@ -68,6 +70,8 @@ test('picks the landing language for the lettrine.eu root with a temporary redir
   )
   assert.equal(preferredEditorialPath('da-DK,da;q=0.9,en;q=0.8'), '/vetenskapliga-tidskrifter')
   assert.equal(preferredEditorialPath('sv-SE'), '/vetenskapliga-tidskrifter')
+  assert.equal(preferredEditorialPath('it-IT,it;q=0.9,en;q=0.8'), '/riviste-scientifiche')
+  assert.equal(preferredEditorialPath('en;q=0.9,it;q=0.8'), '/riviste-scientifiche')
   assert.equal(preferredEditorialPath('en-US,en;q=0.9'), '/vetenskapliga-tidskrifter')
   assert.equal(preferredEditorialPath('en;q=0.9,fr;q=0.8'), '/revues-scientifiques')
   assert.equal(preferredEditorialPath('fr;q=0,sv;q=0.5'), '/vetenskapliga-tidskrifter')

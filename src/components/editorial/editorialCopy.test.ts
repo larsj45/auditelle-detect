@@ -42,7 +42,7 @@ test('uses the same semantic qualification values in both locales', () => {
 })
 
 test('keeps the company only where it is the legal entity, never as the product name', () => {
-  for (const locale of ['fr', 'sv'] as const) {
+  for (const locale of ['fr', 'sv', 'it'] as const) {
     const text = JSON.stringify(editorialCopy[locale])
     assert.ok(!/Verify/.test(text))
     assert.ok(!/Auditelle(?! SASU)/.test(text))
@@ -54,4 +54,32 @@ test('uses feminine agreement for Lettrine in French', () => {
   const text = JSON.stringify(editorialCopy.fr)
   assert.match(text, /Lettrine est conçue/)
   assert.match(text, /Lettrine décide-t-elle/)
+})
+
+test('keeps the Italian page under the Lettrine Editoriale brand', () => {
+  assert.equal(editorialCopy.it.path, '/riviste-scientifiche')
+  assert.equal(editorialCopy.it.privacyNoticePath, '/riviste-scientifiche/privacy')
+  assert.equal(editorialCopy.it.brand.name, 'Lettrine')
+  assert.equal(editorialCopy.it.brand.product, 'Editoriale')
+  assert.equal(editorialCopy.it.htmlLang, 'it')
+  assert.equal(editorialCopy.it.openGraphLocale, 'it_IT')
+  assert.equal(editorialCopy.it.pricing.plans[0].price, 'Prezzo da definire')
+  assert.match(editorialCopy.it.form.successMessage, /Non è necessario alcun appuntamento/)
+})
+
+test('uses the same semantic qualification values in the Italian locale', () => {
+  for (const key of ['volumeOptions', 'planOptions', 'journalCountOptions'] as const) {
+    assert.deepEqual(
+      editorialCopy.it.form[key].map((option) => option.value),
+      editorialCopy.fr.form[key].map((option) => option.value)
+    )
+  }
+  assert.deepEqual(
+    editorialCopy.it.pricing.plans.map((plan) => plan.id),
+    editorialCopy.fr.pricing.plans.map((plan) => plan.id)
+  )
+})
+
+test('keeps the Italian copy free of em dashes', () => {
+  assert.ok(!JSON.stringify(editorialCopy.it).includes('\u2014'))
 })

@@ -95,3 +95,27 @@ test('limits freeform context length', () => {
     { success: false, errorCode: 'invalid_request' }
   )
 })
+
+test('accepts the same semantic contract for Italian requests', () => {
+  const result = validateEditorialDemoRequest({
+    ...validRequest,
+    locale: 'it',
+    name: 'Giulia Rossi',
+    email: 'redazione@rivista-esempio.it',
+    organization: 'Rivista di Esempio',
+    role: 'Direttrice',
+  })
+
+  assert.equal(result.success, true)
+  if (result.success && !result.isSpam) {
+    assert.equal(result.data.locale, 'it')
+  }
+})
+
+test('rejects common Italian consumer email providers', () => {
+  for (const email of ['giulia@libero.it', 'giulia@virgilio.it', 'giulia@tiscali.it']) {
+    const result = validateEditorialDemoRequest({ ...validRequest, locale: 'it', email })
+    assert.equal(result.success, false)
+    if (!result.success) assert.equal(result.errorCode, 'professional_email_required')
+  }
+})
