@@ -158,7 +158,7 @@ const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
     internalIntro: "Un'organizzazione desidera valutare Lettrine Editoriale.",
     contextTitle: 'Contesto',
     missingContext: 'Non indicato',
-    replyInstruction: 'Rispondere direttamente a questa email per proseguire per iscritto.',
+    replyInstruction: 'Rispondere direttamente a questa email per proseguire lo scambio per iscritto.',
     internalSubject: (organization) => `[IT] Account demo Lettrine Editoriale: ${organization}`,
     labels: {
       name: 'Nome',
@@ -192,7 +192,7 @@ const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
     confirmationReceived: (organization) =>
       `Abbiamo ricevuto la richiesta di ${organization} per valutare Lettrine Editoriale.`,
     confirmationNext:
-      "Il nostro team verifica l'idoneità e il perimetro richiesto. Se la richiesta viene accolta, le istruzioni di accesso all'account demo saranno inviate via email. Non è necessario alcun appuntamento.",
+      "Verificheremo l'idoneità della vostra organizzazione e le esigenze indicate. Se la richiesta viene accolta, vi invieremo via email le istruzioni di accesso all'account demo. Non è necessario alcun appuntamento.",
     signature: 'Lettrine Editoriale · Auditelle SASU',
   },
 }

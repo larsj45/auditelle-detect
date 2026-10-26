@@ -36,6 +36,12 @@ export function legacySitemap(now = new Date()): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/istituzioni`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/professeurs`,
       lastModified: now,
       changeFrequency: 'weekly',

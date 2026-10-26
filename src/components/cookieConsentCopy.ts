@@ -6,6 +6,7 @@ export interface CookieConsentCopy {
 
 const SWEDISH_EDITORIAL_PATH = '/vetenskapliga-tidskrifter'
 const ITALIAN_EDITORIAL_PATH = '/riviste-scientifiche'
+const ITALIAN_INSTITUTIONS_PATH = '/istituzioni'
 
 export const swedishEditorialCookieConsent: CookieConsentCopy = {
   message:
@@ -16,7 +17,7 @@ export const swedishEditorialCookieConsent: CookieConsentCopy = {
 
 export const italianEditorialCookieConsent: CookieConsentCopy = {
   message:
-    'Questo sito utilizza cookie per misurare i risultati degli annunci e migliorare la vostra esperienza. Nessun dato personale viene venduto.',
+    'Questo sito utilizza cookie per misurare i risultati delle campagne pubblicitarie e migliorare la vostra esperienza. Nessun dato personale viene venduto.',
   accept: 'Accetta',
   decline: 'Rifiuta',
 }
@@ -30,6 +31,8 @@ export function getCookieConsentCopy(
   defaultCopy: CookieConsentCopy
 ) {
   if (isUnder(pathname, SWEDISH_EDITORIAL_PATH)) return swedishEditorialCookieConsent
-  if (isUnder(pathname, ITALIAN_EDITORIAL_PATH)) return italianEditorialCookieConsent
+  if (isUnder(pathname, ITALIAN_EDITORIAL_PATH) || isUnder(pathname, ITALIAN_INSTITUTIONS_PATH)) {
+    return italianEditorialCookieConsent
+  }
   return defaultCopy
 }

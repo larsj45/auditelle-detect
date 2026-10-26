@@ -24,6 +24,11 @@ test('removes the editorial pages from the auditelle.fr sitemap', () => {
   assert.ok(!urls.some((url) => url.includes('/vetenskapliga-tidskrifter') || url.includes('/revues-scientifiques')))
 })
 
+test('lists the Italian institutions landing on auditelle.fr only', () => {
+  assert.ok(legacySitemap().some((entry) => entry.url === 'https://www.auditelle.fr/istituzioni'))
+  assert.ok(!editorialSitemap().some((entry) => entry.url.includes('/istituzioni')))
+})
+
 test('keeps the editorial privacy notices out of both sitemaps', () => {
   const urls = [...editorialSitemap(), ...legacySitemap()].map((entry) => entry.url)
   assert.ok(!urls.some((url) => url.includes('/integritet') || url.includes('/confidentialite')))

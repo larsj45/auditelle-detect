@@ -945,9 +945,9 @@ export const editorialCopy = {
       steps: [
         {
           number: '01',
-          title: 'Inviare',
+          title: 'Caricare',
           description:
-            'Caricate un manoscritto e associatelo alla rivista, al fascicolo o al dossier editoriale di riferimento.',
+            'Caricate un manoscritto e associatelo alla rivista, al fascicolo o alla sezione monografica di riferimento.',
         },
         {
           number: '02',
@@ -959,7 +959,7 @@ export const editorialCopy = {
           number: '03',
           title: 'Esaminare',
           description:
-            'Il comitato interpreta i risultati nel contesto scientifico. Lettrine non emette verdetti.',
+            'La redazione interpreta i risultati nel contesto scientifico. Lettrine non emette verdetti.',
         },
         {
           number: '04',
@@ -973,13 +973,13 @@ export const editorialCopy = {
       label: 'Lo spazio editoriale',
       title: 'Una coda di manoscritti leggibile da tutta la redazione.',
       intro:
-        'Seguite lo stato di ogni analisi, i segnali da esaminare e i report disponibili senza moltiplicare i fogli di calcolo.',
+        'Seguite lo stato di ogni analisi, i segnali da esaminare e i report disponibili senza dover gestire fogli di calcolo separati.',
     },
     privacy: {
-      label: 'Riservatezza fin dalla progettazione',
-      title: 'I manoscritti meritano un quadro esplicito.',
+      label: 'Riservatezza by design',
+      title: 'I manoscritti richiedono regole chiare.',
       intro:
-        'Lettrine è pensata per documentare conservazione, accessi e fornitori coinvolti prima che una redazione inizi a usarla.',
+        'Lettrine è pensata per definire per iscritto conservazione, accessi e fornitori coinvolti prima che una redazione inizi a usarla.',
       principles: [
         {
           number: '01',
@@ -991,7 +991,7 @@ export const editorialCopy = {
           number: '02',
           title: 'Conservazione definita',
           description:
-            'Una politica di conservazione e cancellazione viene concordata con la rivista prima della messa in produzione.',
+            "Una politica di conservazione e cancellazione viene concordata con la rivista prima dell'avvio del servizio.",
         },
         {
           number: '03',
@@ -1002,7 +1002,7 @@ export const editorialCopy = {
       ],
     },
     pricing: {
-      label: 'Accordo annuale',
+      label: 'Offerta annuale',
       title: 'Un volume di controlli adatto al ritmo della vostra rivista.',
       intro:
         'Prezzi, volumi e condizioni dei fornitori vengono definiti con ciascuna rivista prima di qualsiasi proposta contrattuale.',
@@ -1011,10 +1011,10 @@ export const editorialCopy = {
         {
           id: 'essential',
           name: 'Essenziale',
-          audience: 'Per una piccola rivista o un comitato editoriale ristretto.',
+          audience: 'Per una piccola rivista o una redazione ristretta.',
           price: 'Prezzo da definire',
           period: 'offerta annuale preparata con la vostra redazione',
-          volume: 'Volume editoriale definito dopo un primo confronto',
+          volume: 'Volume definito dopo un primo confronto',
           features: [
             'Redazione ristretta',
             'Analisi IA e similarità',
@@ -1056,7 +1056,7 @@ export const editorialCopy = {
         },
       ],
       noteTitle: 'Prezzi non pubblicati:',
-      noteLead: "l'offerta si definisce su richiesta.",
+      noteLead: "l'offerta viene definita su richiesta.",
       noteDetail:
         'Le ipotesi di prezzo e di pacchetti aggiuntivi non vengono pubblicate finché costi e condizioni dei fornitori non sono confermati.',
     },
@@ -1065,9 +1065,9 @@ export const editorialCopy = {
       title: 'Quello che una redazione deve sapere.',
       items: [
         {
-          question: "Lettrine stabilisce se un autore ha usato un'IA?",
+          question: "Lettrine stabilisce se un autore ha usato l'IA?",
           answer:
-            "No. Lettrine evidenzia segnali e passaggi da esaminare. L'interpretazione spetta sempre al comitato editoriale, nel contesto del manoscritto e della politica della rivista.",
+            "No. Lettrine evidenzia segnali e passaggi da esaminare. L'interpretazione spetta sempre alla redazione, nel contesto del manoscritto e della politica della rivista.",
         },
         {
           question: 'Che cosa comprende un controllo editoriale?',
@@ -1077,12 +1077,12 @@ export const editorialCopy = {
         {
           question: 'I manoscritti vengono usati per addestrare modelli?',
           answer:
-            'Le condizioni di trattamento devono essere confermate nella documentazione contrattuale di ciascun fornitore attivato. Lettrine le presenta prima della messa in produzione della rivista.',
+            'Le condizioni di trattamento devono essere confermate nella documentazione contrattuale di ciascun fornitore attivato. Lettrine le illustra prima che la rivista inizi a usare il servizio.',
         },
         {
           question: "Si possono aggiungere controlli nel corso dell'anno?",
           answer:
-            'Sì. Sono previsti pacchetti di controlli aggiuntivi senza modificare la data di rinnovo annuale.',
+            'Sì. Sono previsti pacchetti di controlli aggiuntivi, senza modificare la data di rinnovo annuale.',
         },
         {
           question: 'Quanto tempo serve per iniziare?',
@@ -1092,18 +1092,18 @@ export const editorialCopy = {
         {
           question: 'Come si richiede un account demo?',
           answer:
-            "Inviate le informazioni sulla vostra rivista con un indirizzo email professionale. Lettrine verifica l'idoneità e risponde via email. Se la richiesta viene accolta, le istruzioni di accesso vengono inviate senza bisogno di un appuntamento.",
+            "Inviate le informazioni sulla vostra rivista con un indirizzo email professionale. Lettrine verifica l'idoneità e risponde via email. Se la richiesta viene accolta, inviamo le istruzioni di accesso senza bisogno di fissare un appuntamento.",
         },
       ],
     },
     closing: {
-      title: 'Date al vostro comitato segnali chiari, non un verdetto automatico.',
+      title: 'Date alla vostra redazione segnali chiari, non un verdetto automatico.',
       description:
         'Scoprite come Lettrine Editoriale può inserirsi nel flusso di lavoro della vostra rivista scientifica.',
     },
     footer: {
       legal: 'Auditelle SASU · Parigi · SIREN 945117000',
-      privacyLink: 'Dati personali',
+      privacyLink: 'Informativa privacy',
       manageCookies: 'Gestisci i cookie',
     },
     reportPreview: {
@@ -1118,10 +1118,10 @@ export const editorialCopy = {
       similarityLabel: 'similarità · 2 fonti',
       beforeAi: 'I corpora digitalizzati consentono una copertura diacronica senza precedenti. ',
       aiPassage:
-        "I modelli linguistici offrono una maggiore produttività nell'estrazione delle varianti grafiche",
+        "I modelli linguistici rendono più efficiente l'estrazione delle varianti grafiche",
       betweenMarks: ', previa ',
       similarityPassage: 'validazione filologica condotta da specialisti del settore',
-      note: 'Da esaminare a cura del comitato di redazione.',
+      note: 'Da esaminare a cura della redazione.',
       exportLabel: 'Esporta il report PDF',
     },
     workspace: {
@@ -1154,15 +1154,15 @@ export const editorialCopy = {
           before:
             'I corpora digitalizzati consentono ormai una copertura diacronica senza precedenti. ',
           marked:
-            "I modelli linguistici offrono una maggiore produttività nell'estrazione delle varianti grafiche",
+            "I modelli linguistici rendono più efficiente l'estrazione delle varianti grafiche",
           after:
-            ', a condizione che i risultati siano validati filologicamente da specialisti.',
+            ', purché i risultati siano sottoposti a validazione filologica da parte di specialisti.',
           tone: 'ai',
         },
         {
-          before: 'Questa evoluzione trasforma le pratiche di documentazione. ',
+          before: 'Questa evoluzione sta trasformando le pratiche di documentazione. ',
           marked:
-            'La costituzione di corpora comparabili resta tuttavia una condizione essenziale per la solidità delle analisi',
+            "La costruzione di corpora comparabili resta tuttavia una condizione essenziale per l'affidabilità delle analisi",
           after:
             ', in particolare quando le fonti presentano livelli di digitalizzazione eterogenei.',
           tone: 'similarity',
@@ -1174,7 +1174,7 @@ export const editorialCopy = {
       ],
       findingsTitle: 'Segnali da esaminare',
       findings: [
-        { title: 'Contenuti IA', detail: '3 passaggi segnalati · livello da esaminare', tone: 'ochre' },
+        { title: 'Contenuti IA', detail: '3 passaggi segnalati da esaminare', tone: 'ochre' },
         { title: 'Similarità', detail: '18% · 2 fonti associate', tone: 'green' },
         { title: 'Contesto', detail: '6.214 parole · scienze umane' },
         { title: 'Principio', detail: 'Questo report non costituisce un verdetto.' },
@@ -1184,7 +1184,7 @@ export const editorialCopy = {
     form: {
       modalTitle: 'Richiedi un account demo istituzionale',
       intro:
-        "Riservato a riviste, case editrici e organizzazioni scientifiche. La valutazione e l'attivazione avvengono via email.",
+        "Riservato a riviste, case editrici e società scientifiche. Valutazione e attivazione avvengono via email.",
       name: 'Nome e cognome',
       email: 'Email professionale',
       organization: 'Rivista o organizzazione',
@@ -1221,13 +1221,13 @@ export const editorialCopy = {
       },
       submitting: 'Invio in corso…',
       submit: 'Invia la richiesta',
-      successTitle: 'Richiesta ricevuta.',
+      successTitle: 'Richiesta ricevuta',
       successMessage:
-        "Verifichiamo l'idoneità della vostra organizzazione. Se la richiesta viene accolta, le istruzioni di accesso saranno inviate via email. Non è necessario alcun appuntamento.",
+        "Verificheremo l'idoneità della vostra organizzazione. Se la richiesta viene accolta, vi invieremo via email le istruzioni di accesso. Non è necessario alcun appuntamento.",
       errors: {
         invalid_request: 'Verificate le informazioni inserite.',
         professional_email_required:
-          "Usate l'indirizzo professionale della vostra istituzione o della vostra rivista.",
+          "Usate l'indirizzo istituzionale della vostra università, ente o rivista.",
         too_large: 'La richiesta è troppo lunga. Accorciate la descrizione e riprovate.',
         rate_limited: "Troppe richieste. Riprovate tra un'ora.",
         delivery_unavailable: 'Non è stato possibile inviare la richiesta. Riprovate più tardi.',

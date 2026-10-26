@@ -29,8 +29,8 @@ test('preserves the reseller copy on French and non-editorial routes', () => {
   }
 })
 
-test('uses Italian consent copy only on the Italian editorial route', () => {
-  for (const pathname of ['/riviste-scientifiche', '/riviste-scientifiche/privacy']) {
+test('uses Italian consent copy only on the Italian routes', () => {
+  for (const pathname of ['/riviste-scientifiche', '/riviste-scientifiche/privacy', '/istituzioni']) {
     assert.strictEqual(getCookieConsentCopy(pathname, frenchCopy), italianEditorialCookieConsent)
   }
   assert.strictEqual(getCookieConsentCopy('/riviste', frenchCopy), frenchCopy)

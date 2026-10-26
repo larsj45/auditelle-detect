@@ -23,7 +23,8 @@ for (const locale of ['fr', 'sv', 'it'] as const) {
     assert.match(text, /12/)
     assert.match(text, /Vercel/)
     assert.match(text, /Resend/)
-    assert.match(text, /6\.1/)
+    // Article 6(1) cited as "6.1" (fr, sv) or "articolo 6, paragrafo 1" (it).
+    assert.match(text, /6\.1|articolo 6, paragrafo 1/)
   })
 }
 
