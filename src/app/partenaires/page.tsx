@@ -131,7 +131,7 @@ export default async function PartenairesPage() {
                   </div>
                 </div>
                 <p className="text-sm text-gray-400 mt-4">
-                  Soit <strong className="text-[var(--navy)]">1 200 {config.currencySymbol}</strong> sur la premi&egrave;re ann&eacute;e. Exemple indicatif, hors pilotes et devis &eacute;tablissements.
+                  Soit <strong className="text-[var(--navy)]">1 200 {config.currencySymbol}</strong>{' '}sur la premi&egrave;re ann&eacute;e. Exemple indicatif, hors pilotes et devis &eacute;tablissements.
                 </p>
               </div>
             </div>
@@ -179,10 +179,10 @@ export default async function PartenairesPage() {
       {/* ── CTA ───────────────────────────────────────────────────────────── */}
       <section className="gradient-hero py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
             Pr&ecirc;t &agrave; rejoindre le programme ?
           </h2>
-          <p className="text-gray-300 mt-4 text-lg">
+          <p className="text-gray-600 mt-4 text-lg">
             Contactez-nous pour recevoir votre convention partenaire et votre lien de suivi personnalis&eacute;.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
@@ -195,7 +195,7 @@ export default async function PartenairesPage() {
             </Link>
             <a
               href={`mailto:${config.supportEmail}?subject=${encodeURIComponent('Programme partenaire Lettrine')}`}
-              className="btn-secondary text-lg px-8 py-4 inline-flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              className="btn-secondary text-lg px-8 py-4 inline-flex items-center gap-2"
             >
               <Mail className="w-5 h-5" />
               {config.supportEmail}

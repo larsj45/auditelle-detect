@@ -26,6 +26,10 @@ export default async function ProductLanding() {
     ? `${siteOrigin(config)}${config.companyHome.productPath}`
     : siteOrigin(config)
   const planCount = config.plans.homepage.length
+  // The CTA band sits on the light hero gradient: dark text on the company-home
+  // brand (auditelle-fr); other brands keep their current styling.
+  const ctaTitle = config.companyHome ? 'text-[var(--navy)]' : 'text-white'
+  const ctaBody = config.companyHome ? 'text-gray-600' : 'text-gray-300'
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -317,10 +321,10 @@ export default async function ProductLanding() {
       {/* CTA */}
       <section className="gradient-hero py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
+          <h2 className={`text-3xl sm:text-4xl font-bold ${ctaTitle}`}>
             {s.cta.title}
           </h2>
-          <p className="text-gray-300 mt-4 text-lg">
+          <p className={`${ctaBody} mt-4 text-lg`}>
             {s.cta.subtitle}
           </p>
           <Link href="/signup" className="btn-primary text-lg px-8 py-4 mt-8 inline-block">

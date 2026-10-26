@@ -366,10 +366,10 @@ export default async function ProfesseursPage() {
       {/* ── Final CTA ────────────────────────────────────────────────────── */}
       <section className="gradient-hero py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)]">
             Protégez l&apos;intégrité de vos évaluations
           </h2>
-          <p className="text-gray-300 mt-4 text-lg">
+          <p className="text-gray-600 mt-4 text-lg">
             Créez un compte et payez uniquement les analyses que vous lancez, sans abonnement ni engagement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
@@ -382,7 +382,7 @@ export default async function ProfesseursPage() {
             </Link>
             <Link
               href="/contact?subject=D%C3%A9monstration"
-              className="btn-secondary text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              className="btn-secondary text-lg px-8 py-4"
             >
               Demander une démo
             </Link>
