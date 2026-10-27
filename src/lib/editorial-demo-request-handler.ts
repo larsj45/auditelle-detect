@@ -195,6 +195,92 @@ const emailCopy: Record<EditorialDemoLocale, EditorialEmailCopy> = {
       "Verificheremo l'idoneità della vostra organizzazione e le esigenze indicate. Se la richiesta viene accolta, vi invieremo via email le istruzioni di accesso all'account demo. Non è necessario alcun appuntamento.",
     signature: 'Lettrine Editoriale · Auditelle SASU',
   },
+  pt: {
+    brand: 'Lettrine Editorial',
+    internalTitle: 'Novo pedido de conta de demonstração Lettrine Editorial',
+    internalIntro: 'Uma organização pretende avaliar a Lettrine Editorial.',
+    contextTitle: 'Contexto',
+    missingContext: 'Não indicado',
+    replyInstruction: 'Responda diretamente a este email para continuar a conversa por escrito.',
+    internalSubject: (organization) => `[PT] Conta demo Lettrine Editorial: ${organization}`,
+    labels: {
+      name: 'Nome',
+      email: 'Email',
+      organization: 'Organização',
+      role: 'Função',
+      journalCount: 'Revistas',
+      volume: 'Manuscritos por ano',
+      plan: 'Oferta de interesse',
+    },
+    journalCounts: {
+      one: '1 revista',
+      two_to_five: '2 a 5 revistas',
+      six_plus: '6 revistas ou mais',
+    },
+    volumes: {
+      under_300: 'Menos de 300',
+      '300_600': '300 a 600',
+      '600_1500': '600 a 1.500',
+      over_1500: 'Mais de 1.500',
+    },
+    plans: {
+      undecided: 'A definir',
+      essential: 'Editorial Essencial',
+      journal: 'Editorial Revista',
+      organization: 'Editorial Organização',
+    },
+    confirmationSubject: 'O seu pedido de conta de demonstração Lettrine Editorial',
+    confirmationTitle: 'Recebemos o seu pedido de conta de demonstração',
+    greeting: (name) => `Caro/a ${name},`,
+    confirmationReceived: (organization) =>
+      `Recebemos o pedido de ${organization} para avaliar a Lettrine Editorial.`,
+    confirmationNext:
+      'Vamos verificar a elegibilidade da sua organização e as necessidades indicadas. Se o pedido for aceite, enviaremos por email as instruções de acesso à conta de demonstração. Não é necessário marcar reunião.',
+    signature: 'Lettrine Editorial · Auditelle SASU',
+  },
+  en: {
+    brand: 'Lettrine Editorial',
+    internalTitle: 'New Lettrine Editorial demo account request',
+    internalIntro: 'An organisation would like to evaluate Lettrine Editorial.',
+    contextTitle: 'Context',
+    missingContext: 'Not provided',
+    replyInstruction: 'Reply directly to this email to continue the conversation in writing.',
+    internalSubject: (organization) => `[EN] Lettrine Editorial demo account: ${organization}`,
+    labels: {
+      name: 'Name',
+      email: 'Email',
+      organization: 'Organisation',
+      role: 'Role',
+      journalCount: 'Journals',
+      volume: 'Manuscripts per year',
+      plan: 'Offer of interest',
+    },
+    journalCounts: {
+      one: '1 journal',
+      two_to_five: '2 to 5 journals',
+      six_plus: '6 journals or more',
+    },
+    volumes: {
+      under_300: 'Fewer than 300',
+      '300_600': '300 to 600',
+      '600_1500': '600 to 1,500',
+      over_1500: 'More than 1,500',
+    },
+    plans: {
+      undecided: 'Not decided yet',
+      essential: 'Editorial Essential',
+      journal: 'Editorial Journal',
+      organization: 'Editorial Organisation',
+    },
+    confirmationSubject: 'Your Lettrine Editorial demo account request',
+    confirmationTitle: 'We have received your demo account request',
+    greeting: (name) => `Dear ${name},`,
+    confirmationReceived: (organization) =>
+      `We have received the request from ${organization} to evaluate Lettrine Editorial.`,
+    confirmationNext:
+      'We will review your organisation’s eligibility and the needs you described. If the request is accepted, we will email you the access instructions for the demo account. No meeting is required.',
+    signature: 'Lettrine Editorial · Auditelle SASU',
+  },
 }
 
 function requestRows(data: EditorialDemoRequest, copy: EditorialEmailCopy) {

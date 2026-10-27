@@ -207,6 +207,132 @@ export const editorialPrivacyCopy: Record<EditorialLocale, EditorialPrivacyCopy>
       },
     ],
   },
+  pt: {
+    locale: 'pt',
+    htmlLang: 'pt-PT',
+    path: '/revistas-cientificas/privacidade',
+    backPath: '/revistas-cientificas',
+    backLabel: 'Voltar à Lettrine Editorial',
+    metadata: {
+      title: 'Política de privacidade | Lettrine Editorial',
+      description:
+        'Como a Auditelle trata os dados enviados através do formulário de pedido de conta de demonstração da Lettrine Editorial.',
+    },
+    title: 'Política de privacidade: pedidos de conta de demonstração',
+    updated: 'Última atualização: outubro de 2026',
+    sections: [
+      {
+        heading: 'Responsável pelo tratamento',
+        paragraphs: [
+          `Auditelle SASU, Paris, França, SIREN 945117000. Contacto: ${CONTACT}.`,
+        ],
+      },
+      {
+        heading: 'Dados tratados',
+        paragraphs: [
+          'Nome completo, email profissional, revista ou organização, função, número de revistas, volume anual de manuscritos, oferta de interesse e as informações de contexto que decida fornecer.',
+          'O seu endereço IP é também tratado temporariamente para prevenir a utilização abusiva do formulário.',
+        ],
+      },
+      {
+        heading: 'Finalidades e fundamentos jurídicos',
+        paragraphs: [
+          'Responder ao seu pedido de conta de demonstração e comunicar consigo a esse respeito: diligências pré-contratuais a seu pedido (artigo 6.º, n.º 1, alínea b), do RGPD).',
+          'Proteger o formulário contra utilizações abusivas: interesse legítimo do responsável pelo tratamento (artigo 6.º, n.º 1, alínea f), do RGPD).',
+        ],
+      },
+      {
+        heading: 'Destinatários',
+        paragraphs: [
+          'Os seus dados nunca são vendidos. São tratados pelos nossos prestadores técnicos, na qualidade de subcontratantes: Vercel (alojamento do sítio), Resend (envio de emails), Google Workspace (o nosso correio eletrónico) e Plausible (estatísticas de visitas sem cookies).',
+          'Alguns destes prestadores podem tratar dados fora da União Europeia. Nesse caso, as transferências baseiam-se nas cláusulas contratuais-tipo adotadas pela Comissão Europeia ou no Quadro de Privacidade de Dados UE-EUA (Data Privacy Framework).',
+        ],
+      },
+      {
+        heading: 'Prazo de conservação',
+        paragraphs: [
+          'Os pedidos que não deem origem a uma colaboração são eliminados no prazo de 12 meses após o último contacto.',
+          'Os registos técnicos e os dados utilizados para prevenir abusos são conservados durante um máximo de 30 dias.',
+        ],
+      },
+      {
+        heading: 'Os seus direitos',
+        paragraphs: [
+          `Tem direito de acesso, retificação, apagamento, limitação do tratamento, oposição e portabilidade dos dados. Escreva-nos para ${CONTACT}.`,
+          'Pode também apresentar reclamação à Comissão Nacional de Proteção de Dados (cnpd.pt), à CNIL em França (cnil.fr) ou à autoridade de controlo do seu país.',
+        ],
+      },
+      {
+        heading: 'Cookies',
+        paragraphs: [
+          'Os cookies de medição de audiência e de campanhas publicitárias só são ativados se os aceitar no aviso de cookies. Pode alterar a sua escolha a qualquer momento através da ligação «Gerir cookies», no fundo da página da Lettrine Editorial.',
+        ],
+      },
+    ],
+  },
+  en: {
+    locale: 'en',
+    htmlLang: 'en',
+    path: '/journals/privacy',
+    backPath: '/journals',
+    backLabel: 'Back to Lettrine Editorial',
+    metadata: {
+      title: 'Privacy notice | Lettrine Editorial',
+      description:
+        'How Auditelle processes the data sent through the Lettrine Editorial demo account request form.',
+    },
+    title: 'Privacy notice: demo account requests',
+    updated: 'Last updated: October 2026',
+    sections: [
+      {
+        heading: 'Controller',
+        paragraphs: [
+          `Auditelle SASU, Paris, France, SIREN 945117000. Contact: ${CONTACT}.`,
+        ],
+      },
+      {
+        heading: 'Data processed',
+        paragraphs: [
+          'Full name, professional email, journal or organisation, role, number of journals, annual manuscript volume, offer of interest and any context you choose to provide.',
+          'Your IP address is also processed temporarily to prevent abuse of the form.',
+        ],
+      },
+      {
+        heading: 'Purposes and legal bases',
+        paragraphs: [
+          'Replying to your demo account request and corresponding with you about it: steps taken at your request prior to entering into a contract (Article 6(1)(b) GDPR).',
+          'Protecting the form against abuse: the controller’s legitimate interest (Article 6(1)(f) GDPR).',
+        ],
+      },
+      {
+        heading: 'Recipients',
+        paragraphs: [
+          'Your data is never sold. It is processed by our technical providers acting as processors: Vercel (website hosting), Resend (email delivery), Google Workspace (our email) and Plausible (cookie-free visit statistics).',
+          'Some of these providers may process data outside the European Union. Where they do, transfers rely on the standard contractual clauses adopted by the European Commission or on the EU-US Data Privacy Framework.',
+        ],
+      },
+      {
+        heading: 'Retention',
+        paragraphs: [
+          'Requests that do not lead to a collaboration are deleted within 12 months of the last exchange.',
+          'Technical logs and data used to prevent abuse are kept for up to 30 days.',
+        ],
+      },
+      {
+        heading: 'Your rights',
+        paragraphs: [
+          `You have the right of access, rectification, erasure, restriction of processing, objection and data portability. Write to us at ${CONTACT}.`,
+          'You may also lodge a complaint with the CNIL in France (cnil.fr) or with the supervisory authority of your country.',
+        ],
+      },
+      {
+        heading: 'Cookies',
+        paragraphs: [
+          'Audience and advertising measurement cookies are only enabled if you accept them in the cookie banner. You can change your choice at any time through the “Manage cookies” link at the bottom of the Lettrine Editorial page.',
+        ],
+      },
+    ],
+  },
 }
 
 export function getEditorialPrivacyCopy(locale: EditorialLocale) {
