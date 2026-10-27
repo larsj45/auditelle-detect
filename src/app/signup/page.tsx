@@ -10,7 +10,7 @@ function PendingBanner() {
   const config = useConfig()
   const pending = searchParams.get('pending')
 
-  if (pending !== '1') return null
+  if (pending !== '1' || config.features.publicDemoWithoutSignup) return null
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-emerald-50 border-b border-emerald-200 px-4 py-3 text-center">

@@ -7,7 +7,7 @@ import Footer from '@/components/Footer'
 import DetectionResult from '@/components/DetectionResult'
 import PlagiarismResult from '@/components/PlagiarismResult'
 import DetectionModeToggle, { type DetectionMode } from '@/components/DetectionModeToggle'
-import ExportReportButton from '@/components/ExportReportButton'
+import ExportReportButton, { PrintReportHeader } from '@/components/ExportReportButton'
 import { FileSearch, Loader2, Sparkles, ArrowRight, Search } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import { useConfig } from '@/components/ConfigProvider'
@@ -239,6 +239,7 @@ export default function TesterPage() {
 
           {(aiResult || plagResult) && (
             <div className="print-report space-y-6 mb-8">
+              <PrintReportHeader />
               <div className="no-print flex justify-end">
                 <ExportReportButton />
               </div>

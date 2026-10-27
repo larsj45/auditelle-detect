@@ -3,6 +3,19 @@
 import { Printer } from 'lucide-react'
 import { useConfig } from '@/components/ConfigProvider'
 
+export function PrintReportHeader() {
+  const config = useConfig()
+  const copy = config.strings.results.printReport
+  if (!copy) return null
+  return (
+    <div className="print-report-header hidden border-b border-gray-300 pb-3 mb-5 text-sm text-gray-700">
+      <strong className="block text-lg text-[var(--navy)]">{config.name}</strong>
+      <span>{copy.generated} {new Intl.DateTimeFormat(config.htmlLang, { dateStyle: 'long' }).format(new Date())}</span>
+      <p className="mt-1">{copy.disclaimer}</p>
+    </div>
+  )
+}
+
 export default function ExportReportButton() {
   const config = useConfig()
 

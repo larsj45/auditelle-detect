@@ -200,6 +200,7 @@ const config: ResellerConfig = {
     teamManagement: true,
     demoPage: true,
     heroDemo: true,
+    publicDemoWithoutSignup: true,
     plagiarismDetection: true,
     // Confidential student/manuscript documents: no public report link.
     pangramPublicDashboardLink: false,
@@ -309,7 +310,7 @@ const config: ResellerConfig = {
       pricing: 'Tarifs',
       dashboard: 'Tableau de bord',
       login: 'Connexion',
-      freeTrial: 'Essai gratuit',
+      freeTrial: 'Tester gratuitement',
     },
 
     // Hero
@@ -421,12 +422,13 @@ const config: ResellerConfig = {
 
     // Auth
     auth: {
+      callbackError: 'Connexion Google impossible. Veuillez réessayer.',
       login: 'Connexion',
       signup: 'Cr\u00e9er un compte',
       resetPassword: 'R\u00e9initialiser le mot de passe',
       loginSubtitle: 'Acc\u00e9dez \u00e0 votre tableau de bord de d\u00e9tection IA',
       loginSubtitlePlan: 'Connectez-vous pour activer le plan {plan}',
-      signupSubtitle: 'Commencez \u00e0 d\u00e9tecter le contenu IA gratuitement',
+      signupSubtitle: 'Créez un compte sans crédits inclus. Tests publics gratuits sur /tester.',
       signupSubtitlePlan: 'Cr\u00e9ez votre compte pour activer le plan {plan}',
       resetSubtitle: 'Entrez votre email pour recevoir un lien de r\u00e9initialisation',
       fullName: 'Nom complet',
@@ -530,6 +532,7 @@ const config: ResellerConfig = {
 
     // Detection results
     results: {
+      printReport: { generated: 'Généré le', disclaimer: 'Un signal, pas une preuve. Interprétez ce résultat avec discernement.' },
       probablyHuman: 'Probablement humain',
       mixed: 'Mixte / Incertain',
       probablyAI: 'Probablement IA',
@@ -591,8 +594,8 @@ const config: ResellerConfig = {
       probablyHuman: 'Probablement humain',
       connectionError: 'Erreur de connexion',
       ctaButton: 'Cr\u00e9er un compte gratuit \u2192',
-      ctaTeaser: "D\u00e9bloquez l'analyse par section, l'identification du mod\u00e8le et plus",
-      unlockLabel: "Cr\u00e9ez un compte pour d\u00e9bloquer l'analyse compl\u00e8te",
+      ctaTeaser: "Compte gratuit sans crédits inclus. Choisissez une offre pour accéder aux analyses complètes.",
+      unlockLabel: "Créez un compte, puis choisissez une offre pour l'analyse complète",
       scansRemaining: '{count} analyses gratuites restantes aujourd\u2019hui',
       pendingBanner: 'Votre texte a été sauvegardé et sera analysé immédiatement après la création de votre compte.',
       signupToAnalyze: 'Créez un compte gratuit pour analyser votre texte',
@@ -715,14 +718,14 @@ const config: ResellerConfig = {
         subject: 'Bienvenue sur Lettrine, {name}! \ud83c\udf89',
         greeting: 'Bienvenue, {name}! \ud83d\udc4b',
         intro: "Merci d'avoir cr\u00e9\u00e9 votre compte Lettrine. Vous avez maintenant acc\u00e8s \u00e0 la d\u00e9tection IA Pangram, \u00e9valu\u00e9e de fa\u00e7on ind\u00e9pendante.",
-        trialTitle: '\ud83c\udf81 Votre essai gratuit inclut :',
+        trialTitle: 'Votre compte gratuit (sans crédits inclus) vous permet :',
         trialFeatures: [
           'Paiement \u00e0 l\u2019analyse, sans abonnement',
           'D\u00e9tection IA Pangram',
           'Identification du mod\u00e8le IA',
           'Historique de 7 jours',
         ],
-        ctaButton: 'Commencer ma premi\u00e8re analyse \u2192',
+        ctaButton: 'Découvrir les analyses payantes \u2192',
         question: 'Des questions ? R\u00e9pondez directement \u00e0 cet email.',
         ctaUrl: '/dashboard',
       },

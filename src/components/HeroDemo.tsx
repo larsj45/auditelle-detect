@@ -93,7 +93,11 @@ export default function HeroDemo() {
   }, [config.strings.errors.textTooShort, config.strings.errors.analysisError, s.connectionError])
 
   const analyze = async () => {
-    // Check auth — gate signup for homepage demo
+    if (config.features.publicDemoWithoutSignup) {
+      await runAnalysis(text, mode)
+      return
+    }
+    // Legacy signup gate for other resellers
     const { supabase } = await import('@/lib/supabase')
     const { data: { session } } = await supabase.auth.getSession()
 
@@ -109,6 +113,11 @@ export default function HeroDemo() {
 
   // Auto-analyze on return from signup
   useEffect(() => {
+    if (config.features.publicDemoWithoutSignup) {
+      sessionStorage.removeItem('pendingAnalysisText')
+      sessionStorage.removeItem('pendingAnalysisMode')
+      return
+    }
     const pendingText = sessionStorage.getItem('pendingAnalysisText')
     const pendingMode = sessionStorage.getItem('pendingAnalysisMode') as DetectionMode | null
 
@@ -125,7 +134,7 @@ export default function HeroDemo() {
         })
       })
     }
-  }, [runAnalysis])
+  }, [runAnalysis, config.features.publicDemoWithoutSignup])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-red-500'
