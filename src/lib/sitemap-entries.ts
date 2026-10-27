@@ -5,7 +5,7 @@ import { EDITORIAL_ORIGIN, LEGACY_ORIGIN, type HostKind } from './editorial-host
 // The Lettrine landings (journals and schools) live on lettrine.eu;
 // auditelle.fr keeps the rest.
 export function editorialSitemap(now = new Date()): MetadataRoute.Sitemap {
-  const journals = (['fr', 'sv', 'it'] as const).map((locale) => ({
+  const journals = (['fr', 'sv', 'it', 'pt', 'en'] as const).map((locale) => ({
     url: `${EDITORIAL_ORIGIN}${editorialCopy[locale].path}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
@@ -15,6 +15,8 @@ export function editorialSitemap(now = new Date()): MetadataRoute.Sitemap {
         fr: `${EDITORIAL_ORIGIN}${editorialCopy.fr.path}`,
         sv: `${EDITORIAL_ORIGIN}${editorialCopy.sv.path}`,
         it: `${EDITORIAL_ORIGIN}${editorialCopy.it.path}`,
+        pt: `${EDITORIAL_ORIGIN}${editorialCopy.pt.path}`,
+        en: `${EDITORIAL_ORIGIN}${editorialCopy.en.path}`,
       },
     },
   }))

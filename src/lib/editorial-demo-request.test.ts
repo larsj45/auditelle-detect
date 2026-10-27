@@ -119,3 +119,15 @@ test('rejects common Italian consumer email providers', () => {
     if (!result.success) assert.equal(result.errorCode, 'professional_email_required')
   }
 })
+
+test('accepts Portuguese and English demo requests and blocks Portuguese consumer email', () => {
+  for (const locale of ['pt', 'en'] as const) {
+    const result = validateEditorialDemoRequest({ ...validRequest, locale, email: 'editor@revista-exemplo.pt' })
+    assert.equal(result.success, true)
+    if (result.success && result.data) assert.equal(result.data.locale, locale)
+  }
+  for (const email of ['ana@sapo.pt', 'ana@iol.pt', 'ana@clix.pt', 'ana@netcabo.pt', 'ana@gmail.com']) {
+    const result = validateEditorialDemoRequest({ ...validRequest, locale: 'pt', email })
+    assert.deepEqual(result, { success: false, errorCode: 'professional_email_required' })
+  }
+})

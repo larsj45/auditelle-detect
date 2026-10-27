@@ -49,6 +49,8 @@ export async function generateMetadata(): Promise<Metadata> {
         fr: `${EDITORIAL_ORIGIN}${editorialCopy.fr.path}`,
         sv: `${EDITORIAL_ORIGIN}${editorialCopy.sv.path}`,
         it: `${EDITORIAL_ORIGIN}${editorialCopy.it.path}`,
+        pt: `${EDITORIAL_ORIGIN}${editorialCopy.pt.path}`,
+        en: `${EDITORIAL_ORIGIN}${editorialCopy.en.path}`,
       },
     },
     openGraph: {

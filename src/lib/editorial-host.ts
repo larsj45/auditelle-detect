@@ -13,6 +13,8 @@ const EDITORIAL_PATH_PREFIXES = [
   '/vetenskapliga-tidskrifter',
   '/revues-scientifiques',
   '/riviste-scientifiche',
+  '/revistas-cientificas',
+  '/journals',
 ]
 // Lettrine landings for schools and universities. They are marketing pages, so
 // they live on lettrine.eu as well; signup, login, contact and the dashboard stay
@@ -21,6 +23,8 @@ export const SCHOOL_PATHS = ['/etablissements', '/istituzioni'] as const
 // Served on both hosts, with host-aware content.
 const SHARED_PATHS = new Set(['/robots.txt', '/sitemap.xml'])
 const NORDIC_LANGUAGES = new Set(['sv', 'da', 'no', 'nb', 'nn', 'fi', 'is'])
+// Central European editors (and English-language browsers) get the English page.
+const ENGLISH_PAGE_LANGUAGES = new Set(['pl', 'cs', 'sk'])
 
 export type HostKind = 'editorial' | 'legacy' | 'other'
 
@@ -48,9 +52,13 @@ export function isEditorialPath(pathname: string): boolean {
   )
 }
 
-// Swedish for Nordic browsers, French or Italian when that language comes first,
-// Swedish otherwise
-// (an English-language browser is more likely a Nordic editor than a French one).
+// Pick the journals landing from Accept-Language. The first language with its
+// own page wins: French, Italian, Portuguese, Swedish for Nordic browsers, and
+// the English page for Polish, Czech and Slovak (no page in those languages yet).
+// If none of those appears, an English browser gets the English page. Until the
+// English page existed, English fell back to Swedish (an English-language
+// browser was more likely a Nordic editor). Browsers with no recognised
+// language keep the historical Swedish fallback.
 export function preferredEditorialPath(acceptLanguage: string | null | undefined): string {
   const languages = (acceptLanguage || '')
     .split(',')
@@ -65,8 +73,13 @@ export function preferredEditorialPath(acceptLanguage: string | null | undefined
   for (const { lang } of languages) {
     if (lang === 'fr') return '/revues-scientifiques'
     if (lang === 'it') return '/riviste-scientifiche'
+    if (lang === 'pt') return '/revistas-cientificas'
+    if (ENGLISH_PAGE_LANGUAGES.has(lang)) return '/journals'
     if (NORDIC_LANGUAGES.has(lang)) return '/vetenskapliga-tidskrifter'
   }
+  // English is a common second browser language, so it only decides when no
+  // language with its own page appears anywhere in the list.
+  if (languages.some(({ lang }) => lang === 'en')) return '/journals'
   return '/vetenskapliga-tidskrifter'
 }
 

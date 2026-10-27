@@ -205,3 +205,33 @@ test('uses Lettrine Editoriale and Italian copy for Italian requests', async () 
   assert.match(sent[1].html, /Gentile Giulia Rossi/)
   assert.match(sent[1].html, /Non è necessario alcun appuntamento/)
 })
+
+test('uses Portuguese and English copy for PT and EN requests', async () => {
+  for (const [locale, tag, greeting, closing] of [
+    ['pt', /^\[PT\]/, /Caro\/a Ana Silva/, /Não é necessário marcar reunião/],
+    ['en', /^\[EN\]/, /Dear Ana Silva/, /No meeting is required/],
+  ] as const) {
+    const sent: EditorialEmailParams[] = []
+    const result = await handleEditorialDemoRequest(
+      {
+        ...validRequest,
+        locale,
+        name: 'Ana Silva',
+        email: 'editor@revista-exemplo.pt',
+        organization: 'Revista de Exemplo',
+        role: 'Diretora',
+      },
+      dependencies({
+        sendEmail: async (params) => {
+          sent.push(params)
+          return { success: true }
+        },
+      })
+    )
+    assert.equal(result.status, 200)
+    assert.equal(sent[0].fromName, 'Lettrine Editorial')
+    assert.match(sent[0].subject, tag)
+    assert.match(sent[1].html, greeting)
+    assert.match(sent[1].html, closing)
+  }
+})

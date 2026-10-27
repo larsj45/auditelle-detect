@@ -22,6 +22,10 @@ test('moves the editorial pages from auditelle.fr to lettrine.eu permanently', (
     '/revues-scientifiques/confidentialite',
     '/riviste-scientifiche',
     '/riviste-scientifiche/privacy',
+    '/revistas-cientificas',
+    '/revistas-cientificas/privacidade',
+    '/journals',
+    '/journals/privacy',
   ]) {
     for (const host of ['auditelle.fr', 'www.auditelle.fr']) {
       assert.deepEqual(resolveEditorialRedirect({ host, pathname, search: '?utm=x' }), {
@@ -42,6 +46,8 @@ test('serves editorial pages and host-aware files on lettrine.eu', () => {
   for (const pathname of [
     '/vetenskapliga-tidskrifter',
     '/revues-scientifiques/confidentialite',
+    '/revistas-cientificas',
+    '/journals/privacy',
     '/robots.txt',
     '/sitemap.xml',
   ]) {
@@ -72,7 +78,14 @@ test('picks the landing language for the lettrine.eu root with a temporary redir
   assert.equal(preferredEditorialPath('sv-SE'), '/vetenskapliga-tidskrifter')
   assert.equal(preferredEditorialPath('it-IT,it;q=0.9,en;q=0.8'), '/riviste-scientifiche')
   assert.equal(preferredEditorialPath('en;q=0.9,it;q=0.8'), '/riviste-scientifiche')
-  assert.equal(preferredEditorialPath('en-US,en;q=0.9'), '/vetenskapliga-tidskrifter')
+  assert.equal(preferredEditorialPath('en-US,en;q=0.9'), '/journals')
+  assert.equal(preferredEditorialPath('en-GB,en;q=0.9,sv;q=0.8'), '/vetenskapliga-tidskrifter')
+  assert.equal(preferredEditorialPath('pt-PT,pt;q=0.9,en;q=0.8'), '/revistas-cientificas')
+  assert.equal(preferredEditorialPath('en;q=0.9,pt-BR;q=0.8'), '/revistas-cientificas')
+  assert.equal(preferredEditorialPath('pl-PL,pl;q=0.9,en;q=0.8'), '/journals')
+  assert.equal(preferredEditorialPath('cs-CZ,cs;q=0.9'), '/journals')
+  assert.equal(preferredEditorialPath('sk'), '/journals')
+  assert.equal(preferredEditorialPath('de-DE,de;q=0.9'), '/vetenskapliga-tidskrifter')
   assert.equal(preferredEditorialPath('en;q=0.9,fr;q=0.8'), '/revues-scientifiques')
   assert.equal(preferredEditorialPath('fr;q=0,sv;q=0.5'), '/vetenskapliga-tidskrifter')
   assert.equal(preferredEditorialPath(null), '/vetenskapliga-tidskrifter')
