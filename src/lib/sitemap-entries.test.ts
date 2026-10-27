@@ -3,7 +3,7 @@ import test from 'node:test'
 import { editorialSitemap, legacySitemap, sitemapForHost } from './sitemap-entries.ts'
 
 test('lists the editorial landings on lettrine.eu with reciprocal hreflang alternates', () => {
-  const entries = editorialSitemap().filter((entry) => !/etablissements|istituzioni/.test(entry.url))
+  const entries = editorialSitemap().filter((entry) => !/etablissements|istituzioni|lettrine$/.test(entry.url))
   assert.deepEqual(entries.map((entry) => entry.url), [
     'https://lettrine.eu/revues-scientifiques',
     'https://lettrine.eu/vetenskapliga-tidskrifter',
@@ -47,6 +47,11 @@ test('keeps the editorial privacy notices out of both sitemaps', () => {
 })
 
 test('chooses the sitemap by host kind', () => {
-  assert.equal(sitemapForHost('editorial').length, 7)
+  assert.equal(sitemapForHost('editorial').length, 8)
   assert.equal(sitemapForHost('other').length, legacySitemap().length)
 })
+
+test('product landing canonical belongs only to Lettrine', () => {
+ assert.ok(editorialSitemap().some(e => e.url === 'https://lettrine.eu/lettrine'));
+ assert.ok(!legacySitemap().some(e => e.url.endsWith('/lettrine')));
+});

@@ -15,6 +15,7 @@ export interface ResellerConfig {
   logoColor: string     // path: e.g. "/brands/auditelle/logo-color.svg"
   logoWhite: string     // path: e.g. "/brands/auditelle/logo-white.svg"
   logoHeight?: string   // CSS height for logo img: e.g. "2rem", "3rem" (default "2rem")
+  wordmark?: string     // when set, render this text as a serif wordmark instead of the logo image
 
   // ── Theme (CSS custom properties) ───────────────────────────────────────
   theme: {
@@ -24,6 +25,10 @@ export interface ResellerConfig {
     navy: string            // dark text / bg,     e.g. "#1a1a2e"
     navyLight: string       // lighter variant,    e.g. "#16213e"
     heroGradient: string    // CSS gradient for hero section
+    // Optional visual skin. 'paper' = cream paper, serif headings, flat cards
+    // (auditelle-fr, shared with the Lettrine editorial identity). Absent =
+    // the default look used by the other brands.
+    skin?: 'paper'
   }
 
   // ── Locale ────────────────────────────────────────────────────────────────
@@ -113,8 +118,70 @@ export interface ResellerConfig {
     permanent: boolean
   }>
 
+  // ── Company home (optional) ───────────────────────────────────────────────
+  // When set, "/" renders the publisher's company page (several products) and
+  // the product landing moves to `productPath` (e.g. "/lettrine"). Brands
+  // without it keep the product landing on "/".
+  companyHome?: CompanyHomeConfig
+
   // ── UI Strings ────────────────────────────────────────────────────────────
   strings: ResellerStrings
+}
+
+// ── Company home ────────────────────────────────────────────────────────────
+
+export interface CompanyHomeLink {
+  label: string
+  href: string
+  external?: boolean
+}
+
+export interface CompanyHomeProduct {
+  name: string
+  tagline: string
+  summary: string            // one-line pitch for the hero card
+  description: string
+  points: string[]
+  tone: 'accent' | 'teal'
+  primary: CompanyHomeLink
+  secondary?: CompanyHomeLink
+}
+
+export interface CompanyHomeConfig {
+  companyName: string        // e.g. "Auditelle"
+  productPath: string        // e.g. "/lettrine"
+  productOrigin?: string    // marketing host, when separate from the company
+  seo: {
+    title: string
+    description: string
+    ogTitle: string
+    ogDescription: string
+  }
+  nav: {
+    products: string
+    about: string
+    contact: string
+    backToCompany: string    // link from product pages back to "/"
+  }
+  hero: {
+    badge: string
+    title: string
+    titleAccent: string
+    subtitle: string
+    ctaPrimary: string
+    ctaSecondary: string
+  }
+  principles: Array<{ title: string; description: string }>
+  productsTitle: string
+  productsSubtitle: string
+  products: CompanyHomeProduct[]
+  about: {
+    title: string
+    body: string
+    facts: Array<{ label: string; value: string }>
+    cta: string
+  }
+  footerNote: string
 }
 
 // ── Plan types ──────────────────────────────────────────────────────────────
@@ -208,8 +275,8 @@ export interface ResellerStrings {
     footer: string
   }
 
-  // Competitor comparison
-  comparison: {
+  // Competitor comparison (optional: omitted brands show no table)
+  comparison?: {
     title: string
     subtitle: string
     competitors: string[]
@@ -233,6 +300,7 @@ export interface ResellerStrings {
     companyLabel: string
     contactLabel: string
     copyright: string
+    copyrightHolder?: string   // defaults to the brand name
     poweredBy: string
     poweredByName: string
   }

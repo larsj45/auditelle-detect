@@ -127,3 +127,8 @@ test('keeps the app on auditelle.fr when reached through lettrine.eu', () => {
     })
   }
 })
+
+test('moves Lettrine product landing without affecting accounts', () => {
+ assert.deepEqual(resolveEditorialRedirect({host:'www.auditelle.fr',pathname:'/lettrine',search:'?utm=x'}),{location:'https://lettrine.eu/lettrine?utm=x',status:308});
+ assert.equal(resolveEditorialRedirect({host:'lettrine.eu',pathname:'/lettrine'}),null);
+});

@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
+import BrandMark from '@/components/BrandMark'
+import { copyrightHolder, productHomePath } from '@/lib/company-home'
 import { EDITORIAL_ORIGIN, LEGACY_ORIGIN } from '@/lib/editorial-host'
 import {
   Shield,
@@ -19,11 +21,11 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Lettrine pour les établissements — La couche d’intégrité académique (pilote de 30 jours)',
   description:
-    "Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l'UE (Supabase, Paris). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
+    "Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données stockées dans l'UE (Supabase, Paris). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
   openGraph: {
     title: 'Lettrine pour les établissements — Couche d’intégrité académique',
     description:
-      'De la charte à la mesure : détection IA et plagiat, rapport exportable, données hébergées dans l’UE. Demandez un diagnostic gratuit.',
+      'De la charte à la mesure : détection IA et plagiat, rapport exportable, données stockées dans l’UE. Demandez un diagnostic gratuit.',
     type: 'website',
     locale: 'fr_FR',
     url: `${EDITORIAL_ORIGIN}/etablissements`,
@@ -62,12 +64,8 @@ export default async function EtablissementsPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center">
-              {config.logoColor ? (
-                <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
-              ) : (
-                <span className="text-xl font-bold text-[var(--navy)]">{config.name}</span>
-              )}
+            <Link href={productHomePath(config)} className="flex items-center">
+              <BrandMark config={config} />
             </Link>
             <div className="flex items-center gap-3">
               <Link
@@ -109,7 +107,7 @@ export default async function EtablissementsPage() {
               'Détection IA + plagiat',
               'Couche d’intégrité, pas un verdict',
               'Rapport exportable',
-              'Données hébergées dans l’UE',
+              'Données stockées dans l’UE',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-gray-600 font-medium">
                 <Check className="w-5 h-5 text-emerald-500 shrink-0" />
@@ -318,7 +316,9 @@ export default async function EtablissementsPage() {
       <footer className="bg-navy text-white py-8">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} {config.name}. Tous droits réservés. {config.legalEntity} &mdash; {config.registrationLabel} {config.registrationNumber}
+            &copy; {new Date().getFullYear()} {copyrightHolder(config)}. Tous droits réservés.{' '}
+            {copyrightHolder(config) === config.legalEntity ? '' : <>{config.legalEntity} &mdash; </>}
+            {config.registrationLabel} {config.registrationNumber}
           </p>
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>

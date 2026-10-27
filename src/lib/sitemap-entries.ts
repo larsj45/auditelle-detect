@@ -44,7 +44,7 @@ export function editorialSitemap(now = new Date()): MetadataRoute.Sitemap {
     },
   ]
 
-  return [...journals, ...schools]
+  return [...journals, ...schools, { url: EDITORIAL_ORIGIN + '/lettrine', lastModified: now, changeFrequency: 'weekly', priority: 0.95 }]
 }
 
 export function legacySitemap(now = new Date()): MetadataRoute.Sitemap {

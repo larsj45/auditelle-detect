@@ -14,15 +14,21 @@ const config: ResellerConfig = {
   // Textual placeholder logos (swap the SVGs in /public/brands/lettrine/ when art exists).
   logoColor: '/brands/lettrine/logo-color.svg',
   logoWhite: '/brands/lettrine/logo-white.svg',
+  // 2026-10-26: serif text wordmark, as on lettrine.eu (the SVGs above stay
+  // for any image-only context).
+  wordmark: 'Lettrine',
 
   // ── Theme ───────────────────────────────────────────────────────────────
+  // 2026-10-26 (Lars): direction "Papier & encre". Ink green = Lettrine
+  // editorial green (lettrine.eu, --editorial-green), on cream paper.
   theme: {
-    accent: '#e85d04',
-    accentHover: '#dc2f02',
-    accentLight: '#fff4e6',
-    navy: '#1a1a2e',
-    navyLight: '#16213e',
-    heroGradient: 'linear-gradient(180deg, #fef3c7 0%, #fef9ef 50%, #ffffff 100%)',
+    accent: '#14533f',
+    accentHover: '#0c382b',
+    accentLight: '#e5f0eb',
+    navy: '#1f2a24',
+    navyLight: '#33413a',
+    heroGradient: 'linear-gradient(180deg, #f3ebdb 0%, #f7f2e8 100%)',
+    skin: 'paper',
   },
 
   // ── Locale ────────────────────────────────────────────────────────────────
@@ -121,34 +127,18 @@ const config: ResellerConfig = {
         popularBadge: 'POPULAIRE',
       },
       {
-        name: 'Université',
-        price: '149€',
-        period: 'mois',
-        description: 'Pour départements et facultés',
+        name: 'Établissements',
+        price: '1 500 € HT',
+        description: 'Pilote de 30 jours, puis déploiement sur devis',
         features: [
-          '10 000 analyses par mois',
-          'Multi-utilisateurs',
-          'Rapports exportables (PDF/CSV)',
-          'Onboarding des équipes',
-          'Support prioritaire',
+          'Pilote de 30 jours pour votre équipe',
+          '5 utilisateurs, jusqu’à 100 unités d’analyse',
+          'Onboarding et protocole de lecture des signaux',
+          'Bilan final et recommandation de déploiement',
+          'Déploiement plus large sur devis',
         ],
-        cta: 'Choisir Université',
-        href: '/signup?plan=university',
-      },
-      {
-        name: 'Enterprise',
-        price: '499€',
-        period: 'mois',
-        description: 'Pour établissements entiers',
-        features: [
-          'Volume sur devis',
-          'Tous les professeurs',
-          'Protocole d’intégrité sur mesure',
-          'Account manager dédié',
-          'Revue humaine des cas sensibles',
-        ],
-        cta: 'Choisir Enterprise',
-        href: '/signup?plan=enterprise',
+        cta: 'Découvrir le pilote',
+        href: '/etablissements',
       },
     ],
     upgrade: [
@@ -218,10 +208,10 @@ const config: ResellerConfig = {
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
     title: 'Lettrine — Couche d’intégrité académique pour les établissements (IA + plagiat)',
-    description: 'Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données hébergées dans l’UE (Supabase, Paris).',
+    description: 'Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données stockées dans l’UE (Supabase, Paris).',
     keywords: ['intégrité académique', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'pilote établissement', 'Lettrine'],
     ogTitle: 'Lettrine — La couche d’intégrité pour les établissements',
-    ogDescription: 'Détection IA + plagiat, rapport exportable, données hébergées dans l’UE.',
+    ogDescription: 'Détection IA + plagiat, rapport exportable, données stockées dans l’UE.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -229,6 +219,87 @@ const config: ResellerConfig = {
     { source: '/essai-gratuit', destination: '/signup', permanent: false },
     { source: '/demo', destination: '/demo-video', permanent: false },
   ],
+
+
+  // ── Company home ─────────────────────────────────────────────────────────
+  // 2026-10-26 (Lars): auditelle.fr presents Auditelle SASU and its products
+  // (Lettrine, VigiExam). The Lettrine landing moves to /lettrine; every
+  // other URL is unchanged. VigiExam facts come from www.vigiexam.eu.
+  companyHome: {
+    companyName: 'Auditelle',
+    productPath: '/lettrine',
+    productOrigin: 'https://lettrine.eu',
+    seo: {
+      title: 'Auditelle — Intégrité des travaux écrits et surveillance d’examens (Lettrine, VigiExam)',
+      description: 'Auditelle SASU, société française, édite et opère Lettrine (détection IA et similarités dans les travaux écrits) et VigiExam (surveillance d’examens à distance avec revue humaine).',
+      ogTitle: 'Auditelle — Lettrine et VigiExam',
+      ogDescription: 'Société française qui édite et opère Lettrine et VigiExam. Un signal, pas un verdict : la décision reste humaine.',
+    },
+    nav: {
+      products: 'Produits',
+      about: 'Qui sommes-nous',
+      contact: 'Contact',
+      backToCompany: 'Auditelle',
+    },
+    hero: {
+      badge: 'Société française · Intégrité académique et examens',
+      title: 'Des évaluations plus sûres, ',
+      titleAccent: 'une décision qui reste humaine.',
+      subtitle: 'Auditelle SASU est une société française qui édite et opère Lettrine et VigiExam : l’analyse des travaux écrits d’un côté, la surveillance des examens à distance de l’autre. Nos outils signalent et documentent ; vos équipes décident.',
+      ctaPrimary: 'Découvrir nos produits',
+      ctaSecondary: 'Nous contacter',
+    },
+    principles: [
+      { title: 'Un signal, pas un verdict', description: 'Nos rapports éclairent la décision de l’enseignant ou du jury, sans la remplacer.' },
+      { title: 'Un contrat avec une société française', description: 'Auditelle SASU contracte, opère et facture ses services depuis la France.' },
+      { title: 'Transparence pour votre DPO', description: 'Traitements et sous-traitants techniques communiqués avant tout pilote.' },
+    ],
+    productsTitle: 'Nos produits',
+    productsSubtitle: 'Deux services distincts, un même principe : fournir des éléments clairs et laisser la décision à votre établissement.',
+    products: [
+      {
+        name: 'Lettrine',
+        tagline: 'Intégrité des travaux écrits',
+        summary: 'Détection IA et similarités, passage par passage. Un signal à lire, jamais une sanction.',
+        description: 'Lettrine signale, passage par passage, les parties probablement générées ou assistées par IA et les similarités avec des sources existantes, dans un rapport exportable.',
+        points: [
+          'Détection IA (moteur Pangram Labs) et recherche de similarités',
+          'Un score à lire, jamais une sanction automatique',
+          'Rapport exportable (PDF/CSV)',
+          'Pilote établissement de 30 jours',
+        ],
+        tone: 'accent',
+        primary: { label: 'Découvrir Lettrine', href: 'https://lettrine.eu/lettrine' },
+        secondary: { label: 'Pilote pour les établissements', href: 'https://lettrine.eu/etablissements' },
+      },
+      {
+        name: 'VigiExam',
+        tagline: 'Surveillance d’examens à distance',
+        summary: 'Identité vérifiée, session enregistrée, revue humaine et rapport sous 72 h.',
+        description: 'VigiExam permet aux candidats de passer l’examen à distance, avec vérification d’identité, surveillance de la webcam, de l’écran et du son, et une revue humaine des sessions signalées.',
+        points: [
+          'Vérification d’identité et surveillance pendant toute la session',
+          'Revue humaine des sessions signalées',
+          'Rapport horodaté avec éléments de preuve sous 72 h',
+          'Opéré depuis la France, données personnelles traitées selon le RGPD',
+        ],
+        tone: 'teal',
+        primary: { label: 'Découvrir VigiExam', href: 'https://www.vigiexam.eu', external: true },
+      },
+    ],
+    about: {
+      title: 'Qui sommes-nous',
+      body: 'Auditelle SASU est une société par actions simplifiée de droit français. Elle édite Lettrine, opère VigiExam et reste votre interlocuteur unique pour le contrat, la mise en place et le support.',
+      facts: [
+        { label: 'Raison sociale', value: 'Auditelle SASU' },
+        { label: 'SIREN', value: '945117000' },
+        { label: 'Pays', value: 'France' },
+        { label: 'Contact', value: 'contact@auditelle.fr' },
+      ],
+      cta: 'Écrire à l’équipe',
+    },
+    footerNote: 'Lettrine et VigiExam sont des services d’Auditelle SASU.',
+  },
 
   // ── UI Strings ────────────────────────────────────────────────────────────
   strings: {
@@ -250,7 +321,7 @@ const config: ResellerConfig = {
       trustBadges: [
         'IA + plagiat',
         'Un signal, pas un verdict',
-        'Données hébergées dans l’UE',
+        'Données stockées dans l’UE',
       ],
       ctaPrimary: 'Découvrir le pilote établissement \u2192',
       ctaSecondary: 'Tester par moi-même',
@@ -319,38 +390,14 @@ const config: ResellerConfig = {
           author: 'Jenna Russell',
           role: 'University of Maryland',
         },
-        {
-          quote: "Un d\u00e9tecteur presque surnaturellement bon. Je n'ai encore constat\u00e9 aucun faux positif ni faux n\u00e9gatif.",
-          author: 'Ryan Nicolace',
-          role: 'Cloud Architect',
-        },
-        {
-          quote: "Mes \u00e9tudiants sont tellement convaincus de sa pr\u00e9cision que c'est devenu le meilleur moyen de dissuasion.",
-          author: 'Jarred Phillips',
-          role: 'New Roads School',
-        },
-      ],
-    },
-
-    // Competitor comparison
-    comparison: {
-      title: 'Lettrine, la couche d’intégrité française',
-      subtitle: 'Comparez les principales solutions d’intégrité académique pour détecter IA et plagiat.',
-      competitors: ['Lettrine', 'GPTZero', 'Turnitin', 'Originality.ai'],
-      rows: [
-        { label: 'IA + plagiat dans le même rapport', values: [true, false, true, true] },
-        { label: 'Support fran\u00e7ais', values: [true, false, false, false] },
-        { label: 'Prix (\u00e0 partir de)', values: ['0,50 €/analyse', '$9.99/mois', 'Sur devis', '$14.95/mois'] },
-        { label: 'Analyse par section', values: [true, false, false, true] },
-        { label: 'Identification du mod\u00e8le', values: [true, true, false, false] },
       ],
     },
 
     // Pricing (homepage section)
     pricing: {
       title: 'Tarification transparente et comp\u00e9titive',
-      subtitle: 'Technologie Pangram Labs. Service fran\u00e7ais. Commencez gratuitement, \u00e9voluez selon vos besoins.',
-      footer: 'Technologie Pangram \u2022 Donn\u00e9es h\u00e9berg\u00e9es dans l\u2019UE \u2022 Support fran\u00e7ais \u2022 SIREN 945117000',
+      subtitle: 'Technologie Pangram Labs. Service fran\u00e7ais. Pour un enseignant, \u00e0 l\u2019analyse ou au mois ; pour un \u00e9tablissement, un pilote de 30 jours.',
+      footer: 'Technologie Pangram \u2022 Donn\u00e9es stock\u00e9es dans l\u2019UE (Supabase, Paris) \u2022 Support fran\u00e7ais \u2022 SIREN 945117000',
     },
 
     // CTA section
@@ -362,11 +409,12 @@ const config: ResellerConfig = {
 
     // Footer
     footer: {
-      description: 'La solution française d’intégrité académique et alternative à Turnitin pour détecter IA, plagiat et contenus suspects avec conformité RGPD.',
+      description: 'Lettrine, service français d’intégrité académique édité par Auditelle SASU.',
       productLabel: 'Produit',
       companyLabel: 'Entreprise',
       contactLabel: 'Contact',
       copyright: 'Tous droits r\u00e9serv\u00e9s.',
+      copyrightHolder: 'Auditelle SASU',
       poweredBy: 'D\u00e9tection propuls\u00e9e par',
       poweredByName: 'Pangram Labs',
     },
@@ -501,7 +549,7 @@ const config: ResellerConfig = {
     // Public tester page
     tester: {
       badge: 'Test gratuit — Aucun compte requis',
-      title: 'Testez l’alternative à Turnitin',
+      title: 'Testez Lettrine gratuitement',
       subtitle: 'Collez un texte et vérifiez l’IA, le plagiat ou les deux en quelques secondes.',
       testsRemaining: '{count} tests gratuits restants',
       limitReached: 'Limite atteinte — créez un compte pour continuer',

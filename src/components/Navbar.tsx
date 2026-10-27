@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { useConfig } from '@/components/ConfigProvider';
+import BrandMark from '@/components/BrandMark';
+import { productAnchor, productHomePath } from '@/lib/company-home';
 
 export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
   const config = useConfig();
   const s = config.strings.nav;
+  const company = config.companyHome;
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(isAuthProp ?? false);
 
@@ -27,20 +30,21 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center">
-            {config.logoColor ? (
-              <img src={config.logoColor} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
-            ) : (
-              <span className="text-xl font-bold text-[var(--navy)]">{config.name}</span>
-            )}
+          <Link href={productHomePath(config)} className="flex items-center">
+            <BrandMark config={config} />
           </Link>
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/#features" className="text-sm text-gray-600 hover:text-navy transition-colors">
+            {company && (
+              <Link href={config.siteUrl ?? `https://${config.domain}`} className="text-sm text-gray-500 hover:text-navy transition-colors">
+                &larr; {company.nav.backToCompany}
+              </Link>
+            )}
+            <Link href={productAnchor(config, 'features')} className="text-sm text-gray-600 hover:text-navy transition-colors">
               {s.features}
             </Link>
-            <Link href="/#pricing" className="text-sm text-gray-600 hover:text-navy transition-colors">
+            <Link href={productAnchor(config, 'pricing')} className="text-sm text-gray-600 hover:text-navy transition-colors">
               {s.pricing}
             </Link>
             {isAuth ? (
@@ -77,10 +81,15 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
 
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
-          <Link href="/#features" className="block text-gray-600 hover:text-navy" onClick={() => setMenuOpen(false)}>
+          {company && (
+            <Link href={config.siteUrl ?? `https://${config.domain}`} className="block text-gray-500 hover:text-navy" onClick={() => setMenuOpen(false)}>
+              &larr; {company.nav.backToCompany}
+            </Link>
+          )}
+          <Link href={productAnchor(config, 'features')} className="block text-gray-600 hover:text-navy" onClick={() => setMenuOpen(false)}>
             {s.features}
           </Link>
-          <Link href="/#pricing" className="block text-gray-600 hover:text-navy" onClick={() => setMenuOpen(false)}>
+          <Link href={productAnchor(config, 'pricing')} className="block text-gray-600 hover:text-navy" onClick={() => setMenuOpen(false)}>
             {s.pricing}
           </Link>
           {isAuth ? (

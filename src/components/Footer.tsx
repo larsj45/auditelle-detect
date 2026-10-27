@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useConfig } from '@/components/ConfigProvider';
 import ManageCookiesLink from '@/components/ManageCookiesLink';
+import BrandMark from '@/components/BrandMark';
+import { copyrightHolder, productAnchor } from '@/lib/company-home';
 
 export default function Footer() {
   const config = useConfig();
@@ -14,11 +16,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
-              {config.logoWhite ? (
-                <img src={config.logoWhite} alt={config.name} style={{ height: config.logoHeight || '2rem' }} />
-              ) : (
-                <span className="text-xl font-bold text-white">{config.name}</span>
-              )}
+              <BrandMark config={config} variant="white" />
             </div>
             <p className="text-gray-400 text-sm max-w-md">
               {s.footer.description}
@@ -31,12 +29,12 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
-                <Link href="/#features" className="hover:text-white transition-colors">
+                <Link href={productAnchor(config, 'features')} className="hover:text-white transition-colors">
                   {s.nav.features}
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-white transition-colors">
+                <Link href={productAnchor(config, 'pricing')} className="hover:text-white transition-colors">
                   {s.nav.pricing}
                 </Link>
               </li>
@@ -53,6 +51,13 @@ export default function Footer() {
               {s.footer.companyLabel}
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">
+              {config.companyHome && (
+                <li>
+                  <Link href={config.siteUrl ?? `https://${config.domain}`} className="hover:text-white transition-colors">
+                    {config.legalEntity}
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors">
                   {s.footer.contactLabel}
@@ -74,7 +79,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-700 mt-10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} {config.name}. {s.footer.copyright}
+            &copy; {new Date().getFullYear()} {copyrightHolder(config)}. {s.footer.copyright}
             <ManageCookiesLink className="ml-4 text-gray-500 hover:text-white transition-colors" />
           </p>
           <p className="text-xs text-gray-600">

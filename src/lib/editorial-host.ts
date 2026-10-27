@@ -15,6 +15,7 @@ const EDITORIAL_PATH_PREFIXES = [
   '/riviste-scientifiche',
   '/revistas-cientificas',
   '/journals',
+  '/lettrine',
 ]
 // Lettrine landings for schools and universities. They are marketing pages, so
 // they live on lettrine.eu as well; signup, login, contact and the dashboard stay
