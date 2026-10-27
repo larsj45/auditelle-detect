@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getResellerConfig } from '@/lib/config'
+import type { ResellerConfig } from '../../../../../config/types'
 import { sendEmail, welcomeEmail } from '@/lib/email'
+import { isInstitutionalEmail } from '@/lib/institutional-email'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,10 +29,14 @@ export async function POST(request: NextRequest) {
       { global: { headers: { Authorization: `Bearer ${token}` } } }
     )
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user || !user.email) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user || !user.email) {
       return NextResponse.json({ error: errors.userNotFound }, { status: 404 })
     }
+
+    // Derive identity from the verified bearer token, never request body.
+    // A zero-credit brand never grants pilot credits.
+    await grantInstitutionalPilotIfEligible(user.id, user.email, config)
 
     // Get user profile for name
     const serviceSupabase = createClient(
@@ -73,4 +79,19 @@ export async function POST(request: NextRequest) {
     console.error('Welcome email error:', error)
     return NextResponse.json({ error: errors.internalError }, { status: 500 })
   }
+}
+
+async function grantInstitutionalPilotIfEligible(userId: string, email: string, config: ResellerConfig) {
+  const credits = config.institutionalPilotCredits ?? 0
+  if (credits <= 0) return
+  const service = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+  const { data: profile, error } = await service.from('profiles')
+    .select('scan_credits, pilot_credits_granted').eq('id', userId).single()
+  if (error || !profile || profile.pilot_credits_granted) return
+  const eligible = isInstitutionalEmail(email, { allowlist: config.institutionalEmailAllowlist })
+  const update = eligible
+    ? { pilot_credits_granted: true, scan_credits: profile.scan_credits + credits }
+    : { pilot_credits_granted: true }
+  // The flag prevents repeat grants; concurrent grant safety requires a DB atomic RPC.
+  await service.from('profiles').update(update).eq('id', userId).eq('pilot_credits_granted', false)
 }

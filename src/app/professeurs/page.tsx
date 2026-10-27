@@ -1,3 +1,4 @@
+import { publicTesterHref } from '@/lib/public-demo-flow'
 import Link from 'next/link'
 import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
@@ -60,10 +61,10 @@ export default async function ProfesseursPage() {
               <BrandMark config={config} />
             </Link>
             <Link
-              href="/signup"
+              href={publicTesterHref(config)}
               className="bg-accent text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent-hover transition-colors"
             >
-              Essai gratuit
+              {config.strings.nav.freeTrial}
             </Link>
           </div>
         </div>
@@ -117,7 +118,7 @@ export default async function ProfesseursPage() {
           </div>
 
           <p className="text-sm text-gray-400 mt-4">
-            Sans carte bancaire &middot; 3 analyses gratuites par mois
+            Sans carte bancaire &middot; 3 tests publics gratuits par jour et par IP, sans compte
           </p>
         </div>
       </section>

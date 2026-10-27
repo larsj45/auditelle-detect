@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { useConfig } from '@/components/ConfigProvider';
 import BrandMark from '@/components/BrandMark';
+import { publicTesterHref } from '@/lib/public-demo-flow';
 import { productAnchor, productHomePath } from '@/lib/company-home';
 
 export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
@@ -60,7 +61,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
                   {s.login}
                 </Link>
                 <Link
-                  href="/signup"
+                  href={publicTesterHref(config)}
                   className="bg-accent text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
                 >
                   {s.freeTrial}
@@ -102,7 +103,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
                 {s.login}
               </Link>
               <Link
-                href="/signup"
+                href={publicTesterHref(config)}
                 className="block bg-accent text-white text-center px-5 py-2 rounded-lg font-medium"
                 onClick={() => setMenuOpen(false)}
               >

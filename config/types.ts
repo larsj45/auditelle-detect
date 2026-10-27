@@ -97,6 +97,7 @@ export interface ResellerConfig {
     teamManagement: boolean
     demoPage: boolean
     heroDemo: boolean
+    publicDemoWithoutSignup?: boolean
     plagiarismDetection: boolean
     // Request a public Pangram report link per scan. Defaults to true.
     pangramPublicDashboardLink?: boolean
@@ -307,6 +308,7 @@ export interface ResellerStrings {
 
   // Auth
   auth: {
+    callbackError?: string
     login: string
     signup: string
     resetPassword: string
@@ -412,6 +414,7 @@ export interface ResellerStrings {
 
   // Detection results
   results: {
+    printReport?: { generated: string; disclaimer: string }
     probablyHuman: string
     mixed: string
     probablyAI: string

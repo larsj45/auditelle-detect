@@ -1,3 +1,4 @@
+import { publicTesterHref } from '@/lib/public-demo-flow'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PricingCard from '@/components/PricingCard'
@@ -120,7 +121,7 @@ export default async function ProductLanding() {
                 <Link href="/etablissements" className={`btn-primary rounded-xl shadow-lg shadow-orange-500/20 ${paper ? 'text-base px-6 py-3.5 whitespace-nowrap text-center' : 'text-lg px-8 py-4'}`}>
                   {s.hero.ctaPrimary}
                 </Link>
-                <Link href="/signup" className={`btn-secondary rounded-xl ${paper ? 'text-base px-6 py-3.5 whitespace-nowrap text-center' : 'text-lg px-8 py-4'}`}>
+                <Link href={publicTesterHref(config)} className={`btn-secondary rounded-xl ${paper ? 'text-base px-6 py-3.5 whitespace-nowrap text-center' : 'text-lg px-8 py-4'}`}>
                   {s.hero.ctaSecondary}
                 </Link>
               </div>
