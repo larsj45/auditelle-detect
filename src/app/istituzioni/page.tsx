@@ -13,7 +13,7 @@ import {
   Shield,
 } from 'lucide-react'
 import { getResellerConfig } from '@/lib/config'
-import { LEGACY_ORIGIN } from '@/lib/editorial-host'
+import { EDITORIAL_ORIGIN, LEGACY_ORIGIN } from '@/lib/editorial-host'
 import OpenCookieConsentButton from '@/components/OpenCookieConsentButton'
 import {
   ISTITUZIONI_CONTACT,
@@ -23,7 +23,7 @@ import {
   istituzioniPilotMailto,
 } from '@/lib/istituzioni-copy'
 
-const PAGE_URL = `${LEGACY_ORIGIN}${ISTITUZIONI_PATH}`
+const PAGE_URL = `${EDITORIAL_ORIGIN}${ISTITUZIONI_PATH}`
 
 const ICONS = {
   cpu: Cpu,
@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: PAGE_URL,
       languages: {
-        fr: `${LEGACY_ORIGIN}/etablissements`,
+        fr: `${EDITORIAL_ORIGIN}/etablissements`,
         it: PAGE_URL,
       },
     },

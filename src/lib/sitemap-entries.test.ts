@@ -3,7 +3,7 @@ import test from 'node:test'
 import { editorialSitemap, legacySitemap, sitemapForHost } from './sitemap-entries.ts'
 
 test('lists the editorial landings on lettrine.eu with reciprocal hreflang alternates', () => {
-  const entries = editorialSitemap()
+  const entries = editorialSitemap().filter((entry) => !/etablissements|istituzioni/.test(entry.url))
   assert.deepEqual(entries.map((entry) => entry.url), [
     'https://lettrine.eu/revues-scientifiques',
     'https://lettrine.eu/vetenskapliga-tidskrifter',
@@ -24,9 +24,17 @@ test('removes the editorial pages from the auditelle.fr sitemap', () => {
   assert.ok(!urls.some((url) => url.includes('/vetenskapliga-tidskrifter') || url.includes('/revues-scientifiques')))
 })
 
-test('lists the Italian institutions landing on auditelle.fr only', () => {
-  assert.ok(legacySitemap().some((entry) => entry.url === 'https://www.auditelle.fr/istituzioni'))
-  assert.ok(!editorialSitemap().some((entry) => entry.url.includes('/istituzioni')))
+test('lists the school landings on lettrine.eu only, with fr/it alternates', () => {
+  const editorialUrls = editorialSitemap().map((entry) => entry.url)
+  assert.ok(editorialUrls.includes('https://lettrine.eu/etablissements'))
+  assert.ok(editorialUrls.includes('https://lettrine.eu/istituzioni'))
+  const legacyUrls = legacySitemap().map((entry) => entry.url)
+  assert.ok(!legacyUrls.some((url) => url.includes('/etablissements') || url.includes('/istituzioni')))
+  const istituzioni = editorialSitemap().find((entry) => entry.url === 'https://lettrine.eu/istituzioni')
+  assert.deepEqual(istituzioni?.alternates?.languages, {
+    fr: 'https://lettrine.eu/etablissements',
+    it: 'https://lettrine.eu/istituzioni',
+  })
 })
 
 test('keeps the editorial privacy notices out of both sitemaps', () => {
@@ -35,6 +43,6 @@ test('keeps the editorial privacy notices out of both sitemaps', () => {
 })
 
 test('chooses the sitemap by host kind', () => {
-  assert.equal(sitemapForHost('editorial').length, 3)
+  assert.equal(sitemapForHost('editorial').length, 5)
   assert.equal(sitemapForHost('other').length, legacySitemap().length)
 })
