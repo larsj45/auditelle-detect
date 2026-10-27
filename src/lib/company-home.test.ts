@@ -11,8 +11,8 @@ test('single-product brands keep the landing on "/"', () => {
 })
 
 test('auditelle-fr moves the Lettrine landing to /lettrine', () => {
-  assert.equal(productHomePath(auditelleFr), '/lettrine')
-  assert.equal(productAnchor(auditelleFr, 'features'), '/lettrine#features')
+  assert.equal(productHomePath(auditelleFr), 'https://lettrine.eu/lettrine')
+  assert.equal(productAnchor(auditelleFr, 'features'), 'https://lettrine.eu/lettrine#features')
 })
 
 test('copyright holder falls back to the brand name', () => {

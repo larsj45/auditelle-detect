@@ -3,6 +3,7 @@ import ManageCookiesLink from '@/components/ManageCookiesLink'
 import { getResellerConfig } from '@/lib/config'
 import BrandMark from '@/components/BrandMark'
 import { copyrightHolder, productHomePath } from '@/lib/company-home'
+import { EDITORIAL_ORIGIN, LEGACY_ORIGIN } from '@/lib/editorial-host'
 import {
   Shield,
   Layers,
@@ -27,9 +28,14 @@ export const metadata: Metadata = {
       'De la charte à la mesure : détection IA et plagiat, rapport exportable, données stockées dans l’UE. Demandez un diagnostic gratuit.',
     type: 'website',
     locale: 'fr_FR',
+    url: `${EDITORIAL_ORIGIN}/etablissements`,
   },
   alternates: {
-    canonical: 'https://www.auditelle.fr/etablissements',
+    canonical: `${EDITORIAL_ORIGIN}/etablissements`,
+    languages: {
+      fr: `${EDITORIAL_ORIGIN}/etablissements`,
+      it: `${EDITORIAL_ORIGIN}/istituzioni`,
+    },
   },
 }
 
@@ -44,7 +50,7 @@ export default async function EtablissementsPage() {
     name: `${config.name} pour les établissements`,
     description:
       "Couche d'intégrité académique pour les établissements français : détection IA Pangram, plagiat, rapport exportable.",
-    url: 'https://www.auditelle.fr/etablissements',
+    url: `${EDITORIAL_ORIGIN}/etablissements`,
   }
 
   return (
@@ -63,13 +69,13 @@ export default async function EtablissementsPage() {
             </Link>
             <div className="flex items-center gap-3">
               <Link
-                href="/contact?subject=D%C3%A9monstration"
+                href={`${LEGACY_ORIGIN}/contact?subject=D%C3%A9monstration`}
                 className="hidden sm:inline text-sm font-medium text-gray-700 hover:text-navy transition-colors"
               >
                 Demander une démo
               </Link>
               <Link
-                href="/contact?subject=Diagnostic"
+                href={`${LEGACY_ORIGIN}/contact?subject=Diagnostic`}
                 className="bg-accent text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent-hover transition-colors"
               >
                 {ctaDiagnostic}
@@ -112,7 +118,7 @@ export default async function EtablissementsPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
-              href="/contact?subject=Diagnostic"
+              href={`${LEGACY_ORIGIN}/contact?subject=Diagnostic`}
               className="btn-primary text-lg px-10 py-4 rounded-xl shadow-lg shadow-orange-500/25 inline-flex items-center gap-2"
             >
               {ctaDiagnostic}
@@ -260,14 +266,14 @@ export default async function EtablissementsPage() {
               </ul>
               <div className="flex flex-col sm:flex-row gap-4 mt-8">
                 <Link
-                  href="/contact?subject=Diagnostic"
+                  href={`${LEGACY_ORIGIN}/contact?subject=Diagnostic`}
                   className="btn-primary px-8 py-3 inline-flex items-center justify-center gap-2"
                 >
                   {pilot.ctaDiagnostic}
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="/contact?subject=Pilote"
+                  href={`${LEGACY_ORIGIN}/contact?subject=Pilote`}
                   className="btn-secondary px-8 py-3 inline-flex items-center justify-center"
                 >
                   Commander le pilote
@@ -290,14 +296,14 @@ export default async function EtablissementsPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
-              href="/contact?subject=Diagnostic"
+              href={`${LEGACY_ORIGIN}/contact?subject=Diagnostic`}
               className="btn-primary text-lg px-10 py-4 inline-flex items-center gap-2"
             >
               {ctaDiagnostic}
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/contact?subject=D%C3%A9monstration"
+              href={`${LEGACY_ORIGIN}/contact?subject=D%C3%A9monstration`}
               className="btn-secondary text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               Demander une démo

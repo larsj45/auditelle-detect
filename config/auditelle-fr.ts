@@ -228,6 +228,7 @@ const config: ResellerConfig = {
   companyHome: {
     companyName: 'Auditelle',
     productPath: '/lettrine',
+    productOrigin: 'https://lettrine.eu',
     seo: {
       title: 'Auditelle — Intégrité des travaux écrits et surveillance d’examens (Lettrine, VigiExam)',
       description: 'Auditelle SASU, société française, édite et opère Lettrine (détection IA et similarités dans les travaux écrits) et VigiExam (surveillance d’examens à distance avec revue humaine).',
@@ -268,8 +269,8 @@ const config: ResellerConfig = {
           'Pilote établissement de 30 jours',
         ],
         tone: 'accent',
-        primary: { label: 'Découvrir Lettrine', href: '/lettrine' },
-        secondary: { label: 'Pilote pour les établissements', href: '/etablissements' },
+        primary: { label: 'Découvrir Lettrine', href: 'https://lettrine.eu/lettrine' },
+        secondary: { label: 'Pilote pour les établissements', href: 'https://lettrine.eu/etablissements' },
       },
       {
         name: 'VigiExam',

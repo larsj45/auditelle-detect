@@ -3,7 +3,7 @@ import test from 'node:test'
 import { editorialCopy } from './editorialCopy.ts'
 import { editorialPrivacyCopy } from './editorialPrivacyCopy.ts'
 
-for (const locale of ['fr', 'sv'] as const) {
+for (const locale of ['fr', 'sv', 'it', 'pt', 'en'] as const) {
   test(`${locale} privacy notice is linked from the landing and stays under its route`, () => {
     const privacy = editorialPrivacyCopy[locale]
     const landing = editorialCopy[locale]
@@ -23,11 +23,31 @@ for (const locale of ['fr', 'sv'] as const) {
     assert.match(text, /12/)
     assert.match(text, /Vercel/)
     assert.match(text, /Resend/)
-    assert.match(text, /6\.1/)
+    // Article 6(1) cited as "6.1" (fr, sv), "articolo 6, paragrafo 1" (it),
+    // "artigo 6.º, n.º 1" (pt) or "Article 6(1)" (en).
+    assert.match(text, /6\.1|articolo 6, paragrafo 1|artigo 6\.º, n\.º 1|Article 6\(1\)/)
   })
 }
 
 test('Swedish notice points to the Swedish supervisory authority', () => {
   const text = editorialPrivacyCopy.sv.sections.flatMap((s) => s.paragraphs).join(' ')
   assert.match(text, /Integritetsskyddsmyndigheten/)
+})
+
+test('Italian notice points to the Italian supervisory authority', () => {
+  const text = editorialPrivacyCopy.it.sections.flatMap((s) => s.paragraphs).join(' ')
+  assert.match(text, /Garante per la protezione dei dati personali/)
+})
+
+test('Portuguese notice points to the Portuguese supervisory authority', () => {
+  const text = editorialPrivacyCopy.pt.sections.flatMap((s) => s.paragraphs).join(' ')
+  assert.match(text, /Comissão Nacional de Proteção de Dados/)
+})
+
+test('PT and EN notices never claim EU-only processing', () => {
+  for (const locale of ['pt', 'en'] as const) {
+    const text = JSON.stringify(editorialPrivacyCopy[locale])
+    assert.match(text, /Data Privacy Framework/)
+    assert.ok(!text.includes('\u2014'))
+  }
 })

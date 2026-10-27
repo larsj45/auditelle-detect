@@ -6,6 +6,7 @@ import { Shield, Brain, FileSearch, BarChart3, Zap, Globe, Check, X } from 'luci
 import Link from 'next/link'
 import { getResellerConfig } from '@/lib/config'
 import { siteOrigin } from '@/lib/site-origin'
+import { productHomePath } from '@/lib/company-home'
 
 const iconMap: Record<string, React.ReactNode> = {
   Brain: <Brain className="w-8 h-8" />,
@@ -23,7 +24,7 @@ export default async function ProductLanding() {
   const config = await getResellerConfig()
   const s = config.strings
   const pageUrl = config.companyHome
-    ? `${siteOrigin(config)}${config.companyHome.productPath}`
+    ? productHomePath(config)
     : siteOrigin(config)
   const planCount = config.plans.homepage.length
   const paper = config.theme.skin === 'paper'

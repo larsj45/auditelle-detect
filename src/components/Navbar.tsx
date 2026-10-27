@@ -37,7 +37,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-6">
             {company && (
-              <Link href="/" className="text-sm text-gray-500 hover:text-navy transition-colors">
+              <Link href={config.siteUrl ?? `https://${config.domain}`} className="text-sm text-gray-500 hover:text-navy transition-colors">
                 &larr; {company.nav.backToCompany}
               </Link>
             )}
@@ -82,7 +82,7 @@ export default function Navbar({ isAuth: isAuthProp }: { isAuth?: boolean }) {
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
           {company && (
-            <Link href="/" className="block text-gray-500 hover:text-navy" onClick={() => setMenuOpen(false)}>
+            <Link href={config.siteUrl ?? `https://${config.domain}`} className="block text-gray-500 hover:text-navy" onClick={() => setMenuOpen(false)}>
               &larr; {company.nav.backToCompany}
             </Link>
           )}

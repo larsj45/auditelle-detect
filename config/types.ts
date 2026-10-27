@@ -150,6 +150,7 @@ export interface CompanyHomeProduct {
 export interface CompanyHomeConfig {
   companyName: string        // e.g. "Auditelle"
   productPath: string        // e.g. "/lettrine"
+  productOrigin?: string    // marketing host, when separate from the company
   seo: {
     title: string
     description: string
