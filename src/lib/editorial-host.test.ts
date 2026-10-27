@@ -33,7 +33,7 @@ test('moves the editorial pages from auditelle.fr to lettrine.eu permanently', (
 })
 
 test('leaves the rest of auditelle.fr untouched', () => {
-  for (const pathname of ['/', '/tester', '/dashboard', '/etablissements', '/vetenskapliga']) {
+  for (const pathname of ['/', '/tester', '/dashboard', '/signup', '/professeurs', '/vetenskapliga', '/etablissements/x']) {
     assert.equal(resolveEditorialRedirect({ host: 'auditelle.fr', pathname }), null)
   }
 })
@@ -83,4 +83,34 @@ test('does nothing on preview and local hosts', () => {
     resolveEditorialRedirect({ host: 'localhost:3461', pathname: '/vetenskapliga-tidskrifter' }),
     null
   )
+})
+
+test('moves the school landings from auditelle.fr to lettrine.eu, keeping the query', () => {
+  for (const pathname of ['/etablissements', '/istituzioni']) {
+    for (const host of ['auditelle.fr', 'www.auditelle.fr']) {
+      assert.deepEqual(resolveEditorialRedirect({ host, pathname, search: '?utm=x' }), {
+        location: `https://lettrine.eu${pathname}?utm=x`,
+        status: 308,
+      })
+    }
+  }
+})
+
+test('serves the school landings on lettrine.eu', () => {
+  for (const pathname of ['/etablissements', '/istituzioni']) {
+    assert.equal(resolveEditorialRedirect({ host: 'lettrine.eu', pathname }), null)
+  }
+  assert.deepEqual(resolveEditorialRedirect({ host: 'www.lettrine.eu', pathname: '/istituzioni' }), {
+    location: 'https://lettrine.eu/istituzioni',
+    status: 308,
+  })
+})
+
+test('keeps the app on auditelle.fr when reached through lettrine.eu', () => {
+  for (const pathname of ['/signup', '/login', '/contact', '/tester', '/dashboard', '/professeurs']) {
+    assert.deepEqual(resolveEditorialRedirect({ host: 'lettrine.eu', pathname, search: '?subject=Pilote' }), {
+      location: `https://www.auditelle.fr${pathname}?subject=Pilote`,
+      status: 308,
+    })
+  }
 })

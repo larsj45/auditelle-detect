@@ -1,6 +1,7 @@
-// Host routing for the Lettrine editorial site.
-// The editorial pages are served by the auditelle-fr deployment but live on
-// their own domain. auditelle.fr keeps the education product and the company.
+// Host routing for the Lettrine site.
+// The Lettrine landings (journals and schools) are served by the auditelle-fr
+// deployment but live on their own domain. auditelle.fr keeps the app
+// (signup, login, dashboard, contact, checkout) and the company.
 
 export const EDITORIAL_HOST = 'lettrine.eu'
 export const EDITORIAL_ORIGIN = `https://${EDITORIAL_HOST}`
@@ -13,6 +14,10 @@ const EDITORIAL_PATH_PREFIXES = [
   '/revues-scientifiques',
   '/riviste-scientifiche',
 ]
+// Lettrine landings for schools and universities. They are marketing pages, so
+// they live on lettrine.eu as well; signup, login, contact and the dashboard stay
+// on auditelle.fr, and these pages link there with absolute URLs.
+export const SCHOOL_PATHS = ['/etablissements', '/istituzioni'] as const
 // Served on both hosts, with host-aware content.
 const SHARED_PATHS = new Set(['/robots.txt', '/sitemap.xml'])
 const NORDIC_LANGUAGES = new Set(['sv', 'da', 'no', 'nb', 'nn', 'fi', 'is'])
@@ -36,8 +41,10 @@ export function hostKind(host: string | null | undefined): HostKind {
 }
 
 export function isEditorialPath(pathname: string): boolean {
-  return EDITORIAL_PATH_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  return (
+    EDITORIAL_PATH_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+    ) || (SCHOOL_PATHS as readonly string[]).includes(pathname)
   )
 }
 
