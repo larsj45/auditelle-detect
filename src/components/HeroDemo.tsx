@@ -322,6 +322,7 @@ export default function HeroDemo() {
           </div>
 
           {/* Blurred preview of full report */}
+          {!config.features.publicDemoWithoutSignup && (
           <div className="mt-4 relative">
             <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
               <p className="text-sm font-semibold text-gray-700 mb-2">{r.breakdown}</p>
@@ -369,6 +370,7 @@ export default function HeroDemo() {
               </a>
             </div>
           </div>
+          )}
         </>
       )}
 
@@ -409,6 +411,7 @@ export default function HeroDemo() {
           </div>
 
           {/* Blurred preview of sources */}
+          {!config.features.publicDemoWithoutSignup && (
           <div className="mt-4 relative">
             <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
               <p className="text-sm font-semibold text-gray-700 mb-3">{p.sourceLabel}</p>
@@ -435,6 +438,7 @@ export default function HeroDemo() {
               </a>
             </div>
           </div>
+          )}
         </>
       )}
 
@@ -485,6 +489,7 @@ export default function HeroDemo() {
             </div>
           </div>
 
+          {!config.features.publicDemoWithoutSignup && (
           <div className="mt-4 relative">
             <div className="blur-[4px] pointer-events-none select-none p-5 bg-white border border-gray-200 rounded-xl">
               <p className="text-sm font-semibold text-gray-700 mb-3">{p.analyzeBoth}</p>
@@ -514,6 +519,7 @@ export default function HeroDemo() {
               </a>
             </div>
           </div>
+          )}
         </>
       )}
     </div>
