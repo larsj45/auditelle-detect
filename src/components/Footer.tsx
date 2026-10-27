@@ -53,7 +53,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               {config.companyHome && (
                 <li>
-                  <Link href="/" className="hover:text-white transition-colors">
+                  <Link href={config.siteUrl ?? `https://${config.domain}`} className="hover:text-white transition-colors">
                     {config.legalEntity}
                   </Link>
                 </li>
