@@ -160,7 +160,7 @@ export default async function PartenairesPage() {
             <BenefitCard
               icon={<Globe className="w-8 h-8" />}
               title="Donn&eacute;es et RGPD"
-              description="Donn&eacute;es stock&eacute;es dans l&apos;UE (Supabase, r&eacute;gion Paris). Sous-traitants techniques communiqu&eacute;s au DPO de chaque &eacute;tablissement."
+              description="Comptes et rapports stock&eacute;s dans l&apos;UE (Supabase, r&eacute;gion Paris), analyse par Pangram Labs (&Eacute;tats-Unis). Sous-traitants techniques communiqu&eacute;s au DPO de chaque &eacute;tablissement."
             />
             <BenefitCard
               icon={<Headphones className="w-8 h-8" />}
