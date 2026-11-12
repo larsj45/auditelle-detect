@@ -398,7 +398,7 @@ const config: ResellerConfig = {
     pricing: {
       title: 'Tarification transparente et comp\u00e9titive',
       subtitle: 'Technologie Pangram Labs. Service fran\u00e7ais. Pour un enseignant, \u00e0 l\u2019analyse ou au mois ; pour un \u00e9tablissement, un pilote de 30 jours.',
-      footer: 'Technologie Pangram \u2022 Donn\u00e9es stock\u00e9es dans l\u2019UE (Supabase, Paris) \u2022 Support fran\u00e7ais \u2022 SIREN 945117000',
+      footer: 'Technologie Pangram Labs (\u00c9tats-Unis) \u2022 Comptes et rapports stock\u00e9s dans l\u2019UE (Supabase, Paris) \u2022 Support fran\u00e7ais \u2022 SIREN 945117000',
     },
 
     // CTA section
