@@ -1,7 +1,7 @@
 // Italian landing for universities and business schools on auditelle.fr.
 // Claims are kept within what the French /etablissements page and the
-// corrected company copy can support: data stored in the EU (Supabase, Paris),
-// analysis by the Pangram Labs engine, a signal and never a verdict.
+// corrected company copy can support: accounts and reports stored in the EU
+// (Supabase, Paris), analysis by Pangram Labs in the United States, a signal and never a verdict.
 // The application itself is in French for now, so the call to action is an
 // email to the team rather than a self-service signup.
 
@@ -41,7 +41,7 @@ export const istituzioniCopy = {
       'Analisi IA e similarità',
       'Testi in italiano',
       'Un segnale, non un verdetto',
-      "Dati archiviati nell'UE",
+      "Account e report archiviati nell'UE",
     ],
     primaryCta: 'Richiedi 20 analisi gratuite',
     secondaryCta: 'Scopri il pilota',
@@ -81,9 +81,9 @@ export const istituzioniCopy = {
       },
       {
         icon: 'lock',
-        title: "Dati archiviati nell'UE",
+        title: "Account e report archiviati nell'UE",
         description:
-          "I dati delle analisi sono archiviati nell'Unione europea (Supabase, regione di Parigi). Il testo viene analizzato dal motore Pangram Labs.",
+          "Account, cronologia e report sono archiviati nell'Unione europea (Supabase, regione di Parigi). Il testo viene analizzato dal nostro fornitore Pangram Labs, negli Stati Uniti.",
       },
       {
         icon: 'layers',
@@ -95,7 +95,7 @@ export const istituzioniCopy = {
   gdpr: {
     title: 'GDPR: che cosa garantiamo oggi',
     body:
-      "I dati delle analisi sono archiviati nell'Unione europea (Supabase, regione di Parigi) e il testo viene analizzato dal motore Pangram Labs. Lettrine è un servizio di Auditelle SASU, società francese (SIREN 945117000). Prima di qualsiasi pilota vi comunichiamo nel dettaglio i trattamenti e i responsabili del trattamento coinvolti, perché il vostro DPO possa valutarli.",
+      "Account, cronologia e report sono archiviati nell'Unione europea (Supabase, regione di Parigi); il testo viene analizzato dal nostro fornitore Pangram Labs, negli Stati Uniti. Lettrine è un servizio di Auditelle SASU, società francese (SIREN 945117000). Prima di qualsiasi pilota vi comunichiamo nel dettaglio i trattamenti e i responsabili del trattamento coinvolti, perché il vostro DPO possa valutarli.",
   },
   trial: {
     title: '20 analisi gratuite per 30 giorni',

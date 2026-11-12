@@ -21,11 +21,11 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Lettrine pour les établissements — La couche d’intégrité académique (pilote de 30 jours)',
   description:
-    "Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données stockées dans l'UE (Supabase, Paris). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
+    "Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Comptes et rapports stockés dans l'UE (Supabase, Paris), analyse par Pangram Labs (États-Unis). Diagnostic gratuit et pilote de 30 jours pour les équipes pédagogiques.",
   openGraph: {
     title: 'Lettrine pour les établissements — Couche d’intégrité académique',
     description:
-      'De la charte à la mesure : détection IA et plagiat, rapport exportable, données stockées dans l’UE. Demandez un diagnostic gratuit.',
+      'De la charte à la mesure : détection IA et plagiat, rapport exportable, comptes et rapports stockés dans l’UE. Demandez un diagnostic gratuit.',
     type: 'website',
     locale: 'fr_FR',
     url: `${EDITORIAL_ORIGIN}/etablissements`,
@@ -107,7 +107,7 @@ export default async function EtablissementsPage() {
               'Détection IA + plagiat',
               'Couche d’intégrité, pas un verdict',
               'Rapport exportable',
-              'Données stockées dans l’UE',
+              'Comptes et rapports stockés dans l’UE',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-gray-600 font-medium">
                 <Check className="w-5 h-5 text-emerald-500 shrink-0" />
@@ -178,8 +178,8 @@ export default async function EtablissementsPage() {
             />
             <FeatureCard
               icon={<Lock className="w-8 h-8" />}
-              title="Données stockées dans l’UE"
-              description="Les données sont stockées dans l'Union européenne (Supabase, région Paris). Conformité RGPD au cœur du produit."
+              title="Comptes et rapports stockés dans l’UE"
+              description="Les comptes, l'historique et les rapports sont stockés dans l'Union européenne (Supabase, région Paris). Le texte est analysé par notre fournisseur Pangram Labs, aux États-Unis."
             />
             <FeatureCard
               icon={<Layers className="w-8 h-8" />}
@@ -201,8 +201,9 @@ export default async function EtablissementsPage() {
                   RGPD : ce que nous garantissons aujourd&apos;hui
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Les données de vos analyses sont <strong>stockées dans l&apos;Union européenne</strong>{' '}
-                  (Supabase, région Paris). {config.name} est éditée par {config.legalEntity},
+                  Les comptes, l&apos;historique et les rapports sont <strong>stockés dans l&apos;Union européenne</strong>{' '}
+                  (Supabase, région Paris). Le texte soumis est analysé par notre fournisseur
+                  Pangram Labs, aux États-Unis. {config.name} est éditée par {config.legalEntity},
                   société française ({config.registrationLabel} {config.registrationNumber}).
                   Lors d&apos;un pilote, nous vous communiquons en toute transparence le détail
                   des traitements et des éventuels sous-traitants techniques, pour que votre

@@ -209,10 +209,10 @@ const config: ResellerConfig = {
   // ── SEO ───────────────────────────────────────────────────────────────────
   seo: {
     title: 'Lettrine — Couche d’intégrité académique pour les établissements (IA + plagiat)',
-    description: 'Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Données stockées dans l’UE (Supabase, Paris).',
+    description: 'Lettrine aide les établissements à passer de la charte à la mesure : détection IA et plagiat, rapport exportable. Comptes et rapports stockés dans l’UE (Supabase, Paris), analyse par Pangram Labs (États-Unis).',
     keywords: ['intégrité académique', 'détection IA', 'détection ChatGPT', 'détection plagiat IA', 'pilote établissement', 'Lettrine'],
     ogTitle: 'Lettrine — La couche d’intégrité pour les établissements',
-    ogDescription: 'Détection IA + plagiat, rapport exportable, données stockées dans l’UE.',
+    ogDescription: 'Détection IA + plagiat, rapport exportable, comptes et rapports stockés dans l’UE.',
   },
 
   // ── Redirects ─────────────────────────────────────────────────────────────
@@ -322,7 +322,7 @@ const config: ResellerConfig = {
       trustBadges: [
         'IA + plagiat',
         'Un signal, pas un verdict',
-        'Données stockées dans l’UE',
+        'Comptes et rapports stockés dans l’UE',
       ],
       ctaPrimary: 'Découvrir le pilote établissement \u2192',
       ctaSecondary: 'Tester par moi-même',

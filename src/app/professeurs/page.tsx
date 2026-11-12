@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Lettrine pour les enseignants — Détectez le contenu IA dans les travaux étudiants',
   description:
-    'Outil de détection IA pour les enseignants, motorisé par Pangram Labs. Vérifiez les copies en quelques secondes. Données stockées dans l’UE. Support français.',
+    'Outil de détection IA pour les enseignants, motorisé par Pangram Labs. Vérifiez les copies en quelques secondes. Comptes et rapports stockés dans l’UE. Support français.',
   openGraph: {
     title: 'Lettrine pour les enseignants — Détectez le contenu IA',
     description:
@@ -84,14 +84,14 @@ export default async function ProfesseursPage() {
           <p className="text-xl text-gray-600 mt-6 max-w-3xl mx-auto leading-relaxed">
             Vérifiez les copies, mémoires et rapports en quelques secondes.
             Un signal à interpréter, pas un verdict.
-            Données stockées dans l&apos;UE.
+            Comptes et rapports stockés dans l&apos;UE.
           </p>
 
           <div className="flex flex-wrap gap-6 mt-8 justify-center">
             {[
               'Moteur Pangram Labs',
               'Un signal, pas un verdict',
-              'Données stockées dans l’UE',
+              'Comptes et rapports stockés dans l’UE',
               'Support français',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-gray-600 font-medium">
